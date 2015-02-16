@@ -1,0 +1,17 @@
+Package: multipanelfigure
+Type: Package
+Title: Infrastructure to assemble multipanle figures (from grobs)
+Version: 0.1.0
+Date: 2015-02-16
+Author: Johannes Graumann
+Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
+Authors@R: c(person("Johannes", "Graumann", email =
+    "jog2030@qatar-med.cornell.edu", role = c("cre", "aut")))
+Description: tools to create the layout of multipanel figures and fill the
+  panels.
+Imports:
+  assertive (>= 0.2-1),
+  gtable (>= 0.1.2)
+Suggest:
+  roxygen2 (>= 4.1.0)
+License: GPL (>= 3)

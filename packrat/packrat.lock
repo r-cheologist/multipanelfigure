@@ -1,0 +1,59 @@
+PackratFormat: 1.4
+PackratVersion: 0.4.3
+RVersion: 3.1.2
+Repos: CRAN=http://cran.rstudio.com,
+    BioCsoft=http://bioconductor.org/packages/3.0/bioc,
+    BioCann=http://bioconductor.org/packages/3.0/data/annotation,
+    BioCexp=http://bioconductor.org/packages/3.0/data/experiment,
+    BioCextra=http://bioconductor.org/packages/3.0/extra
+
+Package: Rcpp
+Source: CRAN
+Version: 0.11.4
+Hash: 1f684f6afd28079e4e609b49f353e49f
+
+Package: assertive
+Source: CRAN
+Version: 0.2-1
+Hash: a2e2b6b00948be4d21e20c4a0ef5fe92
+
+Package: brew
+Source: CRAN
+Version: 1.0-6
+Hash: 9d92cc5ac60123fdb7b0daa3ae83bf99
+
+Package: digest
+Source: CRAN
+Version: 0.6.8
+Hash: 89dc4c8734dad5322bb3c5c2af09056f
+
+Package: gtable
+Source: CRAN
+Version: 0.1.2
+Hash: 0cf4a2b54c02b35dec7e74a8ebed12a0
+
+Package: packrat
+Source: CRAN
+Version: 0.4.3
+Hash: 16c72d5c802629fae5a4abca901e0199
+
+Package: png
+Source: CRAN
+Version: 0.1-7
+Hash: 7559dcd0a9f188351986d0494ec1516d
+
+Package: roxygen2
+Source: CRAN
+Version: 4.1.0
+Hash: a11d0f31f8daf359c67e3e0c19d1e468
+Requires: Rcpp, brew, digest, stringr
+
+Package: stringr
+Source: CRAN
+Version: 0.6.2
+Hash: cdde0cfa0f52cffeaca23a11a3899779
+
+Package: tiff
+Source: CRAN
+Version: 0.1-5
+Hash: bff6221f2ff93a5e6ddaf4314f97251a
