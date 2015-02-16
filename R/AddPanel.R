@@ -1,0 +1,219 @@
+#' @importFrom assertive assert_has_all_attributes
+#' @importFrom assertive assert_is_inherited_from
+#' @importFrom assertive assert_is_a_string
+#' @importFrom assertive assert_all_are_readable_files
+#' @importFrom assertive assert_is_a_number
+#' @importFrom assertive assert_all_are_whole_numbers
+#' @importFrom assertive assert_all_are_in_range
+#' @importFrom assertive assert_all_are_true
+#' @importFrom png readPNG
+#' @importFrom tiff readTIFF
+#' @examples
+#' # Create the figure layout
+#' require(gtable)
+#' Figure <- MultiPanelFigure(
+#'   widths = c(20,30,30),
+#'   heights = c(40,60,60),
+#'   figureName = "Figure")
+#' gtable_show_layout(Figure)
+#' # All panels are free
+#' attr(Figure,"MultiPanelFigure.panelsFree")
+#'
+#' # Make a simple ggplot object to fill panels
+#' require(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg))
+#' p <- p + geom_point()
+#'
+#' # Fill a first panel using the ggplot object directly
+#' Figure <- AddPanel(p, Figure, topPanel = 1, leftPanel = 2)
+#' grid.draw(Figure)
+#' # One panel is occupied
+#' attr(Figure,"MultiPanelFigure.panelsFree")
+#'
+#' # Write the ggplot object to a temporary *.png, re-read and use it
+#' # horizontally spanning 2 panels
+#' require(png)
+#' tmpFile <- tempfile(fileext = ".png")
+#' ggsave(
+#'   filename = tmpFile,
+#'   plot = p,
+#'   width = 55,
+#'   height = 60,
+#'   units = "mm",
+#'   dpi = 300)
+#' Figure <- AddPanel(
+#'     tmpFile,
+#'     Figure,
+#'     topPanel = 2,
+#'     leftPanel = 1,
+#'     rightPanel = 2)
+#' grid.draw(Figure)
+#' # Three panels are occupied
+#' attr(Figure,"MultiPanelFigure.panelsFree")
+#'
+#' # Write the ggplot object to a temporary *.tif, re-read and use it
+#' # vertically spanning 2 panels
+#' require(tiff)
+#' tmpFile <- tempfile(fileext = ".tiff")
+#' ggsave(
+#'   filename = tmpFile,
+#'   plot = p,
+#'   width = 30,
+#'   height = 125,
+#'   units = "mm",
+#'   dpi = 300)
+#' Figure <- AddPanel(
+#'   tmpFile,
+#'   Figure,
+#'   topPanel = 2,
+#'   bottomPanel = 3,
+#'   leftPanel = 3)
+#' grid.draw(Figure)
+#' # Five panels are occupied
+#' attr(Figure,"MultiPanelFigure.panelsFree")
+AddPanel <- function(
+  panel,
+  figure,
+  topPanel = 1,
+  bottomPanel = topPanel,
+  leftPanel = 1,
+  rightPanel = leftPanel,
+  panelLabel = head(attr(figure, "MultiPanelFigure.panelNamesFree"),1))
+{
+  ####################################################
+  # Check prerequisites & transform objects to grobs #
+  ####################################################
+
+  assert_has_all_attributes(
+    figure,
+    attrs = c(
+      "MultiPanelFigure.panelsFree",
+      "MultiPanelFigure.panelNamesFree",
+      "MultiPanelFigure.unit"))
+  assert_is_inherited_from(figure, classes = "gtable")
+
+  if(is.character(panel)){
+    assert_is_a_string(panel)
+    assert_all_are_readable_files(panel)
+    if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = panel)){
+      panel <- readPNG(panel, info = TRUE)
+      panelDim <- attr(panel, "info")[["dim"]]
+      panelDpi <- attr(panel, "info")[["dpi"]]
+      panelSize <- unit(x = panelDim/panelDpi,units = "inches")
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.unit"))
+      panel <- rasterGrob(
+        panel,
+        x = 0, y = 1,
+        width = panelSize[1],
+        height = panelSize[2],
+        just = c("left","top"))
+    } else if(grepl(pattern = "\\.ti[f]{1,2}$", ignore.case = TRUE, x = panel)){
+      panel <- readTIFF(panel, info = TRUE)
+      panelDim <- c(ncol(panel), nrow(panel))
+      if(!identical(
+        attr(panel, "x.resolution"),
+        attr(panel, "y.resolution")))
+      {
+        warning("Non-identical x/y resolutions.")
+      }
+      panelDpi <- attr(panel, "x.resolution")
+      panelSize <- unit(x = panelDim/panelDpi, units = "inches")
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.unit"))
+      panel <- rasterGrob(
+        panel,
+        x = 0, y = 1,
+        width = panelSize[1],
+        height = panelSize[2],
+        just = c("left","top"))
+    } else {
+      stop("unsupported file format.")
+    }
+  } else if(inherits(x = panel, what = "ggplot")){
+    panel <- ggplotGrob(panel)
+  } else {
+    stop("\'panel\' is nt supported.")
+  }
+
+  rows <- nrow(attr(figure,which = "MultiPanelFigure.panelsFree"))
+  columns <- ncol(attr(figure,which = "MultiPanelFigure.panelsFree"))
+
+  assert_is_a_number(topPanel)
+  assert_all_are_whole_numbers(topPanel)
+  assert_all_are_in_range(x = topPanel, lower = 1, upper = rows)
+  assert_all_are_true(topPanel <= bottomPanel)
+
+  assert_is_a_number(bottomPanel)
+  assert_all_are_whole_numbers(bottomPanel)
+  assert_all_are_in_range(x = topPanel, lower = 1, upper = rows)
+  assert_all_are_true(bottomPanel >= topPanel)
+
+  assert_is_a_number(leftPanel)
+  assert_all_are_whole_numbers(leftPanel)
+  assert_all_are_in_range(x = leftPanel, lower = 1, upper = columns)
+  assert_all_are_true(leftPanel <= rightPanel)
+
+  assert_is_a_number(rightPanel)
+  assert_all_are_whole_numbers(rightPanel)
+  assert_all_are_in_range(x = rightPanel, lower = 1, upper = columns)
+  assert_all_are_true(rightPanel >= leftPanel)
+
+  # Are the targeted panels free?
+  tmpMatrix <- matrix(TRUE, nrow = rows, ncol = columns)
+  tmpMatrix[
+    seq(from=topPanel, to= bottomPanel),
+    seq(from=leftPanel,to=rightPanel)] <- FALSE
+  tmpMatrix <- attr(figure,which = "MultiPanelFigure.panelsFree") + tmpMatrix
+  if(all(tmpMatrix[
+    seq(from=topPanel, to= bottomPanel),
+    seq(from=leftPanel,to=rightPanel)] == 1))
+  {
+    attr(figure,which = "MultiPanelFigure.panelsFree")[
+      seq(from=topPanel, to= bottomPanel),
+      seq(from=leftPanel,to=rightPanel)] <- FALSE
+  } else {
+    stop("Attempt to use already filled panel. Check \'attr(figure,which = \"MultiPanelFigure.panelsFree\")\'.")
+  }
+
+  assert_is_a_string(panelLabel)
+
+  ##############
+  # Processing #
+  ##############
+  # Get the "real" spans (including inter-panel spaces)
+  placing <- c(topPanel, bottomPanel, leftPanel, rightPanel)
+  names(placing) <- c("topPanel", "bottomPanel", "leftPanel", "rightPanel")
+  placing <- sapply(
+    placing,
+    function(pl){
+      if(pl == 1){
+        return(1)
+      } else {
+        return(pl + pl - 1)
+      }
+    })
+  # Add panel label
+  panelLabel <- grid.text(
+    label = panelLabel,
+    x = 0, y = 1,
+    hjust = unit(0, "mm"),
+    vjust = unit(1, "mm"),
+    draw = FALSE)
+  panel <- gTree(children=gList(panel, panelLabel))
+  # Add grob to gtable
+  figure <- gtable_add_grob(
+    figure,
+    grobs = panel,
+    t = placing[["topPanel"]],
+    b = placing[["bottomPanel"]],
+    l = placing[["leftPanel"]],
+    r = placing[["rightPanel"]])
+  # Fix attributes
+  attr(figure , "MultiPanelFigure.panelNamesFree") <- tail(
+    x = attr(figure , "MultiPanelFigure.panelNamesFree"),
+    n = -1)
+  attr(figure , "MultiPanelFigure.panelNamesFree") <- head(
+    x = attr(figure , "MultiPanelFigure.panelNamesFree"),
+    n = sum(attr(figure , "MultiPanelFigure.panelsFree")))
+  # Return
+  return(figure)
+}
