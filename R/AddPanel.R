@@ -78,7 +78,7 @@ AddPanel <- function(
   bottomPanel = topPanel,
   leftPanel = 1,
   rightPanel = leftPanel,
-  panelLabel = head(attr(figure, "MultiPanelFigure.panelNamesFree"),1))
+  panelLabel = head(attr(figure, "MultiPanelFigure.panelLabelsFree"),1))
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -88,7 +88,7 @@ AddPanel <- function(
     figure,
     attrs = c(
       "MultiPanelFigure.panelsFree",
-      "MultiPanelFigure.panelNamesFree",
+      "MultiPanelFigure.panelLabelsFree",
       "MultiPanelFigure.unit"))
   assert_is_inherited_from(figure, classes = "gtable")
 
@@ -208,11 +208,11 @@ AddPanel <- function(
     l = placing[["leftPanel"]],
     r = placing[["rightPanel"]])
   # Fix attributes
-  attr(figure , "MultiPanelFigure.panelNamesFree") <- tail(
-    x = attr(figure , "MultiPanelFigure.panelNamesFree"),
+  attr(figure , "MultiPanelFigure.panelLabelsFree") <- tail(
+    x = attr(figure , "MultiPanelFigure.panelLabelsFree"),
     n = -1)
-  attr(figure , "MultiPanelFigure.panelNamesFree") <- head(
-    x = attr(figure , "MultiPanelFigure.panelNamesFree"),
+  attr(figure , "MultiPanelFigure.panelLabelsFree") <- head(
+    x = attr(figure , "MultiPanelFigure.panelLabelsFree"),
     n = sum(attr(figure , "MultiPanelFigure.panelsFree")))
   # Return
   return(figure)

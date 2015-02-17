@@ -37,7 +37,7 @@ MultiPanelFigure <- function(
   interPanelSpacing = 5,
   unit = "mm",
   figureName = "FigureX",
-  panelNames = LETTERS)
+  panelLabels = LETTERS)
 {
   #######################
   # Check Prerequisites #
@@ -90,8 +90,8 @@ MultiPanelFigure <- function(
   assert_is_a_string(unit)
   grid:::valid.units(units = unit)
 
-  assert_is_character(panelNames)
-  assert_all_are_true(length(columns) * length(rows) <= length(panelNames))
+  assert_is_character(panelLabels)
+  assert_all_are_true(length(columns) * length(rows) <= length(panelLabels))
 
   ####################
   # Construct gtable #
@@ -120,7 +120,7 @@ MultiPanelFigure <- function(
       data = TRUE,
       ncol = columns,
       nrow = rows),
-    panelNamesFree = panelNames[seq(columns * rows)],
+    panelLabelsFree = panelLabels[seq(columns * rows)],
     unit = unit)
   attributes(tmpGTable) <- c(attributes(tmpGTable),"MultiPanelFigure"=MultiPanelFigure)
   return(tmpGTable)
