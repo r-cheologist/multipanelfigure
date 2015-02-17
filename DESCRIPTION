@@ -11,7 +11,10 @@ Description: tools to create the layout of multipanel figures and fill the
   panels.
 Imports:
   assertive (>= 0.2-1),
-  gtable (>= 0.1.2)
+  ggplot2 (>= 1.0.0),
+  gtable (>= 0.1.2),
+  png (>= 0.1-7),
+  tiff (>= 0.1-5)
 Suggest:
   roxygen2 (>= 4.1.0)
 License: GPL (>= 3)
