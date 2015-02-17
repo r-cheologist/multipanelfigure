@@ -1,3 +1,76 @@
+#' @title MultiPanelFigure
+#' @description A convenience function building \code{\link[gtable]{gtable}}-based
+#' infrastructure for the assembly of multipanel figures.
+#' @details The \code{\link[gtable]{gtable}} may be constructed in two ways:
+#' \enumerate{
+#'   \item{Based on explicit width/heigth definitions for individual panels
+#'     handed to it via \code{widths} and \code{heights}.}
+#'   \item{Based on total figure/\code{\link[gtable]{gtable}} dimensions given by
+#'     \code{width} and \code{height} together with the number of \code{columns}
+#'     and \code{rows} requested.}}
+#' The function automatically inserts whitespace of width
+#' \code{interPanelSpacing} between panels, which has to be considered for the
+#' total dimesnions of the resulting \code{\link[gtable]{gtable}}. Width of the
+#' \code{\link[gtable]{gtable}} in the former case, for example may be calculated
+#' \eqn{W[total] = sum(widths) + (length(widths) - 1) * interPanelSpacing}
+#' while width of resulting panels in the latter table construction approach may
+#' be calculated
+#' \eqn{W[panel] = (width - (columns - 1) * interPanelSpacing)/columns}
+#'
+#' The two approaches to \code{\link[gtable]{gtable}} construction require mutually
+#' exclusive parameter sets:
+#' \describe{
+#'   \item{Individual definition of panel dimensions:}{Requires \code{widths} and
+#'     \code{heights}. Excludes the use of \code{width}, \code{columns},
+#'     \code{heights} and \code{rows}.}
+#'   \item{Definition of global \code{\link[gtable]{gtable}}/figure dimensions:}{
+#'     Requires\code{width}, \code{columns}, \code{heights} and \code{rows}.
+#'     Excludes the use of \code{widths} and \code{heights}.}}
+#' @param width Single \code{link{numeric}} defining the width of the resulting
+#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
+#' dependend and interfering parameters.
+#' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
+#' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
+#' depending on \code{unit}). See 'Details' for dependend and
+#' interfering parameters.
+#' @param columns Single \code{\link{numeric}} defining the number of columns in
+#' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
+#' interfering parameters.
+#' @param height Single \code{link{numeric}} defining the height of the resulting
+#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
+#' dependend and interfering parameters.
+#' @param heights \code{\link{vector}} of \code{\link{numeric}}s defining the
+#' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
+#' depending on \code{unit}). See 'Details' for dependend and
+#' interfering parameters.
+#' @param rows Single \code{\link{numeric}} defining the number of rows in
+#' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
+#' interfering parameters.
+#' @param interPanelSpacing The amount of white space automatically inserted
+#' between panels (unit depending on \code{unit}).
+#' @param unit Single \code{\link{character}} object defining the unit of all
+#' dimensions defined. Must satisfy \code{grid:::valid.units}.
+#' @param figureName Single \code{\link{character}} object defining the name of
+#' the resulting \code{\link[gtable]{gtable}}.
+#' @param panelLabels A \code{\link{character}} \code{\link{vector}} defining
+#' the panel labels used for automated annotation. \code{\link{length}} must be
+#' larger or equal to the number of panels defined. Will be used sequentially.
+#' @return Returns a \code{\link[gtable]{gtable}} object with the following additional
+#' attribute:
+#' \describe{
+#'   \item{\code{MultiPanelFigure.panelsFree}:}{A \code{\link{logical}}
+#'     \code{\link{matrix}} with the dimensions of the \code{\link[gtable]{gtable}}
+#'     indicating occupancy of the panels in the table.}
+#'   \item{\code{MultiPanelFigure.panelLabelsFree}:}{A \code{\link{character}}
+#'     \code{\link{vector}} indicative of the \code{panelLabels} still available.}
+#'   \item{\code{MultiPanelFigure.unit}:}{A single \code{\link{character}}
+#'     object storing the corresponding value given during object creation.}}
+#' @author Johannes Graumann
+#' @importFrom assertive assert_is_a_bool
+#' @importFrom assertive assert_is_numeric
+#' @export
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{AddPanel}}
+#' @keywords hplot utilities
 #' @importFrom assertive assert_is_a_number
 #' @importFrom assertive assert_all_are_positive
 #' @importFrom assertive assert_is_a_string

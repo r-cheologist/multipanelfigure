@@ -1,3 +1,40 @@
+#' @title AddPanel
+#' @description A convenience function adding graphical objects to a
+#' \code{\link[gtable]{gtable}} constructed by \code{\link{MultiPanelFigure}}.
+#' @details Currently supported as panel-representing objects (\code{panel}) are
+#' \enumerate{
+#'   \item{\code{\link[ggplot2]{ggplot}} objects.}
+#'   \item{Single \code{\link{character}} objects representing paths to readable
+#'     portable network graphics (\code{*.png}) or tagged image file format
+#'     (\code{*.tiff}/\code{*.tif}) files, which will be read and placed into
+#'     panels as requested.}}
+#' Note that bitmaps (\code{*.png},\code{*.tiff}/\code{*.tif}) must be produced
+#' using the dimensions of the panle(s) they are to be placed in for sensible
+#' results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale.
+#' @param panel Single \code{\link{character}} object representing path to a
+#' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif}) or a
+#' \code{\link[ggplot2]{ggplot}} object to be placed in a multipanel figure.
+#' See 'Details'.
+#' @param figure \code{\link[gtable]{gtable}} object as produced by
+#' \code{\link{MultiPanelFigure}} and representing the figure the panel is to be
+#' placed in.
+#' @param topPanel Single \code{\link{numeric}} indicating the row index of
+#' the panel that is to be placed in the figure.
+#' @param bottomPanel Single \code{\link{numeric}} indicating the lower row
+#' index of the panel that is to be placed in the figure. Important for
+#' definition of panel spanning (see examples).
+#' @param leftPanel Single \code{\link{numeric}} indicating the column index
+#' of the panel that is to be placed in the figure.
+#' @param rightPanel Single \code{\link{numeric}} indicating the right column
+#' index of the panel that is to be placed in the figure. Important for
+#' definition of panel spanning (see examples).
+#' @param panelLabel Single \code{\link{character}} object defining the panel
+#' label used for automated annotation.
+#' @return Returns the \code{\link[gtable]{gtable}} object fed to it
+#' (\code{figure}) with the addition of the \code{panel}.
+#' @author Johannes Graumann
+#' @export
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{MultiPanelFigure}}
 #' @importFrom assertive assert_has_all_attributes
 #' @importFrom assertive assert_is_inherited_from
 #' @importFrom assertive assert_is_a_string
@@ -8,6 +45,14 @@
 #' @importFrom assertive assert_all_are_true
 #' @importFrom png readPNG
 #' @importFrom tiff readTIFF
+#' @importFrom grid unit
+#' @importFrom grid convertUnit
+#' @importFrom grid rasterGrob
+#' @importFrom grid grid.text
+#' @importFrom grid gTree
+#' @importFrom grid gList
+#' @importFrom ggplot2 ggplotGrob
+#' @importFrom gtable gtable_add_grob
 #' @examples
 #' # Create the figure layout
 #' require(gtable)
