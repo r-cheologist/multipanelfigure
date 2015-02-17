@@ -12,10 +12,10 @@
 #' \code{interPanelSpacing} between panels, which has to be considered for the
 #' total dimesnions of the resulting \code{\link[gtable]{gtable}}. Width of the
 #' \code{\link[gtable]{gtable}} in the former case, for example may be calculated
-#' \eqn{W[total] = sum(widths) + (length(widths) - 1) * interPanelSpacing}
+#' \deqn{W[total] = sum(widths) + (length(widths) - 1) * interPanelSpacing}
 #' while width of resulting panels in the latter table construction approach may
 #' be calculated
-#' \eqn{W[panel] = (width - (columns - 1) * interPanelSpacing)/columns}
+#' \deqn{W[panel] = (width - (columns - 1) * interPanelSpacing)/columns}
 #'
 #' The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 #' exclusive parameter sets:
