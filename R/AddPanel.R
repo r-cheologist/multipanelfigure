@@ -4,6 +4,7 @@
 #' @details Currently supported as panel-representing objects (\code{panel}) are
 #' \enumerate{
 #'   \item{\code{\link[ggplot2]{ggplot}} objects.}
+#'   \item{\code{\link[grid]{grob}} objects.}
 #'   \item{Single \code{\link{character}} objects representing paths to readable
 #'     portable network graphics (\code{*.png}), tagged image file format
 #'     (\code{*.tiff}/\code{*.tif}) or joint photographic experts group
@@ -17,8 +18,8 @@
 #' \code{*.jpg}/\code{*.jpeg}).
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
-#' \code{*.jpg}/\code{*.jpeg}) or a \code{\link[ggplot2]{ggplot}} object to be
-#' placed in a multipanel figure.
+#' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object or a
+#' \code{\link[grid]{grob}} object to be placed in a multipanel figure.
 #' See 'Details'.
 #' @param figure \code{\link[gtable]{gtable}} object as produced by
 #' \code{\link{MultiPanelFigure}} and representing the figure the panel is to be
@@ -211,6 +212,8 @@ AddPanel <- function(
     }
   } else if(inherits(x = panel, what = "ggplot")){
     panel <- ggplotGrob(panel)
+  } else if(inherits(x = panel, what = "grob")){
+    # pass - do nothing
   } else {
     stop("\'panel\' is nt supported.")
   }
