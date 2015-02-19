@@ -215,7 +215,7 @@ AddPanel <- function(
   } else if(inherits(x = panel, what = "grob")){
     # pass - do nothing
   } else {
-    stop("\'panel\' is nt supported.")
+    stop("Class of \'panel\' is not supported.")
   }
 
   rows <- nrow(attr(figure,which = "MultiPanelFigure.panelsFree"))
