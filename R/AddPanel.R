@@ -40,8 +40,8 @@
 #' @author Johannes Graumann
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{MultiPanelFigure}},
-#' \code{\link[tiff]{readTIFF}, \code{\link[png]{readPNG}},
-#' \code{\link[jpeg]{readJPEG}}}
+#' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
+#' \code{\link[jpeg]{readJPEG}}
 #' @importFrom assertive assert_has_all_attributes
 #' @importFrom assertive assert_is_inherited_from
 #' @importFrom assertive assert_is_a_string
