@@ -22,6 +22,11 @@ Source: CRAN
 Version: 0.2-1
 Hash: a2e2b6b00948be4d21e20c4a0ef5fe92
 
+Package: bmp
+Source: CRAN
+Version: 0.2
+Hash: 47572a223e67d8339cc5da64b841bfa3
+
 Package: brew
 Source: CRAN
 Version: 1.0-6
@@ -52,6 +57,11 @@ Package: gtable
 Source: CRAN
 Version: 0.1.2
 Hash: 0cf4a2b54c02b35dec7e74a8ebed12a0
+
+Package: jpeg
+Source: CRAN
+Version: 0.1-8
+Hash: 2a96df07e30724f8bb773e4f78c634c6
 
 Package: labeling
 Source: CRAN

@@ -5,15 +5,20 @@
 #' \enumerate{
 #'   \item{\code{\link[ggplot2]{ggplot}} objects.}
 #'   \item{Single \code{\link{character}} objects representing paths to readable
-#'     portable network graphics (\code{*.png}) or tagged image file format
-#'     (\code{*.tiff}/\code{*.tif}) files, which will be read and placed into
+#'     portable network graphics (\code{*.png}), tagged image file format
+#'     (\code{*.tiff}/\code{*.tif}) or joint photographic experts group
+#'     (\code{*.jpg}/\code{*.jpeg}) files, which will be read and placed into
 #'     panels as requested.}}
-#' Note that bitmaps (\code{*.png},\code{*.tiff}/\code{*.tif}) must be produced
+#' Note that \code{*.jpg}/\code{*.jpeg} files must be produced
 #' using the dimensions of the panle(s) they are to be placed in for sensible
-#' results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale.
+#' results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale and
+#' \code{*.tiff}/\code{*.tif}, as well as \code{*.png} files have their native
+#' sizes read out of the file (which isn't working for
+#' \code{*.jpg}/\code{*.jpeg}).
 #' @param panel Single \code{\link{character}} object representing path to a
-#' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif}) or a
-#' \code{\link[ggplot2]{ggplot}} object to be placed in a multipanel figure.
+#' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
+#' \code{*.jpg}/\code{*.jpeg}) or a \code{\link[ggplot2]{ggplot}} object to be
+#' placed in a multipanel figure.
 #' See 'Details'.
 #' @param figure \code{\link[gtable]{gtable}} object as produced by
 #' \code{\link{MultiPanelFigure}} and representing the figure the panel is to be
@@ -34,7 +39,9 @@
 #' (\code{figure}) with the addition of the \code{panel}.
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{MultiPanelFigure}}
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{MultiPanelFigure}},
+#' \code{\link[tiff]{readTIFF}, \code{\link[png]{readPNG}},
+#' \code{\link[jpeg]{readJPEG}}}
 #' @importFrom assertive assert_has_all_attributes
 #' @importFrom assertive assert_is_inherited_from
 #' @importFrom assertive assert_is_a_string
@@ -45,6 +52,7 @@
 #' @importFrom assertive assert_all_are_true
 #' @importFrom png readPNG
 #' @importFrom tiff readTIFF
+#' @importFrom jpeg readJPEG
 #' @importFrom grid unit
 #' @importFrom grid convertUnit
 #' @importFrom grid rasterGrob
@@ -70,9 +78,29 @@
 #' p <- p + geom_point()
 #'
 #' # Fill a first panel using the ggplot object directly
-#' Figure <- AddPanel(p, Figure, topPanel = 1, leftPanel = 2)
+#' Figure <- AddPanel(p, Figure, topPanel = 1, leftPanel = 1)
 #' grid.draw(Figure)
 #' # One panel is occupied
+#' attr(Figure,"MultiPanelFigure.panelsFree")
+#'
+#' # Write the ggplot object to a temporary *.jpg, re-read and use it
+#' # horizontally spanning 2 panels
+#' require(jpeg)
+#' tmpFile <- tempfile(fileext = ".jpg")
+#' ggsave(
+#'   filename = tmpFile,
+#'   plot = p,
+#'   width = 30,
+#'   height = 40,
+#'   units = "mm",
+#'   dpi = 300)
+#' Figure <- AddPanel(
+#'     tmpFile,
+#'     Figure,
+#'     topPanel = 1,
+#'     leftPanel = 2)
+#' grid.draw(Figure)
+#' # Two panels are occupied
 #' attr(Figure,"MultiPanelFigure.panelsFree")
 #'
 #' # Write the ggplot object to a temporary *.png, re-read and use it
@@ -93,7 +121,7 @@
 #'     leftPanel = 1,
 #'     rightPanel = 2)
 #' grid.draw(Figure)
-#' # Three panels are occupied
+#' # Four panels are occupied
 #' attr(Figure,"MultiPanelFigure.panelsFree")
 #'
 #' # Write the ggplot object to a temporary *.tif, re-read and use it
@@ -114,7 +142,7 @@
 #'   bottomPanel = 3,
 #'   leftPanel = 3)
 #' grid.draw(Figure)
-#' # Five panels are occupied
+#' # Six panels are occupied
 #' attr(Figure,"MultiPanelFigure.panelsFree")
 AddPanel <- function(
   panel,
@@ -170,6 +198,14 @@ AddPanel <- function(
         width = panelSize[1],
         height = panelSize[2],
         just = c("left","top"))
+    } else if(grepl(pattern = "\\.jp[e]*g$", ignore.case = TRUE, x = panel)){
+      panel <- readJPEG(panel)
+      panel <- rasterGrob(
+        panel,
+        x = 0, y = 1,
+        width = unit(1,"npc"),
+        height = unit(1, "npc"),
+        just = c("left", "top"))
     } else {
       stop("unsupported file format.")
     }
