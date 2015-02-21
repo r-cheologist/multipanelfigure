@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to assemble multipanle figures (from grobs)
-Version: 0.3.1
-Date: 2015-02-19
+Version: 0.4.0
+Date: 2015-02-21
 Author: Johannes Graumann
 Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
 Authors@R: c(person("Johannes", "Graumann", email =
@@ -14,6 +14,7 @@ Imports:
   ggplot2 (>= 1.0.0),
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
+  lattice (>= 0.20-29),
   png (>= 0.1-7),
   tiff (>= 0.1-5)
 Suggest:

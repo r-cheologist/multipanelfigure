@@ -68,6 +68,11 @@ Source: CRAN
 Version: 0.3
 Hash: 568a992912caf7eeddfb121924154047
 
+Package: lattice
+Source: CRAN
+Version: 0.20-29
+Hash: 17e9fe582d11197544a5ec817a80b21e
+
 Package: munsell
 Source: CRAN
 Version: 0.4.2

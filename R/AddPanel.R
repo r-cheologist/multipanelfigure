@@ -5,6 +5,7 @@
 #' \enumerate{
 #'   \item{\code{\link[ggplot2]{ggplot}} objects.}
 #'   \item{\code{\link[grid]{grob}} objects.}
+#'   \item{\code{\link[lattice]{trellis.object}} objects.}
 #'   \item{Single \code{\link{character}} objects representing paths to readable
 #'     portable network graphics (\code{*.png}), tagged image file format
 #'     (\code{*.tiff}/\code{*.tif}) or joint photographic experts group
@@ -16,11 +17,14 @@
 #' \code{*.tiff}/\code{*.tif}, as well as \code{*.png} files have their native
 #' sizes read out of the file (which isn't working for
 #' \code{*.jpg}/\code{*.jpeg}).
+#' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted to
+#' \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of which
+#' with respect to plot formatting are not well studied.
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
-#' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object or a
-#' \code{\link[grid]{grob}} object to be placed in a multipanel figure.
-#' See 'Details'.
+#' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object , a
+#' \code{\link[lattice]{trellis.object}} or a \code{\link[grid]{grob}} object
+#' to be placed in a multipanel figure. See 'Details'.
 #' @param figure \code{\link[gtable]{gtable}} object as produced by
 #' \code{\link{MultiPanelFigure}} and representing the figure the panel is to be
 #' placed in.
@@ -60,6 +64,7 @@
 #' @importFrom grid grid.text
 #' @importFrom grid gTree
 #' @importFrom grid gList
+#' @importFrom grid grid.grabExpr
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom gtable gtable_add_grob
 #' @examples
@@ -145,6 +150,20 @@
 #' grid.draw(Figure)
 #' # Six panels are occupied
 #' attr(Figure,"MultiPanelFigure.panelsFree")
+#'
+#' # Incorporate a lattice/trellis object
+#' require(lattice)
+#' Depth <- equal.count(quakes$depth, number=8, overlap=.1)
+#' latticePlot_trellis <- xyplot(lat ~ long | Depth, data = quakes)
+#' Figure <- AddPanel(
+#'   latticePlot_trellis,
+#'   Figure,
+#'   topPanel = 3,
+#'   leftPanel = 1,
+#'   rightPanel = 2)
+#' grid.draw(Figure)
+#' # Eight panels are occupied
+#' attr(Figure,"MultiPanelFigure.panelsFree")
 AddPanel <- function(
   panel,
   figure,
@@ -214,6 +233,8 @@ AddPanel <- function(
     panel <- ggplotGrob(panel)
   } else if(inherits(x = panel, what = "grob")){
     # pass - do nothing
+  } else if (inherits(x = panel, what = "trellis")){
+    panel <- grid.grabExpr(print(panel))
   } else {
     stop("Class of \'panel\' is not supported.")
   }
