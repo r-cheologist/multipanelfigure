@@ -47,7 +47,8 @@
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 #' interfering parameters.
 #' @param interPanelSpacing The amount of white space automatically inserted
-#' between panels (units depending on \code{units}).
+#' between panels. Defaults to \code{5 mm} unless explicitly given, in which
+#' case the value depents on the \code{units} parameter.
 #' @param units Single \code{\link{character}} object defining the units of all
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
 #' @param figureName Single \code{\link{character}} object defining the name of
@@ -107,7 +108,7 @@ MultiPanelFigure <- function(
   height = NULL,
   heights = NULL,
   rows = NULL,
-  interPanelSpacing = 5,
+  interPanelSpacing = NaN,
   units = "mm",
   figureName = "FigureX",
   panelLabels = LETTERS)
@@ -116,6 +117,11 @@ MultiPanelFigure <- function(
   # Check Prerequisites #
   #######################
   assert_is_a_number(interPanelSpacing)
+  if(is.nan(interPanelSpacing)){
+    interPanelSpacing <- unit(x = 5, units = "mm")
+    interPanelSpacing <- convertUnit(interPanelSpacing,unitTo = units)
+    interPanelSpacing <- as.numeric(interPanelSpacing)
+  }
   assert_all_are_positive(interPanelSpacing)
 
   assert_is_a_string(figureName)
