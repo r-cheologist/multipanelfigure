@@ -182,7 +182,7 @@ AddPanel <- function(
     attrs = c(
       "MultiPanelFigure.panelsFree",
       "MultiPanelFigure.panelLabelsFree",
-      "MultiPanelFigure.unit"))
+      "MultiPanelFigure.units"))
   assert_is_inherited_from(figure, classes = "gtable")
 
   if(is.character(panel)){
@@ -193,7 +193,7 @@ AddPanel <- function(
       panelDim <- attr(panel, "info")[["dim"]]
       panelDpi <- attr(panel, "info")[["dpi"]]
       panelSize <- unit(x = panelDim/panelDpi,units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.unit"))
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.units"))
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -211,7 +211,7 @@ AddPanel <- function(
       }
       panelDpi <- attr(panel, "x.resolution")
       panelSize <- unit(x = panelDim/panelDpi, units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.unit"))
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.units"))
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,

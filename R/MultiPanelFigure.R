@@ -27,28 +27,28 @@
 #'     Requires\code{width}, \code{columns}, \code{heights} and \code{rows}.
 #'     Excludes the use of \code{widths} and \code{heights}.}}
 #' @param width Single \code{link{numeric}} defining the width of the resulting
-#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
+#' \code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
 #' dependend and interfering parameters.
 #' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
-#' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
-#' depending on \code{unit}). See 'Details' for dependend and
+#' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (units
+#' depending on \code{units}). See 'Details' for dependend and
 #' interfering parameters.
 #' @param columns Single \code{\link{numeric}} defining the number of columns in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 #' interfering parameters.
 #' @param height Single \code{link{numeric}} defining the height of the resulting
-#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
+#' \code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
 #' dependend and interfering parameters.
 #' @param heights \code{\link{vector}} of \code{\link{numeric}}s defining the
-#' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
-#' depending on \code{unit}). See 'Details' for dependend and
+#' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (units
+#' depending on \code{units}). See 'Details' for dependend and
 #' interfering parameters.
 #' @param rows Single \code{\link{numeric}} defining the number of rows in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 #' interfering parameters.
 #' @param interPanelSpacing The amount of white space automatically inserted
-#' between panels (unit depending on \code{unit}).
-#' @param unit Single \code{\link{character}} object defining the unit of all
+#' between panels (units depending on \code{units}).
+#' @param units Single \code{\link{character}} object defining the units of all
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
 #' @param figureName Single \code{\link{character}} object defining the name of
 #' the resulting \code{\link[gtable]{gtable}}.
@@ -63,7 +63,7 @@
 #'     indicating occupancy of the panels in the table.}
 #'   \item{\code{MultiPanelFigure.panelLabelsFree}:}{A \code{\link{character}}
 #'     \code{\link{vector}} indicative of the \code{panelLabels} still available.}
-#'   \item{\code{MultiPanelFigure.unit}:}{A single \code{\link{character}}
+#'   \item{\code{MultiPanelFigure.units}:}{A single \code{\link{character}}
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @importFrom assertive assert_is_a_bool
@@ -108,7 +108,7 @@ MultiPanelFigure <- function(
   heights = NULL,
   rows = NULL,
   interPanelSpacing = 5,
-  unit = "mm",
+  units = "mm",
   figureName = "FigureX",
   panelLabels = LETTERS)
 {
@@ -160,8 +160,8 @@ MultiPanelFigure <- function(
     height <- sum(heights) + interPanelSpacing * (rows - 1)
   }
 
-  assert_is_a_string(unit)
-  grid:::valid.units(units = unit)
+  assert_is_a_string(units)
+  grid:::valid.units(units = units)
 
   assert_is_character(panelLabels)
   assert_all_are_true(length(columns) * length(rows) <= length(panelLabels))
@@ -171,20 +171,20 @@ MultiPanelFigure <- function(
   ####################
   # Basic layout
   tmpGTable <- gtable(
-    widths = unit(x = widths, units = unit),
-    heights = unit(x = heights, units = unit),
+    widths = unit(x = widths, units = units),
+    heights = unit(x = heights, units = units),
     name = figureName)
   # add interpanel space
   tmpGTable <- gtable_add_col_space(
     x = tmpGTable,
     width = unit(
       x = interPanelSpacing,
-      units = unit))
+      units = units))
   tmpGTable <- gtable_add_row_space(
     x = tmpGTable,
     height = unit(
       x = interPanelSpacing,
-      units = unit))
+      units = units))
   ##########################
   # Prep and return output #
   ##########################
@@ -194,7 +194,7 @@ MultiPanelFigure <- function(
       ncol = columns,
       nrow = rows),
     panelLabelsFree = panelLabels[seq(columns * rows)],
-    unit = unit)
+    units = units)
   attributes(tmpGTable) <- c(attributes(tmpGTable),"MultiPanelFigure"=MultiPanelFigure)
   return(tmpGTable)
 }
