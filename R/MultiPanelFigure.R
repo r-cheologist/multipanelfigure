@@ -116,6 +116,9 @@ MultiPanelFigure <- function(
   #######################
   # Check Prerequisites #
   #######################
+  assert_is_a_string(units)
+  grid:::valid.units(units = units)
+
   assert_is_a_number(interPanelSpacing)
   if(is.nan(interPanelSpacing)){
     interPanelSpacing <- unit(x = 5, units = "mm")
@@ -165,9 +168,6 @@ MultiPanelFigure <- function(
     rows <- length(heights)
     height <- sum(heights) + interPanelSpacing * (rows - 1)
   }
-
-  assert_is_a_string(units)
-  grid:::valid.units(units = units)
 
   assert_is_character(panelLabels)
   assert_all_are_true(length(columns) * length(rows) <= length(panelLabels))
