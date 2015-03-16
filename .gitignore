@@ -1,6 +1,8 @@
 packrat/lib*/
+.settings
+.project
 .Rproj.user
 NAMESPACE
-man/*
+man
 .Rhistory
 packrat/src/
