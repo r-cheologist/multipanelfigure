@@ -70,7 +70,8 @@
 #' @importFrom assertive assert_is_a_bool
 #' @importFrom assertive assert_is_numeric
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{AddPanel}}
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{AddPanel}},
+#' \code{\link{simpleGrobWidth}}, \code{\link{simpleGrobHeight}}
 #' @keywords hplot utilities
 #' @importFrom assertive assert_is_a_number
 #' @importFrom assertive assert_all_are_positive
@@ -101,6 +102,16 @@
 #'    heights = c(40,60),
 #'    figureName = "Figure2")
 #' gtable_show_layout(Figure2)
+#'
+#' \dontrun{
+#' usedUnits <- "in"
+#' png(
+#'   filename = tempfile(),
+#'   width = simpleGrobWidth(Figure2, unitTo = usedUnits),
+#'   height = simpleGrobHeight(Figure2, unitTo = usedUnits),
+#'   units = usedUnits)
+#' grid.draw(Figure2)
+#' dev.off()}
 MultiPanelFigure <- function(
   width = NULL,
   widths = NULL,

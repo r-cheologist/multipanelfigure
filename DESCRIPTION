@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to assemble multipanle figures (from grobs)
-Version: 0.4.4
-Date: 2015-03-12
+Version: 0.5.0
+Date: 2015-03-17
 Author: Johannes Graumann
 Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
 Authors@R: c(person("Johannes", "Graumann", email =
