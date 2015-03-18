@@ -11,7 +11,7 @@ Description: Tools to create a layout for multipanel figures and fill the
   panels.
 Imports:
   assertive (>= 0.2-1),
-  ggplot2 (>= 1.0.0),
+  ggplot2 (>= 1.0.1),
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
   lattice (>= 0.20-30),

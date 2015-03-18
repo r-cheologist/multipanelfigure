@@ -49,8 +49,8 @@ Hash: 89dc4c8734dad5322bb3c5c2af09056f
 
 Package: ggplot2
 Source: CRAN
-Version: 1.0.0
-Hash: c8bff66238347472f08b6a35608539ff
+Version: 1.0.1
+Hash: 06a8e5faacfd76c9e4ab11a5b7ad94d6
 Requires: digest, gtable, plyr, proto, reshape2, scales
 
 Package: gtable
