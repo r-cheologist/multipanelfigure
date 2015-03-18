@@ -88,7 +88,7 @@
 #' @importFrom gtable gtable_add_row_space
 #' @examples
 #' library(gtable)
-#'
+#' # Figure construction based on overall dimensions
 #' Figure1 <- MultiPanelFigure(
 #'    width = 100,
 #'    columns = 4,
@@ -97,21 +97,34 @@
 #'    figureName = "Figure1")
 #' gtable_show_layout(Figure1)
 #'
+#' # Figure construction based on individual panel dimensions
 #' Figure2 <- MultiPanelFigure(
 #'    widths = c(20,30),
 #'    heights = c(40,60),
 #'    figureName = "Figure2")
 #' gtable_show_layout(Figure2)
 #'
-#' \dontrun{
+#' # A more involved example including filling and printing to device ...
+#' ## Make a simple ggplot object to fill panels
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg))
+#' p <- p + geom_point()
+#' ## Fill panels
+#' Figure2 <- AddPanel(p, Figure2, topPanel = 1, leftPanel = 2)
+#' Figure2 <- AddPanel(p, Figure2, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' ## Plot to appropriately sized png device
+#' tmpFile <- tempfile(fileext = ".png")
 #' usedUnits <- "in"
 #' png(
-#'   filename = tempfile(),
+#'   filename = tmpFile,
 #'   width = simpleGrobWidth(Figure2, unitTo = usedUnits),
 #'   height = simpleGrobHeight(Figure2, unitTo = usedUnits),
-#'   units = usedUnits)
+#'   units = usedUnits,
+#'   res = 300)
 #' grid.draw(Figure2)
-#' dev.off()}
+#' dev.off()
+#' message(
+#'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 MultiPanelFigure <- function(
   width = NULL,
   widths = NULL,
