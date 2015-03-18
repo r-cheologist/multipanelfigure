@@ -1,4 +1,5 @@
-#' @title MultiPanelFigure
+#' @title multipanelfigure
+#' @aliases multipanelfigure
 #' @description A convenience function building \code{\link[gtable]{gtable}}-based
 #' infrastructure for the assembly of multipanel figures.
 #' @details The \code{\link[gtable]{gtable}} may be constructed in two ways:
@@ -59,19 +60,19 @@
 #' @return Returns a \code{\link[gtable]{gtable}} object with the following additional
 #' attribute:
 #' \describe{
-#'   \item{\code{MultiPanelFigure.panelsFree}:}{A \code{\link{logical}}
+#'   \item{\code{multipanelfigure.panelsFree}:}{A \code{\link{logical}}
 #'     \code{\link{matrix}} with the dimensions of the \code{\link[gtable]{gtable}}
 #'     indicating occupancy of the panels in the table.}
-#'   \item{\code{MultiPanelFigure.panelLabelsFree}:}{A \code{\link{character}}
+#'   \item{\code{multipanelfigure.panelLabelsFree}:}{A \code{\link{character}}
 #'     \code{\link{vector}} indicative of the \code{panelLabels} still available.}
-#'   \item{\code{MultiPanelFigure.units}:}{A single \code{\link{character}}
+#'   \item{\code{multipanelfigure.units}:}{A single \code{\link{character}}
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @importFrom assertive assert_is_a_bool
 #' @importFrom assertive assert_is_numeric
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{AddPanel}},
-#' \code{\link{simpleGrobWidth}}, \code{\link{simpleGrobHeight}}
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{addpanel}},
+#' \code{\link{simplegrobwidth}}, \code{\link{simplegrobheight}}
 #' @keywords hplot utilities
 #' @importFrom assertive assert_is_a_number
 #' @importFrom assertive assert_all_are_positive
@@ -89,7 +90,7 @@
 #' @examples
 #' library(gtable)
 #' # Figure construction based on overall dimensions
-#' Figure1 <- MultiPanelFigure(
+#' Figure1 <- multipanelfigure(
 #'    width = 100,
 #'    columns = 4,
 #'    height = 100,
@@ -98,7 +99,7 @@
 #' gtable_show_layout(Figure1)
 #'
 #' # Figure construction based on individual panel dimensions
-#' Figure2 <- MultiPanelFigure(
+#' Figure2 <- multipanelfigure(
 #'    widths = c(20,30),
 #'    heights = c(40,60),
 #'    figureName = "Figure2")
@@ -110,22 +111,22 @@
 #' p <- ggplot(mtcars, aes(wt, mpg))
 #' p <- p + geom_point()
 #' ## Fill panels
-#' Figure2 <- AddPanel(p, Figure2, topPanel = 1, leftPanel = 2)
-#' Figure2 <- AddPanel(p, Figure2, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' Figure2 <- addpanel(p, Figure2, topPanel = 1, leftPanel = 2)
+#' Figure2 <- addpanel(p, Figure2, topPanel = 2, leftPanel = 1, rightPanel = 2)
 #' ## Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
 #' usedUnits <- "in"
 #' png(
 #'   filename = tmpFile,
-#'   width = simpleGrobWidth(Figure2, unitTo = usedUnits),
-#'   height = simpleGrobHeight(Figure2, unitTo = usedUnits),
+#'   width = simplegrobwidth(Figure2, unitTo = usedUnits),
+#'   height = simplegrobheight(Figure2, unitTo = usedUnits),
 #'   units = usedUnits,
 #'   res = 300)
 #' grid.draw(Figure2)
 #' dev.off()
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
-MultiPanelFigure <- function(
+multipanelfigure <- function(
   width = NULL,
   widths = NULL,
   columns = NULL,
@@ -218,13 +219,13 @@ MultiPanelFigure <- function(
   ##########################
   # Prep and return output #
   ##########################
-  MultiPanelFigure <- list(
+  multipanelfigure <- list(
     panelsFree = matrix(
       data = TRUE,
       ncol = columns,
       nrow = rows),
     panelLabelsFree = panelLabels[seq(columns * rows)],
     units = units)
-  attributes(tmpGTable) <- c(attributes(tmpGTable),"MultiPanelFigure"=MultiPanelFigure)
+  attributes(tmpGTable) <- c(attributes(tmpGTable),"multipanelfigure"=multipanelfigure)
   return(tmpGTable)
 }

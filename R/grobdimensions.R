@@ -1,8 +1,8 @@
 #' @title Convenient Access to \code{grob} Dimensions
-#' @aliases simpleGrobHeight
-#' @aliases simpleGrobWidth
-#' @usage simpleGrobWidth(grob, unitTo = "mm")
-#' simpleGrobHeight(grob, unitTo = "mm")
+#' @aliases simplegrobheight
+#' @aliases simplegrobwidth
+#' @usage simplegrobwidth(grob, unitTo = "mm")
+#' simplegrobheight(grob, unitTo = "mm")
 #' @description Convenience functions extracting dimensions from
 #' \code{\link{grob}} objects.
 #' @param unitTo A single \code{\link{character}} string representing a valid
@@ -11,7 +11,7 @@
 #' retrieved.
 #' @return Single \code{\link{numeric}} objects are returned.
 #' @author Johannes Graumann
-#' @seealso \code{\link{MultiPanelFigure}}
+#' @seealso \code{\link{multipanelfigure}}
 #' @importFrom assertive assert_is_inherited_from
 #' @importFrom assertive assert_is_a_string
 #' @importFrom grid convertUnit
@@ -22,13 +22,13 @@
 #' testCircle <- circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
 #' grid.newpage()
 #' grid.draw(testCircle)
-#' simpleGrobHeight(testCircle)
-#' simpleGrobWidth(testCircle)
+#' simplegrobheight(testCircle)
+#' simplegrobwidth(testCircle)
 #'
-#' simpleGrobHeight(testCircle, unitTo = "in")
-#' simpleGrobWidth(testCircle, unitTo = "cm")
+#' simplegrobheight(testCircle, unitTo = "in")
+#' simplegrobwidth(testCircle, unitTo = "cm")
 #' @export
-simpleGrobWidth <- function(grob, unitTo = "mm"){
+simplegrobwidth <- function(grob, unitTo = "mm"){
   # Check prerequisites
   assert_is_inherited_from(x = grob, classes = "grob")
   assert_is_a_string(unitTo)
@@ -42,7 +42,7 @@ simpleGrobWidth <- function(grob, unitTo = "mm"){
 }
 
 #' @export
-simpleGrobHeight <- function(grob, unitTo = "mm"){
+simplegrobheight <- function(grob, unitTo = "mm"){
   # Check prerequisites
   assert_is_inherited_from(x = grob, classes = "grob")
   assert_is_a_string(unitTo)

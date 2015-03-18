@@ -1,6 +1,7 @@
-#' @title AddPanel
+#' @title addpanel
+#' @aliases addpanel
 #' @description A convenience function adding graphical objects to a
-#' \code{\link[gtable]{gtable}} constructed by \code{\link{MultiPanelFigure}}.
+#' \code{\link[gtable]{gtable}} constructed by \code{\link{multipanelfigure}}.
 #' @details Currently supported as panel-representing objects (\code{panel}) are
 #' \enumerate{
 #'   \item{\code{\link[ggplot2]{ggplot}} objects.}
@@ -26,7 +27,7 @@
 #' \code{\link[lattice]{trellis.object}} or a \code{\link[grid]{grob}} object
 #' to be placed in a multipanel figure. See 'Details'.
 #' @param figure \code{\link[gtable]{gtable}} object as produced by
-#' \code{\link{MultiPanelFigure}} and representing the figure the panel is to be
+#' \code{\link{multipanelfigure}} and representing the figure the panel is to be
 #' placed in.
 #' @param topPanel Single \code{\link{numeric}} indicating the row index of
 #' the panel that is to be placed in the figure.
@@ -44,7 +45,7 @@
 #' (\code{figure}) with the addition of the \code{panel}.
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{MultiPanelFigure}},
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{multipanelfigure}},
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
 #' \code{\link[jpeg]{readJPEG}}
 #' @importFrom assertive assert_has_all_attributes
@@ -70,13 +71,13 @@
 #' @examples
 #' # Create the figure layout
 #' require(gtable)
-#' Figure <- MultiPanelFigure(
+#' Figure <- multipanelfigure(
 #'   widths = c(20,30,30),
 #'   heights = c(40,60,60),
 #'   figureName = "Figure")
 #' gtable_show_layout(Figure)
 #' # All panels are free
-#' attr(Figure,"MultiPanelFigure.panelsFree")
+#' attr(Figure,"multipanelfigure.panelsFree")
 #'
 #' # Make a simple ggplot object to fill panels
 #' require(ggplot2)
@@ -84,10 +85,10 @@
 #' p <- p + geom_point()
 #'
 #' # Fill a first panel using the ggplot object directly
-#' Figure <- AddPanel(p, Figure, topPanel = 1, leftPanel = 1)
+#' Figure <- addpanel(p, Figure, topPanel = 1, leftPanel = 1)
 #' grid.draw(Figure)
 #' # One panel is occupied
-#' attr(Figure,"MultiPanelFigure.panelsFree")
+#' attr(Figure,"multipanelfigure.panelsFree")
 #'
 #' # Write the ggplot object to a temporary *.jpg, re-read and use it
 #' # horizontally spanning 2 panels
@@ -100,14 +101,14 @@
 #'   height = 40,
 #'   units = "mm",
 #'   dpi = 300)
-#' Figure <- AddPanel(
+#' Figure <- addpanel(
 #'     tmpFile,
 #'     Figure,
 #'     topPanel = 1,
 #'     leftPanel = 2)
 #' grid.draw(Figure)
 #' # Two panels are occupied
-#' attr(Figure,"MultiPanelFigure.panelsFree")
+#' attr(Figure,"multipanelfigure.panelsFree")
 #'
 #' # Write the ggplot object to a temporary *.png, re-read and use it
 #' # horizontally spanning 2 panels
@@ -120,7 +121,7 @@
 #'   height = 60,
 #'   units = "mm",
 #'   dpi = 300)
-#' Figure <- AddPanel(
+#' Figure <- addpanel(
 #'     tmpFile,
 #'     Figure,
 #'     topPanel = 2,
@@ -128,7 +129,7 @@
 #'     rightPanel = 2)
 #' grid.draw(Figure)
 #' # Four panels are occupied
-#' attr(Figure,"MultiPanelFigure.panelsFree")
+#' attr(Figure,"multipanelfigure.panelsFree")
 #'
 #' # Write the ggplot object to a temporary *.tif, re-read and use it
 #' # vertically spanning 2 panels
@@ -141,7 +142,7 @@
 #'   height = 125,
 #'   units = "mm",
 #'   dpi = 300)
-#' Figure <- AddPanel(
+#' Figure <- addpanel(
 #'   tmpFile,
 #'   Figure,
 #'   topPanel = 2,
@@ -149,13 +150,13 @@
 #'   leftPanel = 3)
 #' grid.draw(Figure)
 #' # Six panels are occupied
-#' attr(Figure,"MultiPanelFigure.panelsFree")
+#' attr(Figure,"multipanelfigure.panelsFree")
 #'
 #' # Incorporate a lattice/trellis object
 #' require(lattice)
 #' Depth <- equal.count(quakes$depth, number=8, overlap=.1)
 #' latticePlot_trellis <- xyplot(lat ~ long | Depth, data = quakes)
-#' Figure <- AddPanel(
+#' Figure <- addpanel(
 #'   latticePlot_trellis,
 #'   Figure,
 #'   topPanel = 3,
@@ -163,15 +164,15 @@
 #'   rightPanel = 2)
 #' grid.draw(Figure)
 #' # Eight panels are occupied
-#' attr(Figure,"MultiPanelFigure.panelsFree")
-AddPanel <- function(
+#' attr(Figure,"multipanelfigure.panelsFree")
+addpanel <- function(
   panel,
   figure,
   topPanel = 1,
   bottomPanel = topPanel,
   leftPanel = 1,
   rightPanel = leftPanel,
-  panelLabel = head(attr(figure, "MultiPanelFigure.panelLabelsFree"),1))
+  panelLabel = head(attr(figure, "multipanelfigure.panelLabelsFree"),1))
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -180,9 +181,9 @@ AddPanel <- function(
   assert_has_all_attributes(
     figure,
     attrs = c(
-      "MultiPanelFigure.panelsFree",
-      "MultiPanelFigure.panelLabelsFree",
-      "MultiPanelFigure.units"))
+      "multipanelfigure.panelsFree",
+      "multipanelfigure.panelLabelsFree",
+      "multipanelfigure.units"))
   assert_is_inherited_from(figure, classes = "gtable")
 
   if(is.character(panel)){
@@ -193,7 +194,7 @@ AddPanel <- function(
       panelDim <- attr(panel, "info")[["dim"]]
       panelDpi <- attr(panel, "info")[["dpi"]]
       panelSize <- unit(x = panelDim/panelDpi,units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.units"))
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -211,7 +212,7 @@ AddPanel <- function(
       }
       panelDpi <- attr(panel, "x.resolution")
       panelSize <- unit(x = panelDim/panelDpi, units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "MultiPanelFigure.units"))
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -239,8 +240,8 @@ AddPanel <- function(
     stop("Class of \'panel\' is not supported.")
   }
 
-  rows <- nrow(attr(figure,which = "MultiPanelFigure.panelsFree"))
-  columns <- ncol(attr(figure,which = "MultiPanelFigure.panelsFree"))
+  rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
+  columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
 
   assert_is_a_number(topPanel)
   assert_all_are_whole_numbers(topPanel)
@@ -267,16 +268,16 @@ AddPanel <- function(
   tmpMatrix[
     seq(from=topPanel, to= bottomPanel),
     seq(from=leftPanel,to=rightPanel)] <- FALSE
-  tmpMatrix <- attr(figure,which = "MultiPanelFigure.panelsFree") + tmpMatrix
+  tmpMatrix <- attr(figure,which = "multipanelfigure.panelsFree") + tmpMatrix
   if(all(tmpMatrix[
     seq(from=topPanel, to= bottomPanel),
     seq(from=leftPanel,to=rightPanel)] == 1))
   {
-    attr(figure,which = "MultiPanelFigure.panelsFree")[
+    attr(figure,which = "multipanelfigure.panelsFree")[
       seq(from=topPanel, to= bottomPanel),
       seq(from=leftPanel,to=rightPanel)] <- FALSE
   } else {
-    stop("Attempt to use already filled panel. Check \'attr(figure,which = \"MultiPanelFigure.panelsFree\")\'.")
+    stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
   }
 
   assert_is_a_string(panelLabel)
@@ -313,12 +314,12 @@ AddPanel <- function(
     l = placing[["leftPanel"]],
     r = placing[["rightPanel"]])
   # Fix attributes
-  attr(figure , "MultiPanelFigure.panelLabelsFree") <- tail(
-    x = attr(figure , "MultiPanelFigure.panelLabelsFree"),
+  attr(figure , "multipanelfigure.panelLabelsFree") <- tail(
+    x = attr(figure , "multipanelfigure.panelLabelsFree"),
     n = -1)
-  attr(figure , "MultiPanelFigure.panelLabelsFree") <- head(
-    x = attr(figure , "MultiPanelFigure.panelLabelsFree"),
-    n = sum(attr(figure , "MultiPanelFigure.panelsFree")))
+  attr(figure , "multipanelfigure.panelLabelsFree") <- head(
+    x = attr(figure , "multipanelfigure.panelLabelsFree"),
+    n = sum(attr(figure , "multipanelfigure.panelsFree")))
   # Return
   return(figure)
 }
