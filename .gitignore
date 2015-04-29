@@ -2,7 +2,5 @@ packrat/lib*/
 .settings
 .project
 .Rproj.user
-NAMESPACE
-man
 .Rhistory
 packrat/src/
