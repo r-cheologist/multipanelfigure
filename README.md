@@ -11,12 +11,12 @@ To install the package, you first need the
 install.packages("devtools")
 ```
 
-Then you can install the *comics* package using
+Then you can install the *multipanelfigure* package using
 
 ```{r}
 library(devtools)
 install_bitbucket(
-  "graumannlab/comics",
+  "graumannlab/multipanelfigure",
   auth_user = "your bitbucket username", 
   password  = "your bitbucket password"  
 )
