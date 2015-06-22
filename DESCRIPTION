@@ -10,13 +10,13 @@ Authors@R: c(person("Johannes", "Graumann", email =
 Description: Tools to create a layout for multipanel figures and fill the
   panels.
 Imports:
-  assertive (>= 0.2-1),
+  assertive (>= 0.2-4),
   ggplot2 (>= 1.0.1),
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
-  lattice (>= 0.20-30),
+  lattice (>= 0.20-31),
   png (>= 0.1-7),
   tiff (>= 0.1-5)
 Suggest:
-  roxygen2 (>= 4.1.0)
+  roxygen2 (>= 4.1.1)
 License: GPL (>= 3)
