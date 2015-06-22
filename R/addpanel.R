@@ -186,59 +186,7 @@ addpanel <- function(
       "multipanelfigure.units"))
   assert_is_inherited_from(figure, classes = "gtable")
 
-  if(is.character(panel)){
-    assert_is_a_string(panel)
-    assert_all_are_readable_files(panel)
-    if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = panel)){
-      panel <- readPNG(panel, info = TRUE)
-      panelDim <- attr(panel, "info")[["dim"]]
-      panelDpi <- attr(panel, "info")[["dpi"]]
-      panelSize <- unit(x = panelDim/panelDpi,units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
-      panel <- rasterGrob(
-        panel,
-        x = 0, y = 1,
-        width = panelSize[1],
-        height = panelSize[2],
-        just = c("left","top"))
-    } else if(grepl(pattern = "\\.ti[f]{1,2}$", ignore.case = TRUE, x = panel)){
-      panel <- readTIFF(panel, info = TRUE)
-      panelDim <- c(ncol(panel), nrow(panel))
-      if(!identical(
-        attr(panel, "x.resolution"),
-        attr(panel, "y.resolution")))
-      {
-        warning("Non-identical x/y resolutions.")
-      }
-      panelDpi <- attr(panel, "x.resolution")
-      panelSize <- unit(x = panelDim/panelDpi, units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
-      panel <- rasterGrob(
-        panel,
-        x = 0, y = 1,
-        width = panelSize[1],
-        height = panelSize[2],
-        just = c("left","top"))
-    } else if(grepl(pattern = "\\.jp[e]*g$", ignore.case = TRUE, x = panel)){
-      panel <- readJPEG(panel)
-      panel <- rasterGrob(
-        panel,
-        x = 0, y = 1,
-        width = unit(1,"npc"),
-        height = unit(1, "npc"),
-        just = c("left", "top"))
-    } else {
-      stop("unsupported file format.")
-    }
-  } else if(inherits(x = panel, what = "ggplot")){
-    panel <- ggplotGrob(panel)
-  } else if(inherits(x = panel, what = "grob")){
-    # pass - do nothing
-  } else if (inherits(x = panel, what = "trellis")){
-    panel <- grid.grabExpr(print(panel))
-  } else {
-    stop("Class of \'panel\' is not supported.")
-  }
+  panel <- makeGrob(panel)
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
@@ -322,4 +270,59 @@ addpanel <- function(
     n = sum(attr(figure , "multipanelfigure.panelsFree")))
   # Return
   return(figure)
+}
+
+makeGrob <- function(x){
+  if(is.character(x)){
+    assert_is_a_string(x)
+    assert_all_are_readable_files(x)
+    if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = x)){
+      panel <- readPNG(panel, info = TRUE)
+      panelDim <- attr(panel, "info")[["dim"]]
+      panelDpi <- attr(panel, "info")[["dpi"]]
+      panelSize <- unit(x = panelDim/panelDpi,units = "inches")
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
+      panel <- rasterGrob(
+        panel,
+        x = 0, y = 1,
+        width = panelSize[1],
+        height = panelSize[2],
+        just = c("left","top"))
+    } else if(grepl(pattern = "\\.ti[f]{1,2}$", ignore.case = TRUE, x = x)){
+      panel <- readTIFF(x, info = TRUE)
+      panelDim <- c(ncol(panel), nrow(panel))
+      if(!identical(
+        attr(panel, "x.resolution"),
+        attr(panel, "y.resolution")))
+      {
+        warning("Non-identical x/y resolutions.")
+      }
+      panelDpi <- attr(panel, "x.resolution")
+      panelSize <- unit(x = panelDim/panelDpi, units = "inches")
+      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
+      panel <- rasterGrob(
+        panel,
+        x = 0, y = 1,
+        width = panelSize[1],
+        height = panelSize[2],
+        just = c("left","top"))
+    } else if(grepl(pattern = "\\.jp[e]*g$", ignore.case = TRUE, x = x)){
+      panel <- readJPEG(x)
+      panel <- rasterGrob(
+        panel,
+        x = 0, y = 1,
+        width = unit(1,"npc"),
+        height = unit(1, "npc"),
+        just = c("left", "top"))
+    } else {
+      stop("unsupported file format.")
+    }
+  } else if(inherits(x = x, what = "ggplot")){
+  } else if(inherits(x = x, what = "grob")){
+    # pass - do nothing
+  } else if (inherits(x = x, what = "trellis")){
+    panel <- grid.grabExpr(print(x))
+  } else {
+    stop("Class of \'panel\' is not supported.")
+  }
 }
