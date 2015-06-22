@@ -68,12 +68,14 @@
 #' @importFrom grid grid.grabExpr
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom gtable gtable_add_grob
+#' @importFrom magrittr %>%
+#' @importFrom magrittr %T>%
 #' @examples
 #' # Create the figure layout
 #' require(gtable)
 #' Figure <- multipanelfigure(
 #'   widths = c(20,30,30),
-#'   heights = c(40,60,60),
+#'   heights = c(40,60,60,60),
 #'   figureName = "Figure")
 #' gtable_show_layout(Figure)
 #' # All panels are free
@@ -152,6 +154,7 @@
 #' # Six panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
 #'
+#'\dontrun{
 #' # Incorporate a lattice/trellis object
 #' require(lattice)
 #' Depth <- equal.count(quakes$depth, number=8, overlap=.1)
@@ -165,6 +168,22 @@
 #' grid.draw(Figure)
 #' # Eight panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
+#'
+#' # Incorporate a gList object (such as produced by VennDigram)
+#' require(VennDiagram)
+#' venn_plot <- venn.diagram(
+#'   x = list(A = 1:150, B = 121:170),
+#'   filename = NULL)
+#' Figure <- addpanel(
+#'   venn_plot,
+#'   Figure,
+#'   topPanel = 4,
+#'   leftPanel = 2,
+#'   rightPanel = 3)
+#' grid.draw(Figure)
+#' # Ten panels are occupied
+#' attr(Figure,"multipanelfigure.panelsFree")
+#'}
 addpanel <- function(
   panel,
   figure,
@@ -186,7 +205,7 @@ addpanel <- function(
       "multipanelfigure.units"))
   assert_is_inherited_from(figure, classes = "gtable")
 
-  panel <- makeGrob(panel)
+  panel <- makeGrob(panel, unitTo = attr(figure , "multipanelfigure.units"))
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
@@ -272,16 +291,19 @@ addpanel <- function(
   return(figure)
 }
 
-makeGrob <- function(x){
+makeGrob <- function(x, unitTo){
   if(is.character(x)){
-    assert_is_a_string(x)
-    assert_all_are_readable_files(x)
+    x %T>%
+      assert_is_a_string() %T>%
+      assert_all_are_readable_files()
     if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = x)){
-      panel <- readPNG(panel, info = TRUE)
+      panel <- readPNG(x, info = TRUE)
       panelDim <- attr(panel, "info")[["dim"]]
       panelDpi <- attr(panel, "info")[["dpi"]]
-      panelSize <- unit(x = panelDim/panelDpi,units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
+      panelSize <-
+        (panelDim/panelDpi) %>%
+        unit(units = "inches") %>%
+        convertUnit(unitTo = unitTo)
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -298,8 +320,10 @@ makeGrob <- function(x){
         warning("Non-identical x/y resolutions.")
       }
       panelDpi <- attr(panel, "x.resolution")
-      panelSize <- unit(x = panelDim/panelDpi, units = "inches")
-      panelSize <- convertUnit(panelSize,unitTo = attr(figure , "multipanelfigure.units"))
+      panelSize <-
+        (panelDim/panelDpi) %>%
+        unit(units = "inches") %>%
+        convertUnit(unitTo = unitTo)
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -318,11 +342,15 @@ makeGrob <- function(x){
       stop("unsupported file format.")
     }
   } else if(inherits(x = x, what = "ggplot")){
+    panel <- ggplotGrob(x)
+  } else if(inherits(x = x, what = "gList")){
+    panel <- x
   } else if(inherits(x = x, what = "grob")){
-    # pass - do nothing
+    panel <- x
   } else if (inherits(x = x, what = "trellis")){
     panel <- grid.grabExpr(print(x))
   } else {
     stop("Class of \'panel\' is not supported.")
   }
+  return(panel)
 }
