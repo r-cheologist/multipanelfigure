@@ -14,10 +14,11 @@ Imports:
   ggplot2 (>= 1.0.1),
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
-  lattice (>= 0.20-31),
   magrittr (>= 1.5),
   png (>= 0.1-7),
   tiff (>= 0.1-5)
 Suggest:
-  roxygen2 (>= 4.1.1)
+  lattice (>= 0.20-31),
+  roxygen2 (>= 4.1.1),
+  VennDiagram (>= 1.6.9)
 License: GPL (>= 3)

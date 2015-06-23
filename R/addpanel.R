@@ -6,6 +6,7 @@
 #' \enumerate{
 #'   \item{\code{\link[ggplot2]{ggplot}} objects.}
 #'   \item{\code{\link[grid]{grob}} objects.}
+#'   \item{\code{\link[grid]{gList}} objects.}
 #'   \item{\code{\link[lattice]{trellis.object}} objects.}
 #'   \item{Single \code{\link{character}} objects representing paths to readable
 #'     portable network graphics (\code{*.png}), tagged image file format
@@ -24,8 +25,9 @@
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 #' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object , a
-#' \code{\link[lattice]{trellis.object}} or a \code{\link[grid]{grob}} object
-#' to be placed in a multipanel figure. See 'Details'.
+#' \code{\link[lattice]{trellis.object}}, a \code{\link[grid]{gList}} object or
+#' a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
+#' 'Details'.
 #' @param figure \code{\link[gtable]{gtable}} object as produced by
 #' \code{\link{multipanelfigure}} and representing the figure the panel is to be
 #' placed in.
@@ -80,6 +82,8 @@
 #' gtable_show_layout(Figure)
 #' # All panels are free
 #' attr(Figure,"multipanelfigure.panelsFree")
+#' # Clear canvas
+#' grid.newpage()
 #'
 #' # Make a simple ggplot object to fill panels
 #' require(ggplot2)
@@ -91,6 +95,8 @@
 #' grid.draw(Figure)
 #' # One panel is occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
+#' # Clear canvas
+#' grid.newpage()
 #'
 #' # Write the ggplot object to a temporary *.jpg, re-read and use it
 #' # horizontally spanning 2 panels
@@ -111,6 +117,8 @@
 #' grid.draw(Figure)
 #' # Two panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
+#' # Clear canvas
+#' grid.newpage()
 #'
 #' # Write the ggplot object to a temporary *.png, re-read and use it
 #' # horizontally spanning 2 panels
@@ -132,6 +140,8 @@
 #' grid.draw(Figure)
 #' # Four panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
+#' # Clear canvas
+#' grid.newpage()
 #'
 #' # Write the ggplot object to a temporary *.tif, re-read and use it
 #' # vertically spanning 2 panels
@@ -153,6 +163,8 @@
 #' grid.draw(Figure)
 #' # Six panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
+#' # Clear canvas
+#' grid.newpage()
 #'
 #'\dontrun{
 #' # Incorporate a lattice/trellis object
@@ -168,6 +180,8 @@
 #' grid.draw(Figure)
 #' # Eight panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
+#' # Clear canvas
+#' grid.newpage()
 #'
 #' # Incorporate a gList object (such as produced by VennDigram)
 #' require(VennDiagram)
