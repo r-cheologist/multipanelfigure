@@ -54,7 +54,7 @@
 #' @importFrom assertive assert_all_are_readable_files
 #' @importFrom assertive assert_is_a_number
 #' @importFrom assertive assert_all_are_whole_numbers
-#' @importFrom assertive assert_all_are_in_range
+#' @importFrom assertive assert_all_are_in_closed_range
 #' @importFrom assertive assert_all_are_true
 #' @importFrom png readPNG
 #' @importFrom tiff readTIFF
@@ -197,38 +197,51 @@ addpanel <- function(
   # Check prerequisites & transform objects to grobs #
   ####################################################
 
-  assert_has_all_attributes(
-    figure,
-    attrs = c(
-      "multipanelfigure.panelsFree",
-      "multipanelfigure.panelLabelsFree",
-      "multipanelfigure.units"))
-  assert_is_inherited_from(figure, classes = "gtable")
+  figure %T>%
+    assert_has_all_attributes(
+      attrs = c(
+        "multipanelfigure.panelsFree",
+        "multipanelfigure.panelLabelsFree",
+        "multipanelfigure.units"))%>%
+    assert_is_inherited_from(classes = "gtable")
 
   panel <- makeGrob(panel, unitTo = attr(figure , "multipanelfigure.units"))
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
 
-  assert_is_a_number(topPanel)
-  assert_all_are_whole_numbers(topPanel)
-  assert_all_are_in_range(x = topPanel, lower = 1, upper = rows)
-  assert_all_are_true(topPanel <= bottomPanel)
+  topPanel %T>%
+    assert_is_a_number() %T>%
+    assert_all_are_whole_numbers() %>%
+    assert_all_are_in_closed_range(lower = 1, upper = rows)
 
-  assert_is_a_number(bottomPanel)
-  assert_all_are_whole_numbers(bottomPanel)
-  assert_all_are_in_range(x = topPanel, lower = 1, upper = rows)
-  assert_all_are_true(bottomPanel >= topPanel)
+  bottomPanel %T>%
+    assert_is_a_number() %T>%
+    assert_all_are_whole_numbers() %>%
+    assert_all_are_in_closed_range(lower = 1, upper = rows)
 
-  assert_is_a_number(leftPanel)
-  assert_all_are_whole_numbers(leftPanel)
-  assert_all_are_in_range(x = leftPanel, lower = 1, upper = columns)
-  assert_all_are_true(leftPanel <= rightPanel)
+  topPanel %>%
+    assert_all_are_in_range(lower = 1, upper = bottomPanel)
 
-  assert_is_a_number(rightPanel)
-  assert_all_are_whole_numbers(rightPanel)
-  assert_all_are_in_range(x = rightPanel, lower = 1, upper = columns)
-  assert_all_are_true(rightPanel >= leftPanel)
+  bottomPanel %>%
+    assert_all_are_in_range(lower = topPanel, upper = rows)
+
+  leftPanel %T>%
+    assert_is_a_number() %T>%
+    assert_all_are_whole_numbers() %>%
+    assert_all_are_in_range(lower = 1, upper = columns)
+
+  rightPanel %T>%
+    assert_is_a_number() %T>%
+    assert_all_are_whole_numbers() %>%
+    assert_all_are_in_range(lower = 1, upper = columns)
+    assert_all_are_true(leftPanel <= rightPanel)
+
+  leftPanel %>%
+    assert_all_are_in_closed_range(lower = 1, upper = rightPanel)
+
+  rightPanel %>%
+    assert_all_are_in_closed_range(lower = leftPanel, upper = columns)
 
   # Are the targeted panels free?
   tmpMatrix <- matrix(TRUE, nrow = rows, ncol = columns)
@@ -253,17 +266,17 @@ addpanel <- function(
   # Processing #
   ##############
   # Get the "real" spans (including inter-panel spaces)
-  placing <- c(topPanel, bottomPanel, leftPanel, rightPanel)
-  names(placing) <- c("topPanel", "bottomPanel", "leftPanel", "rightPanel")
-  placing <- sapply(
-    placing,
-    function(pl){
-      if(pl == 1){
-        return(1)
-      } else {
-        return(pl + pl - 1)
-      }
-    })
+  placing <-
+    c(topPanel, bottomPanel, leftPanel, rightPanel) %>%
+    setNames(c("topPanel", "bottomPanel", "leftPanel", "rightPanel")) %>%
+    sapply(
+      function(pl){
+        if(pl == 1){
+          return(1)
+        } else {
+          return(pl + pl - 1)
+        }
+      })
   # Add panel label
   panelLabel <- grid.text(
     label = panelLabel,

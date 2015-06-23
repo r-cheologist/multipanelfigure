@@ -87,6 +87,8 @@
 #' @importFrom gtable gtable
 #' @importFrom gtable gtable_add_col_space
 #' @importFrom gtable gtable_add_row_space
+#' @importFrom magrittr %>%
+#' @importFrom magrittr %T>%
 #' @examples
 #' library(gtable)
 #' # Figure construction based on overall dimensions
@@ -141,14 +143,17 @@ multipanelfigure <- function(
   #######################
   # Check Prerequisites #
   #######################
-  assert_is_a_string(units)
-  grid:::valid.units(units = units)
+  units %T>%
+    assert_is_a_string() %T>%
+    grid:::valid.units()
 
   assert_is_a_number(interPanelSpacing)
   if(is.nan(interPanelSpacing)){
-    interPanelSpacing <- unit(x = 5, units = "mm")
-    interPanelSpacing <- convertUnit(interPanelSpacing,unitTo = units)
-    interPanelSpacing <- as.numeric(interPanelSpacing)
+    interPanelSpacing <-
+      5 %>%
+      unit(units = "mm") %>%
+      convertUnit(unitTo = units) %>%
+      as.numeric()
   }
   assert_all_are_positive(interPanelSpacing)
 
@@ -156,40 +161,46 @@ multipanelfigure <- function(
 
   if(!is.null(width)){
     assert_is_null(widths)
-    assert_is_not_null(columns)
-    assert_is_a_number(width)
-    assert_all_are_positive(width)
-    assert_is_a_number(columns)
-    assert_all_are_whole_numbers(columns)
-    assert_all_are_in_range(x = columns, lower = 1, upper = Inf)
+    width %T>%
+      assert_is_a_number() %T>%
+      assert_all_are_positive()
+    columns %T>%
+      assert_is_not_null() %T>%
+      assert_is_a_number() %T>%
+      assert_all_are_whole_numbers() %T>%
+      assert_all_are_in_range(lower = 1, upper = Inf)
     widths <- rep(
       x = (width - interPanelSpacing * (columns - 1))/columns,
       times = columns)
   } else {
-    assert_is_not_null(widths)
     assert_is_null(columns)
-    assert_is_numeric(widths)
-    assert_all_are_positive(widths)
+    widths %T>%
+      assert_is_not_null() %T>%
+      assert_is_numeric() %T>%
+      assert_all_are_positive()
     columns <- length(widths)
     width <- sum(widths) + interPanelSpacing * (columns - 1)
   }
 
   if(!is.null(height)){
     assert_is_null(heights)
-    assert_is_not_null(rows)
-    assert_is_a_number(height)
-    assert_all_are_positive(height)
-    assert_is_a_number(rows)
-    assert_all_are_whole_numbers(rows)
-    assert_all_are_in_range(x = rows, lower = 1, upper = Inf)
+    height %T>%
+      assert_is_a_number() %T>%
+      assert_all_are_positive()
+    rows %T>%
+      assert_is_not_null() %T>%
+      assert_is_a_number() %T>%
+      assert_all_are_whole_numbers() %T>%
+      assert_all_are_in_range(lower = 1, upper = Inf)
     heights <- rep(
       x = (height - interPanelSpacing * (rows - 1))/rows,
       times = rows)
   } else {
-    assert_is_not_null(heights)
     assert_is_null(rows)
-    assert_is_numeric(heights)
-    assert_all_are_positive(heights)
+    heights %T>%
+      assert_is_not_null() %T>%
+      assert_is_numeric() %T>%
+      assert_all_are_positive()
     rows <- length(heights)
     height <- sum(heights) + interPanelSpacing * (rows - 1)
   }
@@ -201,21 +212,20 @@ multipanelfigure <- function(
   # Construct gtable #
   ####################
   # Basic layout
-  tmpGTable <- gtable(
-    widths = unit(x = widths, units = units),
-    heights = unit(x = heights, units = units),
-    name = figureName)
-  # add interpanel space
-  tmpGTable <- gtable_add_col_space(
-    x = tmpGTable,
-    width = unit(
-      x = interPanelSpacing,
-      units = units))
-  tmpGTable <- gtable_add_row_space(
-    x = tmpGTable,
-    height = unit(
-      x = interPanelSpacing,
-      units = units))
+  tmpGTable <-
+    gtable(
+      widths = unit(x = widths, units = units),
+      heights = unit(x = heights, units = units),
+      name = figureName) %>%
+    # add interpanel space
+    gtable_add_col_space(
+      width = unit(
+        x = interPanelSpacing,
+        units = units)) %>%
+    gtable_add_row_space(
+      height = unit(
+        x = interPanelSpacing,
+        units = units))
   ##########################
   # Prep and return output #
   ##########################
