@@ -72,6 +72,9 @@
 #' @importFrom gtable gtable_add_grob
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %T>%
+#' @importFrom stats setNames
+#' @importFrom utils head
+#' @importFrom utils tail
 #' @examples
 #' # Create the figure layout
 #' require(gtable)

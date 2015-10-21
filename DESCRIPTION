@@ -10,7 +10,7 @@ Authors@R: c(person("Johannes", "Graumann", email =
 Description: Tools to create a layout for multipanel figures and fill the
   panels.
 Imports:
-  assertive.base (>= 0.0-2),
+  assertive.base (>= 0.0-3),
   assertive.files (>= 0.0-1),
   assertive.numbers (>= 0.0-1),
   assertive.properties (>= 0.0-1),
@@ -19,8 +19,10 @@ Imports:
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
   magrittr (>= 1.5),
+  stats,
   png (>= 0.1-7),
-  tiff (>= 0.1-5)
+  tiff (>= 0.1-5),
+  utils
 Suggest:
   lattice (>= 0.20-31),
   roxygen2 (>= 4.1.1),
