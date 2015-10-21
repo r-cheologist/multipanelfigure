@@ -146,7 +146,7 @@ multipanelfigure <- function(
   #######################
   units %T>%
     assert_is_a_string() %T>%
-    grid:::valid.units()
+    assert_is_a_valid_unit_type()
 
   assert_is_a_number(interPanelSpacing)
   if(is.nan(interPanelSpacing)){
