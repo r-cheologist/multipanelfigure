@@ -10,7 +10,11 @@ Authors@R: c(person("Johannes", "Graumann", email =
 Description: Tools to create a layout for multipanel figures and fill the
   panels.
 Imports:
-  assertive (>= 0.2-4),
+  assertive.base (>= 0.0-2),
+  assertive.files (>= 0.0-1),
+  assertive.numbers (>= 0.0-1),
+  assertive.properties (>= 0.0-1),
+  assertive.types (>= 0.0-1),
   ggplot2 (>= 1.0.1),
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),

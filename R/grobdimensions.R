@@ -12,8 +12,8 @@
 #' @return Single \code{\link{numeric}} objects are returned.
 #' @author Johannes Graumann
 #' @seealso \code{\link{multipanelfigure}}
-#' @importFrom assertive assert_is_inherited_from
-#' @importFrom assertive assert_is_a_string
+#' @importFrom assertive.types assert_is_inherited_from
+#' @importFrom assertive.types assert_is_a_string
 #' @importFrom grid convertUnit
 #' @importFrom grid heightDetails
 #' @importFrom grid widthDetails

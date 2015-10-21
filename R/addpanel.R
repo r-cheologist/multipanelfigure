@@ -50,14 +50,14 @@
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{multipanelfigure}},
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
 #' \code{\link[jpeg]{readJPEG}}
-#' @importFrom assertive assert_has_all_attributes
-#' @importFrom assertive assert_is_inherited_from
-#' @importFrom assertive assert_is_a_string
-#' @importFrom assertive assert_all_are_readable_files
-#' @importFrom assertive assert_is_a_number
-#' @importFrom assertive assert_all_are_whole_numbers
-#' @importFrom assertive assert_all_are_in_closed_range
-#' @importFrom assertive assert_all_are_true
+#' @importFrom assertive.base assert_all_are_true
+#' @importFrom assertive.files assert_all_are_readable_files
+#' @importFrom assertive.numbers assert_all_are_whole_numbers
+#' @importFrom assertive.numbers assert_all_are_in_closed_range
+#' @importFrom assertive.properties assert_has_all_attributes
+#' @importFrom assertive.types assert_is_inherited_from
+#' @importFrom assertive.types assert_is_a_string
+#' @importFrom assertive.types assert_is_a_number
 #' @importFrom png readPNG
 #' @importFrom tiff readTIFF
 #' @importFrom jpeg readJPEG

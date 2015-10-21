@@ -68,23 +68,23 @@
 #'   \item{\code{multipanelfigure.units}:}{A single \code{\link{character}}
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
-#' @importFrom assertive assert_is_a_bool
-#' @importFrom assertive assert_is_numeric
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{addpanel}},
 #' \code{\link{simplegrobwidth}}, \code{\link{simplegrobheight}}
 #' @keywords hplot utilities
-#' @importFrom assertive assert_is_a_number
-#' @importFrom assertive assert_all_are_non_negative
-#' @importFrom assertive assert_all_are_positive
-#' @importFrom assertive assert_is_a_string
-#' @importFrom assertive assert_is_null
-#' @importFrom assertive assert_is_not_null
-#' @importFrom assertive assert_all_are_whole_numbers
-#' @importFrom assertive assert_all_are_in_range
-#' @importFrom assertive assert_is_numeric
-#' @importFrom assertive assert_is_character
-#' @importFrom assertive assert_all_are_true
+#' @importFrom assertive.base assert_all_are_true
+#' @importFrom assertive.properties assert_is_null
+#' @importFrom assertive.properties assert_is_not_null
+#' @importFrom assertive.numbers assert_all_are_non_negative
+#' @importFrom assertive.numbers assert_all_are_positive
+#' @importFrom assertive.numbers assert_all_are_whole_numbers
+#' @importFrom assertive.numbers assert_all_are_in_range
+#' @importFrom assertive.types assert_is_a_bool
+#' @importFrom assertive.types assert_is_numeric
+#' @importFrom assertive.types assert_is_a_string
+#' @importFrom assertive.types assert_is_a_number
+#' @importFrom assertive.types assert_is_numeric
+#' @importFrom assertive.types assert_is_character
 #' @importFrom gtable gtable
 #' @importFrom gtable gtable_add_col_space
 #' @importFrom gtable gtable_add_row_space
