@@ -75,6 +75,7 @@
 #' \code{\link{simplegrobwidth}}, \code{\link{simplegrobheight}}
 #' @keywords hplot utilities
 #' @importFrom assertive assert_is_a_number
+#' @importFrom assertive assert_all_are_non_negative
 #' @importFrom assertive assert_all_are_positive
 #' @importFrom assertive assert_is_a_string
 #' @importFrom assertive assert_is_null
@@ -155,7 +156,7 @@ multipanelfigure <- function(
       convertUnit(unitTo = units) %>%
       as.numeric()
   }
-  assert_all_are_positive(interPanelSpacing)
+  assert_all_are_non_negative(interPanelSpacing)
 
   assert_is_a_string(figureName)
 
