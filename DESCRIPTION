@@ -15,12 +15,14 @@ Imports:
   assertive.numbers (>= 0.0-1),
   assertive.properties (>= 0.0-1),
   assertive.types (>= 0.0-1),
+  digest(>= 0.6.8),
   ggplot2 (>= 1.0.1),
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
   magrittr (>= 1.5),
-  stats,
+  pathological(>= 0.0.7),
   png (>= 0.1-7),
+  stats,
   tiff (>= 0.1-5),
   utils
 Suggest:
