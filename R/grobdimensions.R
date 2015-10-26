@@ -36,7 +36,7 @@ simplegrobwidth <- function(grob, unitTo = "mm"){
     assert_is_inherited_from(classes = "grob")
   unitTo %T>%
     assert_is_a_string() %T>%
-    grid:::valid.units()
+    assert_is_a_valid_unit_type()
 
   # Process
   convertUnit(
@@ -52,7 +52,7 @@ simplegrobheight <- function(grob, unitTo = "mm"){
     assert_is_inherited_from(classes = "grob")
   unitTo %T>%
     assert_is_a_string() %T>%
-    grid:::valid.units()
+    assert_is_a_valid_unit_type()
 
   # Process
   convertUnit(
