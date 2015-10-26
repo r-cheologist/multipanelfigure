@@ -237,6 +237,11 @@ multipanelfigure <- function(
       nrow = rows),
     panelLabelsFree = panelLabels[seq(columns * rows)],
     units = units)
-  attributes(tmpGTable) <- c(attributes(tmpGTable),"multipanelfigure"=multipanelfigure)
-  return(tmpGTable)
+  #attributes(tmpGTable) <- c(attributes(tmpGTable),"multipanelfigure"=multipanelfigure)
+  tmpGTable %>%
+    structure(
+    multipanelfigure = multipanelfigure,
+    class = c("multipanelfigure", class(tmpGTable))
+  ) %>%
+    return
 }
