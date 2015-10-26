@@ -214,13 +214,8 @@ addpanel <- function(
   # Check prerequisites & transform objects to grobs #
   ####################################################
 
-  figure %T>%
-    assert_has_all_attributes(
-      attrs = c(
-        "multipanelfigure.panelsFree",
-        "multipanelfigure.panelLabelsFree",
-        "multipanelfigure.units"))%>%
-    assert_is_inherited_from(classes = "gtable")
+  figure %>%
+    assert_is_multipanelfigure
 
   panel <- makeGrob(panel, unitTo = attr(figure , "multipanelfigure.units"))
 

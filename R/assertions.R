@@ -40,3 +40,24 @@ assert_is_a_valid_unit_type <- function(x, severity = getOption("assertive.sever
     severity = severity
   )
 }
+
+#' Check that the input is a multipanelfigure
+#'
+#' Checks that the input is of class \code{multipanelfigure} and has the
+#' appropriate attributes.
+#' @param x Object to check.
+#' @importFrom assertive.properties assert_has_all_attributes
+#' @importFrom assertive.types assert_is_inherited_from
+#' @export
+assert_is_multipanelfigure <- function(x)
+{
+  assert_is_inherited_from(x, "multipanelfigure")
+  assert_has_all_attributes(
+    x,
+    c(
+      "multipanelfigure.panelsFree",
+      "multipanelfigure.panelLabelsFree",
+      "multipanelfigure.units"
+    )
+  )
+}

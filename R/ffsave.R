@@ -24,13 +24,8 @@
 ffsave <- function(filename = default_name(plot), figureFrame,
   device = pathological::get_extension(filename), path = NULL, dpi = 300, ...)
 {
-  figureFrame %T>%
-    assert_has_all_attributes(
-      attrs = c(
-        "multipanelfigure.panelsFree",
-        "multipanelfigure.panelLabelsFree",
-        "multipanelfigure.units"))%>%
-    assert_is_inherited_from(classes = "gtable")
+  figureFrame %>%
+    assert_is_multipanelfigure
 
   # This code from ggplot2::ggsave
   eps <- ps <- function(..., width, height) grDevices::postscript(...,
