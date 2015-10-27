@@ -16,12 +16,14 @@
 #' @importFrom assertive.properties assert_has_all_attributes
 #' @importFrom assertive.types assert_is_inherited_from
 #' @importFrom digest digest
+#' @importFrom grDevices dev.off
 #' @importFrom grid grid.newpage
 #' @importFrom grid grid.draw
 #' @importFrom magrittr %>%
 #' @importFrom pathological get_extension
+#' @importFrom utils capture.output
 #' @export
-ffsave <- function(filename = default_name(plot), figureFrame,
+mpfsave <- function(filename = default_name(figureFrame), figureFrame,
   device = pathological::get_extension(filename), path = NULL, dpi = 300, ...)
 {
   figureFrame %>%
@@ -52,7 +54,7 @@ ffsave <- function(filename = default_name(plot), figureFrame,
   {
     device <- get(device)
   }
-  default_name <- function(plot) {
+  default_name <- function(figureFrame) {
       paste(digest::digest(figureFrame), ".pdf", sep = "")
   }
   # End ggplot2::ggsave code
