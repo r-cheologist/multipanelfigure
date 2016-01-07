@@ -16,7 +16,7 @@ Imports:
   assertive.properties (>= 0.0-1),
   assertive.types (>= 0.0-1),
   digest(>= 0.6.8),
-  ggplot2 (>= 1.0.1),
+  ggplot2 (>= 2.0.0),
   grDevices,
   gtable (>= 0.1.2),
   jpeg (>= 0.1-8),
