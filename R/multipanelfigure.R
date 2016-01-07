@@ -111,22 +111,17 @@
 #' # A more involved example including filling and printing to device ...
 #' ## Make a simple ggplot object to fill panels
 #' library(ggplot2)
-#' p <- ggplot(mtcars, aes(wt, mpg))
-#' p <- p + geom_point()
+#' p <- ggplot(mtcars, aes(wt, mpg)) +
+#'   geom_point()
 #' ## Fill panels
 #' Figure2 <- addpanel(p, Figure2, topPanel = 1, leftPanel = 2)
 #' Figure2 <- addpanel(p, Figure2, topPanel = 2, leftPanel = 1, rightPanel = 2)
 #' ## Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
 #' usedUnits <- "in"
-#' png(
-#'   filename = tmpFile,
-#'   width = simplegrobwidth(Figure2, unitTo = usedUnits),
-#'   height = simplegrobheight(Figure2, unitTo = usedUnits),
-#'   units = usedUnits,
-#'   res = 300)
-#' grid.draw(Figure2)
-#' dev.off()
+#' width <- simplegrobwidth(Figure2, unitTo = usedUnits)
+#' height <- simplegrobheight(Figure2, unitTo = usedUnits)
+#' ggsave(tmpFile, Figure2, width = width, height = height)
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 multipanelfigure <- function(
