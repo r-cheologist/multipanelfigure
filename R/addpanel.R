@@ -71,7 +71,6 @@
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom gtable gtable_add_grob
 #' @importFrom magrittr %>%
-#' @importFrom magrittr %T>%
 #' @importFrom stats setNames
 #' @importFrom utils head
 #' @importFrom utils tail
@@ -222,13 +221,13 @@ addpanel <- function(
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
 
-  topPanel %T>%
-    assert_is_a_number() %T>%
+  topPanel %>%
+    assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_closed_range(lower = 1, upper = rows)
 
-  bottomPanel %T>%
-    assert_is_a_number() %T>%
+  bottomPanel %>%
+    assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_closed_range(lower = 1, upper = rows)
 
@@ -238,13 +237,13 @@ addpanel <- function(
   bottomPanel %>%
     assert_all_are_in_range(lower = topPanel, upper = rows)
 
-  leftPanel %T>%
-    assert_is_a_number() %T>%
+  leftPanel %>%
+    assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_range(lower = 1, upper = columns)
 
-  rightPanel %T>%
-    assert_is_a_number() %T>%
+  rightPanel %>%
+    assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_range(lower = 1, upper = columns)
     assert_all_are_true(leftPanel <= rightPanel)
@@ -318,8 +317,8 @@ addpanel <- function(
 
 makeGrob <- function(x, unitTo){
   if(is.character(x)){
-    x %T>%
-      assert_is_a_string() %T>%
+    x %>%
+      assert_is_a_string() %>%
       assert_all_are_readable_files()
     if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = x)){
       panel <- readPNG(x, info = TRUE)

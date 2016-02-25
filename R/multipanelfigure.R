@@ -89,7 +89,6 @@
 #' @importFrom gtable gtable_add_col_space
 #' @importFrom gtable gtable_add_row_space
 #' @importFrom magrittr %>%
-#' @importFrom magrittr %T>%
 #' @examples
 #' library(gtable)
 #' # Figure construction based on overall dimensions
@@ -139,8 +138,8 @@ multipanelfigure <- function(
   #######################
   # Check Prerequisites #
   #######################
-  units %T>%
-    assert_is_a_string() %T>%
+  units %>%
+    assert_is_a_string() %>%
     assert_is_a_valid_unit_type()
 
   assert_is_a_number(interPanelSpacing)
@@ -157,22 +156,22 @@ multipanelfigure <- function(
 
   if(!is.null(width)){
     assert_is_null(widths)
-    width %T>%
-      assert_is_a_number() %T>%
+    width %>%
+      assert_is_a_number() %>%
       assert_all_are_positive()
-    columns %T>%
-      assert_is_not_null() %T>%
-      assert_is_a_number() %T>%
-      assert_all_are_whole_numbers() %T>%
+    columns %>%
+      assert_is_not_null() %>%
+      assert_is_a_number() %>%
+      assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     widths <- rep(
       x = (width - interPanelSpacing * (columns - 1))/columns,
       times = columns)
   } else {
     assert_is_null(columns)
-    widths %T>%
-      assert_is_not_null() %T>%
-      assert_is_numeric() %T>%
+    widths %>%
+      assert_is_not_null() %>%
+      assert_is_numeric() %>%
       assert_all_are_positive()
     columns <- length(widths)
     width <- sum(widths) + interPanelSpacing * (columns - 1)
@@ -180,22 +179,22 @@ multipanelfigure <- function(
 
   if(!is.null(height)){
     assert_is_null(heights)
-    height %T>%
-      assert_is_a_number() %T>%
+    height %>%
+      assert_is_a_number() %>%
       assert_all_are_positive()
-    rows %T>%
-      assert_is_not_null() %T>%
-      assert_is_a_number() %T>%
-      assert_all_are_whole_numbers() %T>%
+    rows %>%
+      assert_is_not_null() %>%
+      assert_is_a_number() %>%
+      assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     heights <- rep(
       x = (height - interPanelSpacing * (rows - 1))/rows,
       times = rows)
   } else {
     assert_is_null(rows)
-    heights %T>%
-      assert_is_not_null() %T>%
-      assert_is_numeric() %T>%
+    heights %>%
+      assert_is_not_null() %>%
+      assert_is_numeric() %>%
       assert_all_are_positive()
     rows <- length(heights)
     height <- sum(heights) + interPanelSpacing * (rows - 1)

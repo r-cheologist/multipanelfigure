@@ -18,7 +18,6 @@
 #' @importFrom grid heightDetails
 #' @importFrom grid widthDetails
 #' @importFrom magrittr %>%
-#' @importFrom magrittr %T>%
 #' @examples
 #' library(grid)
 #' testCircle <- circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
@@ -32,10 +31,10 @@
 #' @export
 simplegrobwidth <- function(grob, unitTo = "mm"){
   # Check prerequisites
-  grob %T>%
+  grob %>%
     assert_is_inherited_from(classes = "grob")
-  unitTo %T>%
-    assert_is_a_string() %T>%
+  unitTo %>%
+    assert_is_a_string() %>%
     assert_is_a_valid_unit_type()
 
   # Process
@@ -48,10 +47,10 @@ simplegrobwidth <- function(grob, unitTo = "mm"){
 #' @export
 simplegrobheight <- function(grob, unitTo = "mm"){
   # Check prerequisites
-  grob %T>%
+  grob %>%
     assert_is_inherited_from(classes = "grob")
-  unitTo %T>%
-    assert_is_a_string() %T>%
+  unitTo %>%
+    assert_is_a_string() %>%
     assert_is_a_valid_unit_type()
 
   # Process
