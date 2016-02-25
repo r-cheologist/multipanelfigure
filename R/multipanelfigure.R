@@ -113,8 +113,8 @@
 #' p <- ggplot(mtcars, aes(wt, mpg)) +
 #'   geom_point()
 #' ## Fill panels
-#' Figure2 <- addpanel(p, Figure2, topPanel = 1, leftPanel = 2)
-#' Figure2 <- addpanel(p, Figure2, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' Figure2 <- addpanel(Figure2, p, topPanel = 1, leftPanel = 2)
+#' Figure2 <- addpanel(Figure2, p, topPanel = 2, leftPanel = 1, rightPanel = 2)
 #' ## Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
 #' usedUnits <- "in"

@@ -22,15 +22,15 @@
 #' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted to
 #' \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of which
 #' with respect to plot formatting are not well studied.
+#' @param figure \code{\link[gtable]{gtable}} object as produced by
+#' \code{\link{multipanelfigure}} and representing the figure the panel is to be
+#' placed in.
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 #' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object , a
 #' \code{\link[lattice]{trellis.object}}, a \code{\link[grid]{gList}} object or
 #' a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 #' 'Details'.
-#' @param figure \code{\link[gtable]{gtable}} object as produced by
-#' \code{\link{multipanelfigure}} and representing the figure the panel is to be
-#' placed in.
 #' @param topPanel Single \code{\link{numeric}} indicating the row index of
 #' the panel that is to be placed in the figure.
 #' @param bottomPanel Single \code{\link{numeric}} indicating the lower row
@@ -93,7 +93,7 @@
 #' p <- p + geom_point()
 #'
 #' # Fill a first panel using the ggplot object directly
-#' Figure <- addpanel(p, Figure, topPanel = 1, leftPanel = 1)
+#' Figure <- addpanel(Figure, p, topPanel = 1, leftPanel = 1)
 #' grid.draw(Figure)
 #' # One panel is occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -112,8 +112,8 @@
 #'   units = "mm",
 #'   dpi = 300)
 #' Figure <- addpanel(
-#'     tmpFile,
 #'     Figure,
+#'     tmpFile,
 #'     topPanel = 1,
 #'     leftPanel = 2)
 #' grid.draw(Figure)
@@ -134,8 +134,8 @@
 #'   units = "mm",
 #'   dpi = 300)
 #' Figure <- addpanel(
-#'     tmpFile,
 #'     Figure,
+#'     tmpFile,
 #'     topPanel = 2,
 #'     leftPanel = 1,
 #'     rightPanel = 2)
@@ -157,8 +157,8 @@
 #'   units = "mm",
 #'   dpi = 300)
 #' Figure <- addpanel(
-#'   tmpFile,
 #'   Figure,
+#'   tmpFile,
 #'   topPanel = 2,
 #'   bottomPanel = 3,
 #'   leftPanel = 3)
@@ -174,8 +174,8 @@
 #' Depth <- equal.count(quakes$depth, number=8, overlap=.1)
 #' latticePlot_trellis <- xyplot(lat ~ long | Depth, data = quakes)
 #' Figure <- addpanel(
-#'   latticePlot_trellis,
 #'   Figure,
+#'   latticePlot_trellis,
 #'   topPanel = 3,
 #'   leftPanel = 1,
 #'   rightPanel = 2)
@@ -191,8 +191,8 @@
 #'   x = list(A = 1:150, B = 121:170),
 #'   filename = NULL)
 #' Figure <- addpanel(
-#'   venn_plot,
 #'   Figure,
+#'   venn_plot,
 #'   topPanel = 4,
 #'   leftPanel = 2,
 #'   rightPanel = 3)
@@ -201,8 +201,8 @@
 #' attr(Figure,"multipanelfigure.panelsFree")
 #'}
 addpanel <- function(
-  panel,
   figure,
+  panel,
   topPanel = 1,
   bottomPanel = topPanel,
   leftPanel = 1,
