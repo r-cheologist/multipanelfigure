@@ -78,7 +78,7 @@
 #' # Create the figure layout
 #' require(gtable)
 #' Figure <- multipanelfigure(
-#'   widths = c(20,30,30),
+#'   widths = c(20,30,30,30),
 #'   heights = c(40,60,60,60),
 #'   figureName = "Figure")
 #' gtable_show_layout(Figure)
@@ -194,10 +194,25 @@
 #'   Figure,
 #'   venn_plot,
 #'   topPanel = 4,
-#'   leftPanel = 2,
-#'   rightPanel = 3)
+#'   leftPanel = 1,
+#'   rightPanel = 2)
 #' grid.draw(Figure)
 #' # Ten panels are occupied
+#' attr(Figure,"multipanelfigure.panelsFree")
+#'
+#' # Incorporate a base plot figure (produces minor margin issues)
+#' require(gridGraphics)
+#' plot(seq(10))
+#' grid.echo()
+#' grid.grab() -> base_plot
+#' Figure <- addpanel(
+#'   Figure,
+#'   base_plot,
+#'   topPanel = 4,
+#'   leftPanel = 3,
+#'   rightPanel = 4)
+#' grid.draw(Figure)
+#' # Twelve panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
 #'}
 addpanel <- function(
