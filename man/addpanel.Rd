@@ -193,14 +193,14 @@ grid.draw(Figure)
 # Ten panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")
 
-# Incorporate a base plot figure
+# Incorporate a base plot figure (produces minor margin issues)
 require(gridGraphics)
 plot(seq(10))
 grid.echo()
-grid.grab() -> heatmap_plot
+grid.grab() -> base_plot
 Figure <- addpanel(
   Figure,
-  heatmap_plot,
+  base_plot,
   topPanel = 4,
   leftPanel = 3,
   rightPanel = 4)
