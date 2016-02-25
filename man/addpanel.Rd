@@ -9,9 +9,9 @@ addpanel(figure, panel, topPanel = 1, bottomPanel = topPanel,
   "multipanelfigure.panelLabelsFree"), 1))
 }
 \arguments{
-\item{figure}{\code{\link[gtable]{gtable}} object as produced by
-\code{\link{multipanelfigure}} and representing the figure the panel is to be
-placed in.}
+\item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
+as produced by \code{\link{multipanelfigure}} and representing the figure the
+panel is to be placed in.}
 
 \item{panel}{Single \code{\link{character}} object representing path to a
 bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},

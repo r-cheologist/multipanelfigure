@@ -22,9 +22,9 @@
 #' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted to
 #' \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of which
 #' with respect to plot formatting are not well studied.
-#' @param figure \code{\link[gtable]{gtable}} object as produced by
-#' \code{\link{multipanelfigure}} and representing the figure the panel is to be
-#' placed in.
+#' @param figure Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
+#' as produced by \code{\link{multipanelfigure}} and representing the figure the
+#' panel is to be placed in.
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 #' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object , a

@@ -25,7 +25,7 @@
 #'     \code{heights}. Excludes the use of \code{width}, \code{columns},
 #'     \code{heights} and \code{rows}.}
 #'   \item{Definition of global \code{\link[gtable]{gtable}}/figure dimensions:}{
-#'     Requires\code{width}, \code{columns}, \code{heights} and \code{rows}.
+#'     Requires \code{width}, \code{columns}, \code{heights} and \code{rows}.
 #'     Excludes the use of \code{widths} and \code{heights}.}}
 #' @param width Single \code{link{numeric}} defining the width of the resulting
 #' \code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
@@ -57,8 +57,8 @@
 #' @param panelLabels A \code{\link{character}} \code{\link{vector}} defining
 #' the panel labels used for automated annotation. \code{\link{length}} must be
 #' larger or equal to the number of panels defined. Will be used sequentially.
-#' @return Returns a \code{\link[gtable]{gtable}} object with the following additional
-#' attribute:
+#' @return Returns an object of class \code{multipanelfigure} as well as
+#' \code{\link[gtable]{gtable}} object with the following additional attributes:
 #' \describe{
 #'   \item{\code{multipanelfigure.panelsFree}:}{A \code{\link{logical}}
 #'     \code{\link{matrix}} with the dimensions of the \code{\link[gtable]{gtable}}
