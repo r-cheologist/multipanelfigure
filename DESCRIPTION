@@ -10,13 +10,13 @@ Authors@R: c(person("Johannes", "Graumann", email =
 Description: Tools to create a layout for multipanel figures and fill the
     panels.
 Imports:
-    assertive.base (>= 0.0-3),
+    assertive.base (>= 0.0-5),
     assertive.files (>= 0.0-1),
     assertive.numbers (>= 0.0-1),
-    assertive.properties (>= 0.0-1),
-    assertive.types (>= 0.0-1),
-    ggplot2 (>= 2.0.0),
-    gtable (>= 0.1.2),
+    assertive.properties (>= 0.0-2),
+    assertive.types (>= 0.0-2),
+    ggplot2 (>= 2.1.0),
+    gtable (>= 0.2.0),
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),
     png (>= 0.1-7),
@@ -25,8 +25,8 @@ Imports:
     utils
 Suggest:
     gridGraphics (>=0.1-5),
-    lattice (>= 0.20-31),
-    roxygen2 (>= 4.1.1),
-    VennDiagram (>= 1.6.9)
+    lattice (>= 0.20-33),
+    roxygen2 (>= 5.0.1),
+    VennDiagram (>= 1.6.16)
 License: GPL (>= 3)
 RoxygenNote: 5.0.1
