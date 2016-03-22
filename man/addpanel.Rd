@@ -69,6 +69,7 @@ with respect to plot formatting are not well studied.
 }
 \examples{
 # Create the figure layout
+require(grid)
 require(gtable)
 Figure <- multipanelfigure(
   widths = c(20,30,30,30),

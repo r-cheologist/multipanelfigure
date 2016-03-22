@@ -76,6 +76,7 @@
 #' @importFrom utils tail
 #' @examples
 #' # Create the figure layout
+#' require(grid)
 #' require(gtable)
 #' Figure <- multipanelfigure(
 #'   widths = c(20,30,30,30),
