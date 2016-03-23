@@ -11,7 +11,7 @@
 #'     and \code{rows} requested.}}
 #' The function automatically inserts whitespace of width
 #' \code{interPanelSpacing} between panels, which has to be considered for the
-#' total dimesnions of the resulting \code{\link[gtable]{gtable}}. Width of the
+#' total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
 #' \code{\link[gtable]{gtable}} in the former case, for example may be calculated
 #' \deqn{W[total] = sum(widths) + (length(widths) - 1) * interPanelSpacing}
 #' while width of resulting panels in the latter table construction approach may
@@ -29,7 +29,7 @@
 #'     Excludes the use of \code{widths} and \code{heights}.}}
 #' @param width Single \code{link{numeric}} defining the width of the resulting
 #' \code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
-#' dependend and interfering parameters.
+#' dependent and interfering parameters.
 #' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
 #' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (units
 #' depending on \code{units}). See 'Details' for dependend and
