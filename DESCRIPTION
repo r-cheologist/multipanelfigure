@@ -23,8 +23,8 @@ Imports:
     stats,
     tiff (>= 0.1-5),
     utils
-Suggest:
-    gridGraphics (>=0.1-5),
+Suggests:
+    gridGraphics (>= 0.1-5),
     lattice (>= 0.20-33),
     roxygen2 (>= 5.0.1),
     VennDiagram (>= 1.6.16)
