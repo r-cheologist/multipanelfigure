@@ -3,6 +3,7 @@
 S3method(print,multipanelfigure)
 export(addpanel)
 export(assert_is_multipanelfigure)
+export(capturebaseplot)
 export(multipanelfigure)
 export(simplegrobheight)
 export(simplegrobwidth)
