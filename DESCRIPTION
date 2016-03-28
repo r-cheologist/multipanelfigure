@@ -16,6 +16,7 @@ Imports:
     assertive.properties (>= 0.0-2),
     assertive.types (>= 0.0-2),
     ggplot2 (>= 2.1.0),
+    grid,
     gtable (>= 0.2.0),
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),

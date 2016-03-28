@@ -16,7 +16,7 @@ An object of class \code{gTree}.
 Capture a plot drawn using base graphics as a grid \code{grob}.
 }
 \note{
-A side effect of this function is that plots gt drawn twice: once as
+A side effect of this function is that plots get drawn twice: once as
 a base plot, and secondly as a grid plot.
 }
 \examples{
