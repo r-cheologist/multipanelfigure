@@ -6,7 +6,9 @@
 \usage{
 multipanelfigure(width = NULL, widths = NULL, columns = NULL,
   height = NULL, heights = NULL, rows = NULL, interPanelSpacing = NaN,
-  units = "mm", figureName = "FigureX", panelLabels = LETTERS)
+  units = "mm", figureName = "FigureX", panelLabelType = c("upper-alpha",
+  "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek",
+  "lower-greek", "none"))
 }
 \arguments{
 \item{width}{Single \code{link{numeric}} defining the width of the resulting
@@ -45,9 +47,8 @@ dimensions defined. Must satisfy \code{grid:::valid.units}.}
 \item{figureName}{Single \code{\link{character}} object defining the name of
 the resulting \code{\link[gtable]{gtable}}.}
 
-\item{panelLabels}{A \code{\link{character}} \code{\link{vector}} defining
-the panel labels used for automated annotation. \code{\link{length}} must be
-larger or equal to the number of panels defined. Will be used sequentially.}
+\item{panelLabelType}{A string specifying the marker style for the panel labels
+used for automated annotation.  Defaults to uppercase Latin letters.}
 }
 \value{
 Returns an object of class \code{multipanelfigure} as well as

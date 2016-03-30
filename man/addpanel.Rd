@@ -5,8 +5,7 @@
 \title{addpanel}
 \usage{
 addpanel(figure, panel, topPanel = 1, bottomPanel = topPanel,
-  leftPanel = 1, rightPanel = leftPanel, panelLabel = head(attr(figure,
-  "multipanelfigure.panelLabelsFree"), 1))
+  leftPanel = 1, rightPanel = leftPanel)
 }
 \arguments{
 \item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
@@ -33,9 +32,6 @@ of the panel that is to be placed in the figure.}
 \item{rightPanel}{Single \code{\link{numeric}} indicating the right column
 index of the panel that is to be placed in the figure. Important for
 definition of panel spanning (see examples).}
-
-\item{panelLabel}{Single \code{\link{character}} object defining the panel
-label used for automated annotation.}
 }
 \value{
 Returns the \code{\link[gtable]{gtable}} object fed to it

@@ -54,9 +54,8 @@
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
 #' @param figureName Single \code{\link{character}} object defining the name of
 #' the resulting \code{\link[gtable]{gtable}}.
-#' @param panelLabels A \code{\link{character}} \code{\link{vector}} defining
-#' the panel labels used for automated annotation. \code{\link{length}} must be
-#' larger or equal to the number of panels defined. Will be used sequentially.
+#' @param panelLabelType A string specifying the marker style for the panel labels
+#' used for automated annotation.  Defaults to uppercase Latin letters.
 #' @return Returns an object of class \code{multipanelfigure} as well as
 #' \code{\link[gtable]{gtable}} object with the following additional attributes:
 #' \describe{
@@ -133,7 +132,7 @@ multipanelfigure <- function(
   interPanelSpacing = NaN,
   units = "mm",
   figureName = "FigureX",
-  panelLabels = LETTERS)
+  panelLabelType = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
 {
   #######################
   # Check Prerequisites #
@@ -200,8 +199,10 @@ multipanelfigure <- function(
     height <- sum(heights) + interPanelSpacing * (rows - 1)
   }
 
-  assert_is_character(panelLabels)
-  assert_all_are_true(length(columns) * length(rows) <= length(panelLabels))
+  # TODO: support all CSS ordered list marker styles
+  # greek, hebrew, georgian, hiragana, etc. still TODO
+  # http://www.w3schools.com/cssref/pr_list-style-type.asp
+  panelLabelType <- match.arg(panelLabelType)
 
   ####################
   # Construct gtable #
@@ -229,7 +230,7 @@ multipanelfigure <- function(
       data = TRUE,
       ncol = columns,
       nrow = rows),
-    panelLabelsFree = panelLabels[seq(columns * rows)],
+    panelLabelType = panelLabelType,
     units = units)
   attributes(tmpGTable) <- c(
     attributes(tmpGTable),

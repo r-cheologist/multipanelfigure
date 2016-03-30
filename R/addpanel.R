@@ -41,8 +41,6 @@
 #' @param rightPanel Single \code{\link{numeric}} indicating the right column
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
-#' @param panelLabel Single \code{\link{character}} object defining the panel
-#' label used for automated annotation.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
 #' @author Johannes Graumann
@@ -222,8 +220,7 @@ addpanel <- function(
   topPanel = 1,
   bottomPanel = topPanel,
   leftPanel = 1,
-  rightPanel = leftPanel,
-  panelLabel = head(attr(figure, "multipanelfigure.panelLabelsFree"),1))
+  rightPanel = leftPanel)
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -287,8 +284,6 @@ addpanel <- function(
     stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
   }
 
-  assert_is_a_string(panelLabel)
-
   ##############
   # Processing #
   ##############
@@ -306,7 +301,7 @@ addpanel <- function(
       })
   # Add panel label
   panelLabel <- grid.text(
-    label = panelLabel,
+    label = nextLabel(figure),
     x = 0, y = 1,
     hjust = unit(0, "mm"),
     vjust = unit(1, "mm"),
@@ -320,13 +315,6 @@ addpanel <- function(
     b = placing[["bottomPanel"]],
     l = placing[["leftPanel"]],
     r = placing[["rightPanel"]])
-  # Fix attributes
-  attr(figure , "multipanelfigure.panelLabelsFree") <- tail(
-    x = attr(figure , "multipanelfigure.panelLabelsFree"),
-    n = -1)
-  attr(figure , "multipanelfigure.panelLabelsFree") <- head(
-    x = attr(figure , "multipanelfigure.panelLabelsFree"),
-    n = sum(attr(figure , "multipanelfigure.panelsFree")))
   # Return
   return(figure)
 }
