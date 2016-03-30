@@ -27,7 +27,6 @@ print.multipanelfigure <- function(x, newpage = TRUE, ...)
 {
   if(is_empty(x$grobs))
   {
-    message("The multi-panel figure has no panels; showing the layout instead.")
     gtable_show_layout(x)
   } else
   {
