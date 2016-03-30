@@ -335,7 +335,7 @@ makeGrob <- function(x, unitTo){
   if(is.character(x)){
     x %>%
       assert_is_a_string() %>%
-      assert_all_are_readable_files()
+      assert_all_are_readable_files(warn_about_windows = FALSE, severity = "warning")
     if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = x)){
       panel <- readPNG(x, info = TRUE)
       panelDim <- attr(panel, "info")[["dim"]]
