@@ -19,15 +19,29 @@
 #' @importFrom grid widthDetails
 #' @importFrom magrittr %>%
 #' @examples
-#' library(grid)
-#' testCircle <- circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
-#' grid.newpage()
-#' grid.draw(testCircle)
+#' # Get dimensions of a grid grob
+#' testCircle <- grid::circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
 #' simplegrobheight(testCircle)
 #' simplegrobwidth(testCircle)
 #'
+#' # Use the unitTo arg to convert units
 #' simplegrobheight(testCircle, unitTo = "in")
 #' simplegrobwidth(testCircle, unitTo = "cm")
+#'
+#' # Get dimensions of a multi-panel figure
+#' Figure <- multipanelfigure(width = 55, height = 55, rows = 2, columns = 2)
+#' simplegrobheight(Figure)
+#' simplegrobwidth(Figure)
+#'
+#' # ggsave defaults to measuring dimensions in inches
+#' usedUnits <- "in"
+#' width <- simplegrobwidth(Figure, unitTo = usedUnits)
+#' height <- simplegrobheight(Figure, unitTo = usedUnits)
+#' tmpFile <- tempfile(fileext = ".png")
+#' ggplot2::ggsave(tmpFile, Figure, width = width, height = height)
+#' \donttest{ # Not testing due to use of external software
+#' utils::browseURL(tmpFile)
+#' }
 #' @export
 simplegrobwidth <- function(grob, unitTo = "mm"){
   # Check prerequisites

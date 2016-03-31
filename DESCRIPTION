@@ -26,6 +26,7 @@ Imports:
     tiff (>= 0.1-5),
     utils
 Suggests:
+    grDevices,
     lattice (>= 0.20-33),
     roxygen2 (>= 5.0.1),
     VennDiagram (>= 1.6.16)

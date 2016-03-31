@@ -68,8 +68,10 @@
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{addpanel}},
-#' \code{\link{simplegrobwidth}}, \code{\link{simplegrobheight}}
+#' @seealso \code{\link{addpanel}} for more examples of adding panels
+#' \code{\link{simplegrobwidth}} for inspecting figure dimensions
+#' \code{\link{capturebaseplot}} for including plots created using base graphics
+#' \code{\link[gtable]{gtable}} for the underlying structure of a figure
 #' @keywords hplot utilities
 #' @importFrom assertive.base assert_all_are_true
 #' @importFrom assertive.properties assert_is_null
@@ -89,7 +91,6 @@
 #' @importFrom gtable gtable_add_row_space
 #' @importFrom magrittr %>%
 #' @examples
-#' library(gtable)
 #' # Figure construction based on overall dimensions
 #' Figure1 <- multipanelfigure(
 #'    width = 100,
@@ -97,31 +98,36 @@
 #'    height = 100,
 #'    rows = 6,
 #'    figureName = "Figure1")
-#' gtable_show_layout(Figure1)
+#' # With no panels, printing shows the layout
+#' Figure1
 #'
 #' # Figure construction based on individual panel dimensions
-#' Figure2 <- multipanelfigure(
-#'    widths = c(20,30),
+#' (Figure2 <- multipanelfigure(
+#'    widths = c(40,30),
 #'    heights = c(40,60),
-#'    figureName = "Figure2")
-#' gtable_show_layout(Figure2)
+#'    figureName = "Figure2"))
 #'
 #' # A more involved example including filling and printing to device ...
-#' ## Make a simple ggplot object to fill panels
-#' library(ggplot2)
-#' p <- ggplot(mtcars, aes(wt, mpg)) +
-#'   geom_point()
-#' ## Fill panels
-#' Figure2 <- addpanel(Figure2, p, topPanel = 1, leftPanel = 2)
-#' Figure2 <- addpanel(Figure2, p, topPanel = 2, leftPanel = 1, rightPanel = 2)
-#' ## Plot to appropriately sized png device
+#' # Make a simple ggplot object to fill panels
+#' ggp <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'   ggplot2::geom_point()
+#' # Fill panels
+#' # ggplots and lattice plot objects are added directly
+#' # The default position is the top-left panel
+#' Figure2 <- addpanel(Figure2, ggp)
+#' # JPEG, PNG, and TIFF images are added by passing the path to their file
+#' jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
+#' Figure2 <- addpanel(Figure2, jpg, leftPanel = 2)
+#' # Plots can take up multiple panels
+#' Figure2 <- addpanel(Figure2, ggp, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' # Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
-#' usedUnits <- "in"
-#' width <- simplegrobwidth(Figure2, unitTo = usedUnits)
-#' height <- simplegrobheight(Figure2, unitTo = usedUnits)
-#' ggsave(tmpFile, Figure2, width = width, height = height)
+#' ggplot2::ggsave(tmpFile, Figure2, width = width, height = height, units = "mm")
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
+#' \donttest{ # Not testing due to use of external software
+#' utils::browseURL(tmpFile)
+#' }
 multipanelfigure <- function(
   width = NULL,
   widths = NULL,
