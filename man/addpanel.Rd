@@ -5,7 +5,7 @@
 \title{addpanel}
 \usage{
 addpanel(figure, panel, topPanel = 1, bottomPanel = topPanel,
-  leftPanel = 1, rightPanel = leftPanel)
+  leftPanel = 1, rightPanel = leftPanel, label = NULL)
 }
 \arguments{
 \item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
@@ -19,19 +19,22 @@ bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 'Details'.}
 
-\item{topPanel}{Single \code{\link{numeric}} indicating the row index of
+\item{topPanel}{Single \code{\link[base]{numeric}} indicating the row index of
 the panel that is to be placed in the figure.}
 
-\item{bottomPanel}{Single \code{\link{numeric}} indicating the lower row
+\item{bottomPanel}{Single \code{\link[base]{numeric}} indicating the lower row
 index of the panel that is to be placed in the figure. Important for
 definition of panel spanning (see examples).}
 
-\item{leftPanel}{Single \code{\link{numeric}} indicating the column index
+\item{leftPanel}{Single \code{\link[base]{numeric}} indicating the column index
 of the panel that is to be placed in the figure.}
 
-\item{rightPanel}{Single \code{\link{numeric}} indicating the right column
+\item{rightPanel}{Single \code{\link[base]{numeric}} indicating the right column
 index of the panel that is to be placed in the figure. Important for
 definition of panel spanning (see examples).}
+
+\item{Single}{\code{\link[base]{character}} used for the panel label, or
+\code{NULL} to automatically generate the label.}
 }
 \value{
 Returns the \code{\link[gtable]{gtable}} object fed to it

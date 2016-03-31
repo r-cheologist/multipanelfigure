@@ -31,16 +31,18 @@
 #' \code{\link[lattice]{trellis.object}}, a \code{\link[grid]{gList}} object or
 #' a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 #' 'Details'.
-#' @param topPanel Single \code{\link{numeric}} indicating the row index of
+#' @param topPanel Single \code{\link[base]{numeric}} indicating the row index of
 #' the panel that is to be placed in the figure.
-#' @param bottomPanel Single \code{\link{numeric}} indicating the lower row
+#' @param bottomPanel Single \code{\link[base]{numeric}} indicating the lower row
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
-#' @param leftPanel Single \code{\link{numeric}} indicating the column index
+#' @param leftPanel Single \code{\link[base]{numeric}} indicating the column index
 #' of the panel that is to be placed in the figure.
-#' @param rightPanel Single \code{\link{numeric}} indicating the right column
+#' @param rightPanel Single \code{\link[base]{numeric}} indicating the right column
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
+#' @param Single \code{\link[base]{character}} used for the panel label, or
+#' \code{NULL} to automatically generate the label.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
 #' @author Johannes Graumann
@@ -49,6 +51,8 @@
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
 #' \code{\link[jpeg]{readJPEG}}
 #' @importFrom assertive.base assert_all_are_true
+#' @importFrom assertive.base use_first
+#' @importFrom assertive.base coerce_to
 #' @importFrom assertive.files assert_all_are_readable_files
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.numbers assert_all_are_in_closed_range
@@ -220,7 +224,8 @@ addpanel <- function(
   topPanel = 1,
   bottomPanel = topPanel,
   leftPanel = 1,
-  rightPanel = leftPanel)
+  rightPanel = leftPanel,
+  label = NULL)
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -284,6 +289,15 @@ addpanel <- function(
     stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
   }
 
+  # Check/fix panel label
+  label <- if(is.null(label))
+  {
+    nextLabel(figure)
+  } else
+  {
+    use_first(coerce_to(label, "character"))
+  }
+
   ##############
   # Processing #
   ##############
@@ -301,7 +315,7 @@ addpanel <- function(
       })
   # Add panel label
   panelLabel <- grid.text(
-    label = nextLabel(figure),
+    label = label,
     x = 0, y = 1,
     hjust = unit(0, "mm"),
     vjust = unit(1, "mm"),
