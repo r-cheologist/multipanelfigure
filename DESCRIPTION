@@ -17,6 +17,7 @@ Imports:
     assertive.types (>= 0.0-2),
     ggplot2 (>= 2.1.0),
     grid,
+    gridGraphics (>= 0.1-5),
     gtable (>= 0.2.0),
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),
@@ -25,7 +26,6 @@ Imports:
     tiff (>= 0.1-5),
     utils
 Suggests:
-    gridGraphics (>= 0.1-5),
     lattice (>= 0.20-33),
     roxygen2 (>= 5.0.1),
     VennDiagram (>= 1.6.16)
