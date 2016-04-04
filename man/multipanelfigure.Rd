@@ -6,16 +6,16 @@
 \usage{
 multipanelfigure(width = NULL, widths = NULL, columns = NULL,
   height = NULL, heights = NULL, rows = NULL, interPanelSpacing = NaN,
-  units = "mm", figureName = "FigureX", panelLabels = LETTERS)
+  unit = "mm", figureName = "FigureX", panelLabels = LETTERS)
 }
 \arguments{
 \item{width}{Single \code{link{numeric}} defining the width of the resulting
-\code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
-dependent and interfering parameters.}
+\code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
+dependend and interfering parameters.}
 
 \item{widths}{\code{\link{vector}} of \code{\link{numeric}}s defining the
-actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (units
-depending on \code{units}). See 'Details' for dependend and
+actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
+depending on \code{unit}). See 'Details' for dependend and
 interfering parameters.}
 
 \item{columns}{Single \code{\link{numeric}} defining the number of columns in
@@ -23,12 +23,12 @@ the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 interfering parameters.}
 
 \item{height}{Single \code{link{numeric}} defining the height of the resulting
-\code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
+\code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
 dependend and interfering parameters.}
 
 \item{heights}{\code{\link{vector}} of \code{\link{numeric}}s defining the
-actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (units
-depending on \code{units}). See 'Details' for dependend and
+actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
+depending on \code{unit}). See 'Details' for dependend and
 interfering parameters.}
 
 \item{rows}{Single \code{\link{numeric}} defining the number of rows in
@@ -37,9 +37,9 @@ interfering parameters.}
 
 \item{interPanelSpacing}{The amount of white space automatically inserted
 between panels. Defaults to \code{5 mm} unless explicitly given, in which
-case the value depents on the \code{units} parameter.}
+case the value depents on the \code{unit} parameter.}
 
-\item{units}{Single \code{\link{character}} object defining the units of all
+\item{unit}{Single \code{\link{character}} object defining the unit of all
 dimensions defined. Must satisfy \code{grid:::valid.units}.}
 
 \item{figureName}{Single \code{\link{character}} object defining the name of
@@ -58,7 +58,7 @@ Returns an object of class \code{multipanelfigure} as well as
     indicating occupancy of the panels in the table.}
   \item{\code{multipanelfigure.panelLabelsFree}:}{A \code{\link{character}}
     \code{\link{vector}} indicative of the \code{panelLabels} still available.}
-  \item{\code{multipanelfigure.units}:}{A single \code{\link{character}}
+  \item{\code{multipanelfigure.unit}:}{A single \code{\link{character}}
     object storing the corresponding value given during object creation.}}
 }
 \description{
@@ -120,9 +120,9 @@ Figure2 <- addpanel(Figure2, p, topPanel = 1, leftPanel = 2)
 Figure2 <- addpanel(Figure2, p, topPanel = 2, leftPanel = 1, rightPanel = 2)
 ## Plot to appropriately sized png device
 tmpFile <- tempfile(fileext = ".png")
-usedUnits <- "in"
-width <- simplegrobwidth(Figure2, unitTo = usedUnits)
-height <- simplegrobheight(Figure2, unitTo = usedUnits)
+usedUnit <- "in"
+width <- simplegrobwidth(Figure2, unitTo = usedUnit)
+height <- simplegrobheight(Figure2, unitTo = usedUnit)
 ggsave(tmpFile, Figure2, width = width, height = height)
 message(
   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))

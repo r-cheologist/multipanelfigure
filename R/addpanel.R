@@ -110,7 +110,7 @@
 #'   plot = p,
 #'   width = 30,
 #'   height = 40,
-#'   units = "mm",
+#'   unit = "mm",
 #'   dpi = 300)
 #' Figure <- addpanel(
 #'     Figure,
@@ -132,7 +132,7 @@
 #'   plot = p,
 #'   width = 55,
 #'   height = 60,
-#'   units = "mm",
+#'   unit = "mm",
 #'   dpi = 300)
 #' Figure <- addpanel(
 #'     Figure,
@@ -155,7 +155,7 @@
 #'   plot = p,
 #'   width = 30,
 #'   height = 125,
-#'   units = "mm",
+#'   unit = "mm",
 #'   dpi = 300)
 #' Figure <- addpanel(
 #'   Figure,
@@ -232,7 +232,7 @@ addpanel <- function(
   figure %>%
     assert_is_multipanelfigure
 
-  panel <- makeGrob(panel, unitTo = attr(figure , "multipanelfigure.units"))
+  panel <- makeGrob(panel, unitTo = attr(figure , "multipanelfigure.unit"))
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))

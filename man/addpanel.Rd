@@ -103,7 +103,7 @@ ggsave(
   plot = p,
   width = 30,
   height = 40,
-  units = "mm",
+  unit = "mm",
   dpi = 300)
 Figure <- addpanel(
     Figure,
@@ -125,7 +125,7 @@ ggsave(
   plot = p,
   width = 55,
   height = 60,
-  units = "mm",
+  unit = "mm",
   dpi = 300)
 Figure <- addpanel(
     Figure,
@@ -148,7 +148,7 @@ ggsave(
   plot = p,
   width = 30,
   height = 125,
-  units = "mm",
+  unit = "mm",
   dpi = 300)
 Figure <- addpanel(
   Figure,
