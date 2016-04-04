@@ -1,12 +1,14 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to assemble multipanle figures (from grobs)
-Version: 0.7.2
-Date: 2016-03-22
+Version: 0.8.0
+Date: 2016-04-04
 Author: Johannes Graumann
 Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
 Authors@R: c(person("Johannes", "Graumann", email =
-    "jog2030@qatar-med.cornell.edu", role = c("cre", "aut")))
+    "jog2030@qatar-med.cornell.edu", role = c("cre", "aut")),
+    person("Richard J.","Cotton", email = "rjc2003@qatar-med.cornell.edu",
+    role = c("ctb")))
 Description: Tools to create a layout for multipanel figures and fill the
     panels.
 Imports:
