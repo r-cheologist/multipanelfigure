@@ -1,4 +1,4 @@
-#' @title multipanelfigure
+#' @title multi_panel_figure
 #' @aliases multipanelfigure
 #' @description A convenience function building \code{\link[gtable]{gtable}}-based
 #' infrastructure for the assembly of multipanel figures.
@@ -69,8 +69,8 @@
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{addpanel}},
-#' \code{\link{simplegrobwidth}}, \code{\link{simplegrobheight}}
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{add_panel}},
+#' \code{\link{simple_grob_width}}, \code{\link{simple_grob_height}}
 #' @keywords hplot utilities
 #' @importFrom assertive.base assert_all_are_true
 #' @importFrom assertive.properties assert_is_null
@@ -92,7 +92,7 @@
 #' @examples
 #' library(gtable)
 #' # Figure construction based on overall dimensions
-#' Figure1 <- multipanelfigure(
+#' Figure1 <- multi_panel_figure(
 #'    width = 100,
 #'    columns = 4,
 #'    height = 100,
@@ -101,7 +101,7 @@
 #' gtable_show_layout(Figure1)
 #'
 #' # Figure construction based on individual panel dimensions
-#' Figure2 <- multipanelfigure(
+#' Figure2 <- multi_panel_figure(
 #'    widths = c(20,30),
 #'    heights = c(40,60),
 #'    figureName = "Figure2")
@@ -113,17 +113,17 @@
 #' p <- ggplot(mtcars, aes(wt, mpg)) +
 #'   geom_point()
 #' ## Fill panels
-#' Figure2 <- addpanel(Figure2, p, topPanel = 1, leftPanel = 2)
-#' Figure2 <- addpanel(Figure2, p, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' Figure2 <- add_panel(Figure2, p, topPanel = 1, leftPanel = 2)
+#' Figure2 <- add_panel(Figure2, p, topPanel = 2, leftPanel = 1, rightPanel = 2)
 #' ## Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
 #' usedUnit <- "in"
-#' width <- simplegrobwidth(Figure2, unitTo = usedUnit)
-#' height <- simplegrobheight(Figure2, unitTo = usedUnit)
+#' width <- simple_grob_width(Figure2, unitTo = usedUnit)
+#' height <- simple_grob_height(Figure2, unitTo = usedUnit)
 #' ggsave(tmpFile, Figure2, width = width, height = height)
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
-multipanelfigure <- function(
+multi_panel_figure <- function(
   width = NULL,
   widths = NULL,
   columns = NULL,
@@ -236,4 +236,12 @@ multipanelfigure <- function(
     multipanelfigure = multipanelfigure)
   class(tmpGTable) <- c("multipanelfigure", class(tmpGTable))
   return(tmpGTable)
+}
+
+#' @export
+multipanelfigure <- function( ... ){
+  .Deprecated(
+    new = "multi_panel_figure",
+    package = "multipanelfigure")
+  multi_panel_figure( ... )
 }

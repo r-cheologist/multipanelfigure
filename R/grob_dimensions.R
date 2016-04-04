@@ -1,8 +1,8 @@
 #' @title Convenient Access to \code{grob} Dimensions
-#' @aliases simplegrobheight
-#' @aliases simplegrobwidth
-#' @usage simplegrobwidth(grob, unitTo = "mm")
-#' simplegrobheight(grob, unitTo = "mm")
+#' @name grob_dimensions
+#' @aliases simplegrobheight simplegrobwidth simple_grob_height simple_grob_width
+#' @usage simple_grob_width(grob, unitTo = "mm")
+#' simple_grob_height(grob, unitTo = "mm")
 #' @description Convenience functions extracting dimensions from
 #' \code{\link{grob}} objects.
 #' @param unitTo A single \code{\link{character}} string representing a valid
@@ -11,7 +11,7 @@
 #' retrieved.
 #' @return Single \code{\link{numeric}} objects are returned.
 #' @author Johannes Graumann
-#' @seealso \code{\link{multipanelfigure}}
+#' @seealso \code{\link{multi_panel_figure}}
 #' @importFrom assertive.types assert_is_inherited_from
 #' @importFrom assertive.types assert_is_a_string
 #' @importFrom grid convertUnit
@@ -23,13 +23,13 @@
 #' testCircle <- circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
 #' grid.newpage()
 #' grid.draw(testCircle)
-#' simplegrobheight(testCircle)
-#' simplegrobwidth(testCircle)
+#' simple_grob_height(testCircle)
+#' simple_grob_width(testCircle)
 #'
-#' simplegrobheight(testCircle, unitTo = "in")
-#' simplegrobwidth(testCircle, unitTo = "cm")
+#' simple_grob_height(testCircle, unitTo = "in")
+#' simple_grob_width(testCircle, unitTo = "cm")
 #' @export
-simplegrobwidth <- function(grob, unitTo = "mm"){
+simple_grob_width <- function(grob, unitTo = "mm"){
   # Check prerequisites
   grob %>%
     assert_is_inherited_from(classes = "grob")
@@ -45,7 +45,7 @@ simplegrobwidth <- function(grob, unitTo = "mm"){
 }
 
 #' @export
-simplegrobheight <- function(grob, unitTo = "mm"){
+simple_grob_height <- function(grob, unitTo = "mm"){
   # Check prerequisites
   grob %>%
     assert_is_inherited_from(classes = "grob")
@@ -59,4 +59,20 @@ simplegrobheight <- function(grob, unitTo = "mm"){
     unitTo = unitTo,
     valueOnly = TRUE)
 
+}
+
+#' @export
+simplegrobheight <- function( ... ){
+  .Deprecated(
+    new = "simple_grob_height",
+    package = "multipanelfigure")
+  simple_grob_height( ... )
+}
+
+#' @export
+simplegrobwidth <- function( ... ){
+  .Deprecated(
+    new = "simple_grob_width",
+    package = "multipanelfigure")
+  simple_grob_width( ... )
 }

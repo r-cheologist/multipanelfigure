@@ -1,7 +1,7 @@
-#' @title addpanel
-#' @aliases addpanel
+#' @title add_panel
+#' @aliases addPanel
 #' @description A convenience function adding graphical objects to a
-#' \code{\link[gtable]{gtable}} constructed by \code{\link{multipanelfigure}}.
+#' \code{\link[gtable]{gtable}} constructed by \code{\link{multi_panel_figure}}.
 #' @details Currently supported as panel-representing objects (\code{panel}) are
 #' \enumerate{
 #'   \item{\code{\link[ggplot2]{ggplot}} objects.}
@@ -23,7 +23,7 @@
 #' \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of which
 #' with respect to plot formatting are not well studied.
 #' @param figure Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
-#' as produced by \code{\link{multipanelfigure}} and representing the figure the
+#' as produced by \code{\link{multi_panel_figure}} and representing the figure the
 #' panel is to be placed in.
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
@@ -47,7 +47,7 @@
 #' (\code{figure}) with the addition of the \code{panel}.
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{multipanelfigure}},
+#' @seealso \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
 #' \code{\link[jpeg]{readJPEG}}
 #' @importFrom assertive.base assert_all_are_true
@@ -78,7 +78,7 @@
 #' # Create the figure layout
 #' require(grid)
 #' require(gtable)
-#' Figure <- multipanelfigure(
+#' Figure <- multi_panel_figure(
 #'   widths = c(20,30,30,30),
 #'   heights = c(40,60,60,60),
 #'   figureName = "Figure")
@@ -94,7 +94,7 @@
 #' p <- p + geom_point()
 #'
 #' # Fill a first panel using the ggplot object directly
-#' Figure <- addpanel(Figure, p, topPanel = 1, leftPanel = 1)
+#' Figure <- add_panel(Figure, p, topPanel = 1, leftPanel = 1)
 #' grid.draw(Figure)
 #' # One panel is occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -112,7 +112,7 @@
 #'   height = 40,
 #'   unit = "mm",
 #'   dpi = 300)
-#' Figure <- addpanel(
+#' Figure <- add_panel(
 #'     Figure,
 #'     tmpFile,
 #'     topPanel = 1,
@@ -134,7 +134,7 @@
 #'   height = 60,
 #'   unit = "mm",
 #'   dpi = 300)
-#' Figure <- addpanel(
+#' Figure <- add_panel(
 #'     Figure,
 #'     tmpFile,
 #'     topPanel = 2,
@@ -157,7 +157,7 @@
 #'   height = 125,
 #'   unit = "mm",
 #'   dpi = 300)
-#' Figure <- addpanel(
+#' Figure <- add_panel(
 #'   Figure,
 #'   tmpFile,
 #'   topPanel = 2,
@@ -174,7 +174,7 @@
 #' require(lattice)
 #' Depth <- equal.count(quakes$depth, number=8, overlap=.1)
 #' latticePlot_trellis <- xyplot(lat ~ long | Depth, data = quakes)
-#' Figure <- addpanel(
+#' Figure <- add_panel(
 #'   Figure,
 #'   latticePlot_trellis,
 #'   topPanel = 3,
@@ -191,7 +191,7 @@
 #' venn_plot <- venn.diagram(
 #'   x = list(A = 1:150, B = 121:170),
 #'   filename = NULL)
-#' Figure <- addpanel(
+#' Figure <- add_panel(
 #'   Figure,
 #'   venn_plot,
 #'   topPanel = 4,
@@ -206,7 +206,7 @@
 #' plot(seq(10))
 #' grid.echo()
 #' grid.grab() -> base_plot
-#' Figure <- addpanel(
+#' Figure <- add_panel(
 #'   Figure,
 #'   base_plot,
 #'   topPanel = 4,
@@ -216,7 +216,7 @@
 #' # Twelve panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
 #'}
-addpanel <- function(
+add_panel <- function(
   figure,
   panel,
   topPanel = 1,
@@ -393,4 +393,12 @@ makeGrob <- function(x, unitTo){
     stop("Class of \'panel\' is not supported.")
   }
   return(panel)
+}
+
+#' @export
+addPanel <- function( ... ){
+  .Deprecated(
+    new = "add_panel",
+    package = "multipanelfigure")
+  add_panel( ... )
 }

@@ -9,13 +9,13 @@
 #' invoked for the side effect of printing the plot to the current device.
 #' @examples
 #' p <- lattice::xyplot(dist ~ speed, cars)
-#' fig <- multipanelfigure(
+#' fig <- multi_panel_figure(
 #'   width = 100, height = 100,
 #'   rows = 1, columns = 1
 #' )
 #' # With no panels, printing shows the layout
 #' print(fig)
-#' fig <- addpanel(fig, p)
+#' fig <- add_panel(fig, p)
 #' # After a panel is added, printing shows the plot.
 #' print(fig) # shows plot
 #' @importFrom assertive.properties is_empty

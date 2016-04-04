@@ -10,16 +10,16 @@
 #' if(requireNamespace("magrittr"))
 #' {
 #'   `%>%` <- magrittr::`%>%`
-#'   fig <- multipanelfigure(
+#'   fig <- multi_panel_figure(
 #'     width = 150, height = 150,
 #'     rows = 3, columns = 3,
 #'     interPanelSpacing = 0
 #'   )
 #'   rhinoFile <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
 #'   fig %>%
-#'     addpanel(rhinoFile) %>%
-#'     addpanel(rhinoFile, leftPanel = 2, rightPanel = 3) %>%
-#'     addpanel(rhinoFile, topPanel = 2, bottomPanel = 3) %>%
-#'     addpanel(rhinoFile, leftPanel = 2, rightPanel = 3, topPanel = 2, bottomPanel = 3)
+#'     add_panel(rhinoFile) %>%
+#'     add_panel(rhinoFile, leftPanel = 2, rightPanel = 3) %>%
+#'     add_panel(rhinoFile, topPanel = 2, bottomPanel = 3) %>%
+#'     add_panel(rhinoFile, leftPanel = 2, rightPanel = 3, topPanel = 2, bottomPanel = 3)
 #' }
 NULL
