@@ -1,11 +1,11 @@
 #' @title Convenient Access to \code{grob} Dimensions
 #' @name grob_dimensions
 #' @aliases simplegrobheight simplegrobwidth simple_grob_height simple_grob_width
-#' @usage simple_grob_width(grob, unitTo = "mm")
-#' simple_grob_height(grob, unitTo = "mm")
+#' @usage simple_grob_width(grob, unit_to = "mm")
+#' simple_grob_height(grob, unit_to = "mm")
 #' @description Convenience functions extracting dimensions from
 #' \code{\link{grob}} objects.
-#' @param unitTo A single \code{\link{character}} string representing a valid
+#' @param unit_to A single \code{\link{character}} string representing a valid
 #' \pkg{grid}-\code{\link[grid]{unit}}.
 #' @param grob A \code{\link[grid]{grob}} object for which dimensions are to be
 #' retrieved.
@@ -26,37 +26,37 @@
 #' simple_grob_height(testCircle)
 #' simple_grob_width(testCircle)
 #'
-#' simple_grob_height(testCircle, unitTo = "in")
-#' simple_grob_width(testCircle, unitTo = "cm")
+#' simple_grob_height(testCircle, unit_to = "in")
+#' simple_grob_width(testCircle, unit_to = "cm")
 #' @export
-simple_grob_width <- function(grob, unitTo = "mm"){
+simple_grob_width <- function(grob, unit_to = "mm"){
   # Check prerequisites
   grob %>%
     assert_is_inherited_from(classes = "grob")
-  unitTo %>%
+  unit_to %>%
     assert_is_a_string() %>%
     assert_is_a_valid_unit_type()
 
   # Process
   convertUnit(
     widthDetails(grob),
-    unitTo = unitTo,
+    unitTo = unit_to,
     valueOnly = TRUE)
 }
 
 #' @export
-simple_grob_height <- function(grob, unitTo = "mm"){
+simple_grob_height <- function(grob, unit_to = "mm"){
   # Check prerequisites
   grob %>%
     assert_is_inherited_from(classes = "grob")
-  unitTo %>%
+  unit_to %>%
     assert_is_a_string() %>%
     assert_is_a_valid_unit_type()
 
   # Process
   convertUnit(
     heightDetails(grob),
-    unitTo = unitTo,
+    unitTo = unit_to,
     valueOnly = TRUE)
 
 }
@@ -66,7 +66,13 @@ simplegrobheight <- function( ... ){
   .Deprecated(
     new = "simple_grob_height",
     package = "multipanelfigure")
-  simple_grob_height( ... )
+  paramList <- list( ... )
+  if("unitTo" %in% names(paramList)){
+    unit_to <- paramList[["unitTo"]]
+  } else {
+    unit_to = "mm"
+  }
+  simple_grob_height(unit_to = unit_to, ... )
 }
 
 #' @export
@@ -74,5 +80,11 @@ simplegrobwidth <- function( ... ){
   .Deprecated(
     new = "simple_grob_width",
     package = "multipanelfigure")
-  simple_grob_width( ... )
+  paramList <- list( ... )
+  if("unitTo" %in% names(paramList)){
+    unit_to <- paramList[["unitTo"]]
+  } else {
+    unit_to = "mm"
+  }
+  simple_grob_width(unit_to = unit_to, ... )
 }

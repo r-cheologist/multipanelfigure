@@ -22,9 +22,9 @@ if(requireNamespace("magrittr"))
   rhinoFile <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
   fig \%>\%
     add_panel(rhinoFile) \%>\%
-    add_panel(rhinoFile, leftPanel = 2, rightPanel = 3) \%>\%
-    add_panel(rhinoFile, topPanel = 2, bottomPanel = 3) \%>\%
-    add_panel(rhinoFile, leftPanel = 2, rightPanel = 3, topPanel = 2, bottomPanel = 3)
+    add_panel(rhinoFile, left_panel = 2, right_panel = 3) \%>\%
+    add_panel(rhinoFile, top_panel = 2, bottom_panel = 3) \%>\%
+    add_panel(rhinoFile, left_panel = 2, right_panel = 3, top_panel = 2, bottom_panel = 3)
 }
 }
 

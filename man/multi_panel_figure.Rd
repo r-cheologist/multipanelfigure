@@ -7,7 +7,7 @@
 \usage{
 multi_panel_figure(width = NULL, widths = NULL, columns = NULL,
   height = NULL, heights = NULL, rows = NULL, interPanelSpacing = NaN,
-  unit = "mm", figureName = "FigureX", panelLabels = LETTERS)
+  unit = "mm", figureName = "FigureX", panel_labels = LETTERS)
 }
 \arguments{
 \item{width}{Single \code{link{numeric}} defining the width of the resulting
@@ -46,7 +46,7 @@ dimensions defined. Must satisfy \code{grid:::valid.units}.}
 \item{figureName}{Single \code{\link{character}} object defining the name of
 the resulting \code{\link[gtable]{gtable}}.}
 
-\item{panelLabels}{A \code{\link{character}} \code{\link{vector}} defining
+\item{panel_labels}{A \code{\link{character}} \code{\link{vector}} defining
 the panel labels used for automated annotation. \code{\link{length}} must be
 larger or equal to the number of panels defined. Will be used sequentially.}
 }
@@ -57,8 +57,8 @@ Returns an object of class \code{multipanelfigure} as well as
   \item{\code{multipanelfigure.panelsFree}:}{A \code{\link{logical}}
     \code{\link{matrix}} with the dimensions of the \code{\link[gtable]{gtable}}
     indicating occupancy of the panels in the table.}
-  \item{\code{multipanelfigure.panelLabelsFree}:}{A \code{\link{character}}
-    \code{\link{vector}} indicative of the \code{panelLabels} still available.}
+  \item{\code{multipanelfigure.panellabelsfree}:}{A \code{\link{character}}
+    \code{\link{vector}} indicative of the \code{panel_labels} still available.}
   \item{\code{multipanelfigure.unit}:}{A single \code{\link{character}}
     object storing the corresponding value given during object creation.}}
 }
@@ -117,8 +117,8 @@ library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg)) +
   geom_point()
 ## Fill panels
-Figure2 <- add_panel(Figure2, p, topPanel = 1, leftPanel = 2)
-Figure2 <- add_panel(Figure2, p, topPanel = 2, leftPanel = 1, rightPanel = 2)
+Figure2 <- add_panel(Figure2, p, top_panel = 1, left_panel = 2)
+Figure2 <- add_panel(Figure2, p, top_panel = 2, left_panel = 1, right_panel = 2)
 ## Plot to appropriately sized png device
 tmpFile <- tempfile(fileext = ".png")
 usedUnit <- "in"

@@ -4,9 +4,13 @@
 \alias{multipanelfigure-deprecated}
 \title{Superceded objects in multipanelfigure}
 \usage{
-addPanel( ... )
+addPanel( figure, ... )
 }
 \arguments{
+\item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
+as produced by \code{\link{multi_panel_figure}} and representing the figure the
+panel is to be placed in.}
+
 \item{...}{Arguments to functions you shouldn't use.}
 }
 \description{

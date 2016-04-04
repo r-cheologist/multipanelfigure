@@ -5,9 +5,9 @@
 \alias{add_panel}
 \title{add_panel}
 \usage{
-add_panel(figure, panel, topPanel = 1, bottomPanel = topPanel,
-  leftPanel = 1, rightPanel = leftPanel, panelLabel = head(attr(figure,
-  "multipanelfigure.panelLabelsFree"), 1))
+add_panel(figure, panel, top_panel = 1, bottom_panel = top_panel,
+  left_panel = 1, right_panel = left_panel,
+  panel_label = head(attr(figure, "multipanelfigure.panellabelsfree"), 1))
 }
 \arguments{
 \item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
@@ -21,21 +21,21 @@ bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 'Details'.}
 
-\item{topPanel}{Single \code{\link{numeric}} indicating the row index of
+\item{top_panel}{Single \code{\link{numeric}} indicating the row index of
 the panel that is to be placed in the figure.}
 
-\item{bottomPanel}{Single \code{\link{numeric}} indicating the lower row
+\item{bottom_panel}{Single \code{\link{numeric}} indicating the lower row
 index of the panel that is to be placed in the figure. Important for
 definition of panel spanning (see examples).}
 
-\item{leftPanel}{Single \code{\link{numeric}} indicating the column index
+\item{left_panel}{Single \code{\link{numeric}} indicating the column index
 of the panel that is to be placed in the figure.}
 
-\item{rightPanel}{Single \code{\link{numeric}} indicating the right column
+\item{right_panel}{Single \code{\link{numeric}} indicating the right column
 index of the panel that is to be placed in the figure. Important for
 definition of panel spanning (see examples).}
 
-\item{panelLabel}{Single \code{\link{character}} object defining the panel
+\item{panel_label}{Single \code{\link{character}} object defining the panel
 label used for automated annotation.}
 }
 \value{
@@ -88,7 +88,7 @@ p <- ggplot(mtcars, aes(wt, mpg))
 p <- p + geom_point()
 
 # Fill a first panel using the ggplot object directly
-Figure <- add_panel(Figure, p, topPanel = 1, leftPanel = 1)
+Figure <- add_panel(Figure, p, top_panel = 1, left_panel = 1)
 grid.draw(Figure)
 # One panel is occupied
 attr(Figure,"multipanelfigure.panelsFree")
@@ -109,8 +109,8 @@ ggsave(
 Figure <- add_panel(
     Figure,
     tmpFile,
-    topPanel = 1,
-    leftPanel = 2)
+    top_panel = 1,
+    left_panel = 2)
 grid.draw(Figure)
 # Two panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")
@@ -131,9 +131,9 @@ ggsave(
 Figure <- add_panel(
     Figure,
     tmpFile,
-    topPanel = 2,
-    leftPanel = 1,
-    rightPanel = 2)
+    top_panel = 2,
+    left_panel = 1,
+    right_panel = 2)
 grid.draw(Figure)
 # Four panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")
@@ -154,9 +154,9 @@ ggsave(
 Figure <- add_panel(
   Figure,
   tmpFile,
-  topPanel = 2,
-  bottomPanel = 3,
-  leftPanel = 3)
+  top_panel = 2,
+  bottom_panel = 3,
+  left_panel = 3)
 grid.draw(Figure)
 # Six panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")
@@ -171,9 +171,9 @@ latticePlot_trellis <- xyplot(lat ~ long | Depth, data = quakes)
 Figure <- add_panel(
   Figure,
   latticePlot_trellis,
-  topPanel = 3,
-  leftPanel = 1,
-  rightPanel = 2)
+  top_panel = 3,
+  left_panel = 1,
+  right_panel = 2)
 grid.draw(Figure)
 # Eight panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")
@@ -188,9 +188,9 @@ venn_plot <- venn.diagram(
 Figure <- add_panel(
   Figure,
   venn_plot,
-  topPanel = 4,
-  leftPanel = 1,
-  rightPanel = 2)
+  top_panel = 4,
+  left_panel = 1,
+  right_panel = 2)
 grid.draw(Figure)
 # Ten panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")
@@ -203,9 +203,9 @@ grid.grab() -> base_plot
 Figure <- add_panel(
   Figure,
   base_plot,
-  topPanel = 4,
-  leftPanel = 3,
-  rightPanel = 4)
+  top_panel = 4,
+  left_panel = 3,
+  right_panel = 4)
 grid.draw(Figure)
 # Twelve panels are occupied
 attr(Figure,"multipanelfigure.panelsFree")

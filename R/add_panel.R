@@ -31,17 +31,17 @@
 #' \code{\link[lattice]{trellis.object}}, a \code{\link[grid]{gList}} object or
 #' a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 #' 'Details'.
-#' @param topPanel Single \code{\link{numeric}} indicating the row index of
+#' @param top_panel Single \code{\link{numeric}} indicating the row index of
 #' the panel that is to be placed in the figure.
-#' @param bottomPanel Single \code{\link{numeric}} indicating the lower row
+#' @param bottom_panel Single \code{\link{numeric}} indicating the lower row
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
-#' @param leftPanel Single \code{\link{numeric}} indicating the column index
+#' @param left_panel Single \code{\link{numeric}} indicating the column index
 #' of the panel that is to be placed in the figure.
-#' @param rightPanel Single \code{\link{numeric}} indicating the right column
+#' @param right_panel Single \code{\link{numeric}} indicating the right column
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
-#' @param panelLabel Single \code{\link{character}} object defining the panel
+#' @param panel_label Single \code{\link{character}} object defining the panel
 #' label used for automated annotation.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
@@ -81,7 +81,7 @@
 #' Figure <- multi_panel_figure(
 #'   widths = c(20,30,30,30),
 #'   heights = c(40,60,60,60),
-#'   figureName = "Figure")
+#'   figure_name = "Figure")
 #' gtable_show_layout(Figure)
 #' # All panels are free
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -94,7 +94,7 @@
 #' p <- p + geom_point()
 #'
 #' # Fill a first panel using the ggplot object directly
-#' Figure <- add_panel(Figure, p, topPanel = 1, leftPanel = 1)
+#' Figure <- add_panel(Figure, p, top_panel = 1, left_panel = 1)
 #' grid.draw(Figure)
 #' # One panel is occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -115,8 +115,8 @@
 #' Figure <- add_panel(
 #'     Figure,
 #'     tmpFile,
-#'     topPanel = 1,
-#'     leftPanel = 2)
+#'     top_panel = 1,
+#'     left_panel = 2)
 #' grid.draw(Figure)
 #' # Two panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -137,9 +137,9 @@
 #' Figure <- add_panel(
 #'     Figure,
 #'     tmpFile,
-#'     topPanel = 2,
-#'     leftPanel = 1,
-#'     rightPanel = 2)
+#'     top_panel = 2,
+#'     left_panel = 1,
+#'     right_panel = 2)
 #' grid.draw(Figure)
 #' # Four panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -160,9 +160,9 @@
 #' Figure <- add_panel(
 #'   Figure,
 #'   tmpFile,
-#'   topPanel = 2,
-#'   bottomPanel = 3,
-#'   leftPanel = 3)
+#'   top_panel = 2,
+#'   bottom_panel = 3,
+#'   left_panel = 3)
 #' grid.draw(Figure)
 #' # Six panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -177,9 +177,9 @@
 #' Figure <- add_panel(
 #'   Figure,
 #'   latticePlot_trellis,
-#'   topPanel = 3,
-#'   leftPanel = 1,
-#'   rightPanel = 2)
+#'   top_panel = 3,
+#'   left_panel = 1,
+#'   right_panel = 2)
 #' grid.draw(Figure)
 #' # Eight panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -194,9 +194,9 @@
 #' Figure <- add_panel(
 #'   Figure,
 #'   venn_plot,
-#'   topPanel = 4,
-#'   leftPanel = 1,
-#'   rightPanel = 2)
+#'   top_panel = 4,
+#'   left_panel = 1,
+#'   right_panel = 2)
 #' grid.draw(Figure)
 #' # Ten panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -209,9 +209,9 @@
 #' Figure <- add_panel(
 #'   Figure,
 #'   base_plot,
-#'   topPanel = 4,
-#'   leftPanel = 3,
-#'   rightPanel = 4)
+#'   top_panel = 4,
+#'   left_panel = 3,
+#'   right_panel = 4)
 #' grid.draw(Figure)
 #' # Twelve panels are occupied
 #' attr(Figure,"multipanelfigure.panelsFree")
@@ -219,11 +219,11 @@
 add_panel <- function(
   figure,
   panel,
-  topPanel = 1,
-  bottomPanel = topPanel,
-  leftPanel = 1,
-  rightPanel = leftPanel,
-  panelLabel = head(attr(figure, "multipanelfigure.panelLabelsFree"),1))
+  top_panel = 1,
+  bottom_panel = top_panel,
+  left_panel = 1,
+  right_panel = left_panel,
+  panel_label = head(attr(figure, "multipanelfigure.panellabelsfree"),1))
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -232,70 +232,70 @@ add_panel <- function(
   figure %>%
     assert_is_multipanelfigure
 
-  panel <- makeGrob(panel, unitTo = attr(figure , "multipanelfigure.unit"))
+  panel <- makeGrob(panel, unit_to = attr(figure , "multipanelfigure.unit"))
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
 
-  topPanel %>%
+  top_panel %>%
     assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_closed_range(lower = 1, upper = rows)
 
-  bottomPanel %>%
+  bottom_panel %>%
     assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_closed_range(lower = 1, upper = rows)
 
-  topPanel %>%
-    assert_all_are_in_range(lower = 1, upper = bottomPanel)
+  top_panel %>%
+    assert_all_are_in_range(lower = 1, upper = bottom_panel)
 
-  bottomPanel %>%
-    assert_all_are_in_range(lower = topPanel, upper = rows)
+  bottom_panel %>%
+    assert_all_are_in_range(lower = top_panel, upper = rows)
 
-  leftPanel %>%
+  left_panel %>%
     assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_range(lower = 1, upper = columns)
 
-  rightPanel %>%
+  right_panel %>%
     assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_range(lower = 1, upper = columns)
-    assert_all_are_true(leftPanel <= rightPanel)
+    assert_all_are_true(left_panel <= right_panel)
 
-  leftPanel %>%
-    assert_all_are_in_closed_range(lower = 1, upper = rightPanel)
+  left_panel %>%
+    assert_all_are_in_closed_range(lower = 1, upper = right_panel)
 
-  rightPanel %>%
-    assert_all_are_in_closed_range(lower = leftPanel, upper = columns)
+  right_panel %>%
+    assert_all_are_in_closed_range(lower = left_panel, upper = columns)
 
   # Are the targeted panels free?
   tmpMatrix <- matrix(TRUE, nrow = rows, ncol = columns)
   tmpMatrix[
-    seq(from=topPanel, to= bottomPanel),
-    seq(from=leftPanel,to=rightPanel)] <- FALSE
+    seq(from=top_panel, to= bottom_panel),
+    seq(from=left_panel,to=right_panel)] <- FALSE
   tmpMatrix <- attr(figure,which = "multipanelfigure.panelsFree") + tmpMatrix
   if(all(tmpMatrix[
-    seq(from=topPanel, to= bottomPanel),
-    seq(from=leftPanel,to=rightPanel)] == 1))
+    seq(from=top_panel, to= bottom_panel),
+    seq(from=left_panel,to=right_panel)] == 1))
   {
     attr(figure,which = "multipanelfigure.panelsFree")[
-      seq(from=topPanel, to= bottomPanel),
-      seq(from=leftPanel,to=rightPanel)] <- FALSE
+      seq(from=top_panel, to= bottom_panel),
+      seq(from=left_panel,to=right_panel)] <- FALSE
   } else {
     stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
   }
 
-  assert_is_a_string(panelLabel)
+  assert_is_a_string(panel_label)
 
   ##############
   # Processing #
   ##############
   # Get the "real" spans (including inter-panel spaces)
   placing <-
-    c(topPanel, bottomPanel, leftPanel, rightPanel) %>%
-    setNames(c("topPanel", "bottomPanel", "leftPanel", "rightPanel")) %>%
+    c(top_panel, bottom_panel, left_panel, right_panel) %>%
+    setNames(c("top_panel", "bottom_panel", "left_panel", "right_panel")) %>%
     sapply(
       function(pl){
         if(pl == 1){
@@ -305,33 +305,33 @@ add_panel <- function(
         }
       })
   # Add panel label
-  panelLabel <- grid.text(
-    label = panelLabel,
+  panel_label <- grid.text(
+    label = panel_label,
     x = 0, y = 1,
     hjust = unit(0, "mm"),
     vjust = unit(1, "mm"),
     draw = FALSE)
-  panel <- gTree(children=gList(panel, panelLabel))
+  panel <- gTree(children=gList(panel, panel_label))
   # Add grob to gtable
   figure <- gtable_add_grob(
     figure,
     grobs = panel,
-    t = placing[["topPanel"]],
-    b = placing[["bottomPanel"]],
-    l = placing[["leftPanel"]],
-    r = placing[["rightPanel"]])
+    t = placing[["top_panel"]],
+    b = placing[["bottom_panel"]],
+    l = placing[["left_panel"]],
+    r = placing[["right_panel"]])
   # Fix attributes
-  attr(figure , "multipanelfigure.panelLabelsFree") <- tail(
-    x = attr(figure , "multipanelfigure.panelLabelsFree"),
+  attr(figure , "multipanelfigure.panellabelsfree") <- tail(
+    x = attr(figure , "multipanelfigure.panellabelsfree"),
     n = -1)
-  attr(figure , "multipanelfigure.panelLabelsFree") <- head(
-    x = attr(figure , "multipanelfigure.panelLabelsFree"),
+  attr(figure , "multipanelfigure.panellabelsfree") <- head(
+    x = attr(figure , "multipanelfigure.panellabelsfree"),
     n = sum(attr(figure , "multipanelfigure.panelsFree")))
   # Return
   return(figure)
 }
 
-makeGrob <- function(x, unitTo){
+makeGrob <- function(x, unit_to){
   if(is.character(x)){
     x %>%
       assert_is_a_string() %>%
@@ -343,7 +343,7 @@ makeGrob <- function(x, unitTo){
       panelSize <-
         (panelDim/panelDpi) %>%
         unit(units = "inches") %>%
-        convertUnit(unitTo = unitTo)
+        convertUnit(unitTo = unit_to)
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -363,7 +363,7 @@ makeGrob <- function(x, unitTo){
       panelSize <-
         (panelDim/panelDpi) %>%
         unit(units = "inches") %>%
-        convertUnit(unitTo = unitTo)
+        convertUnit(unitTo = unit_to)
       panel <- rasterGrob(
         panel,
         x = 0, y = 1,
@@ -396,9 +396,46 @@ makeGrob <- function(x, unitTo){
 }
 
 #' @export
-addPanel <- function( ... ){
+addPanel <- function( figure, ... ){
   .Deprecated(
     new = "add_panel",
     package = "multipanelfigure")
-  add_panel( ... )
+  paramList <- list ( ... )
+  if("topPanel" %in% names(paramList)){
+    top_panel = paramList[["topPanel"]]
+  } else {
+    top_panel = 1
+  }
+  if("bottomPanel" %in% names(paramList)){
+    bottom_panel = paramList[["bottomPanel"]]
+  } else {
+    bottom_panel = top_panel
+  }
+  if("leftPanel" %in% names(paramList)){
+    left_panel = paramList[["leftPanel"]]
+  } else {
+    left_panel = 1
+  }
+  if("rightPanel" %in% names(paramList)){
+    right_panel = paramList[["rightPanel"]]
+  } else {
+    rightPanel = left_panel
+  }
+  if("panelLabel" %in% names(paramList)){
+    panel_label = paramList[["panelPanel"]]
+  } else {
+    panel_label = head(
+      attr(
+        figure,
+        "multipanelfigure.panellabelsfree"),
+      1)
+  }
+  add_panel(
+    figure = figure,
+    top_panel = top_panel,
+    bottom_panel = bottom_panel,
+    left_panel = left_panel,
+    right_panel = right_panel,
+    panel_label = panel_label,
+    ... )
 }
