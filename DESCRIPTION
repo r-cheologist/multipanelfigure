@@ -11,7 +11,7 @@ Description: Tools to create a layout for multipanel figures and fill the
     panels.
 Imports:
     assertive.base (>= 0.0-5),
-    assertive.files (>= 0.0-1),
+    assertive.files (>= 0.0-2),
     assertive.numbers (>= 0.0-1),
     assertive.properties (>= 0.0-2),
     assertive.types (>= 0.0-2),
