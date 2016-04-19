@@ -36,9 +36,9 @@
 #' #' # ggsave defaults to measuring dimensions in inches
 #' width <- simple_grob_width(figure, unit_to = "in")
 #' height <- simple_grob_height(figure, unit_to = "in")
-#' \donttest{ # Not testing due to use of external software
 #' tmp_file <- tempfile(fileext = ".png")
 #' ggplot2::ggsave(tmp_file, figure, width = width, height = height)
+#' \donttest{ # Not testing due to use of external software
 #' utils::browseURL(tmp_file)
 #' }
 #' @export
