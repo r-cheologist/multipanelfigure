@@ -6,8 +6,10 @@
 \title{multi_panel_figure}
 \usage{
 multi_panel_figure(width = NULL, widths = NULL, columns = NULL,
-  height = NULL, heights = NULL, rows = NULL, interPanelSpacing = NaN,
-  unit = "mm", figureName = "FigureX", panel_labels = LETTERS)
+  height = NULL, heights = NULL, rows = NULL, inter_panel_spacing = NaN,
+  unit = "mm", figure_name = "FigureX",
+  panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman",
+  "lower-roman", "upper-greek", "lower-greek", "none"))
 }
 \arguments{
 \item{width}{Single \code{link{numeric}} defining the width of the resulting
@@ -36,19 +38,18 @@ interfering parameters.}
 the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 interfering parameters.}
 
-\item{interPanelSpacing}{The amount of white space automatically inserted
+\item{inter_panel_spacing}{The amount of white space automatically inserted
 between panels. Defaults to \code{5 mm} unless explicitly given, in which
 case the value depents on the \code{unit} parameter.}
 
 \item{unit}{Single \code{\link{character}} object defining the unit of all
 dimensions defined. Must satisfy \code{grid:::valid.units}.}
 
-\item{figureName}{Single \code{\link{character}} object defining the name of
+\item{figure_name}{Single \code{\link{character}} object defining the name of
 the resulting \code{\link[gtable]{gtable}}.}
 
-\item{panel_labels}{A \code{\link{character}} \code{\link{vector}} defining
-the panel labels used for automated annotation. \code{\link{length}} must be
-larger or equal to the number of panels defined. Will be used sequentially.}
+\item{panel_label_type}{A string specifying the marker style for the panel labels
+used for automated annotation.  Defaults to uppercase Latin letters.}
 }
 \value{
 Returns an object of class \code{multipanelfigure} as well as
@@ -75,13 +76,13 @@ The \code{\link[gtable]{gtable}} may be constructed in two ways:
     \code{width} and \code{height} together with the number of \code{columns}
     and \code{rows} requested.}}
 The function automatically inserts whitespace of width
-\code{interPanelSpacing} between panels, which has to be considered for the
+\code{inter_panel_spacing} between panels, which has to be considered for the
 total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
 \code{\link[gtable]{gtable}} in the former case, for example may be calculated
-\deqn{W[total] = sum(widths) + (length(widths) - 1) * interPanelSpacing}
+\deqn{W[total] = sum(widths) + (length(widths) - 1) * inter_panel_spacing}
 while width of resulting panels in the latter table construction approach may
 be calculated
-\deqn{W[panel] = (width - (columns - 1) * interPanelSpacing)/columns}
+\deqn{W[panel] = (width - (columns - 1) * inter_panel_spacing)/columns}
 
 The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 exclusive parameter sets:
@@ -94,46 +95,55 @@ exclusive parameter sets:
     Excludes the use of \code{widths} and \code{heights}.}}
 }
 \examples{
-library(gtable)
 # Figure construction based on overall dimensions
-Figure1 <- multi_panel_figure(
+figure1 <- multi_panel_figure(
    width = 100,
    columns = 4,
    height = 100,
    rows = 6,
-   figureName = "Figure1")
-gtable_show_layout(Figure1)
+   figure_name = "figure1")
+# With no panels, printing shows the layout
+figure1
 
 # Figure construction based on individual panel dimensions
-Figure2 <- multi_panel_figure(
-   widths = c(20,30),
+(figure2 <- multi_panel_figure(
+   widths = c(40,30),
    heights = c(40,60),
-   figureName = "Figure2")
-gtable_show_layout(Figure2)
+   figure_name = "figure2"))
 
 # A more involved example including filling and printing to device ...
-## Make a simple ggplot object to fill panels
-library(ggplot2)
-p <- ggplot(mtcars, aes(wt, mpg)) +
-  geom_point()
-## Fill panels
-Figure2 <- add_panel(Figure2, p, top_panel = 1, left_panel = 2)
-Figure2 <- add_panel(Figure2, p, top_panel = 2, left_panel = 1, right_panel = 2)
-## Plot to appropriately sized png device
+# Make a simple ggplot object to fill panels
+ggp <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+  ggplot2::geom_point()
+# Fill panels
+# ggplots and lattice plot objects are added directly
+# The default position is the top-left panel
+figure2 <- add_panel(figure2, ggp)
+# JPEG, PNG, and TIFF images are added by passing the path to their file
+jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
+figure2 <- add_panel(figure2, jpg, left_panel = 2)
+# Plots can take up multiple panels
+figure2 <- add_panel(figure2, ggp, top_panel = 2, left_panel = 1, right_panel = 2)
+# Plot to appropriately sized png device
 tmpFile <- tempfile(fileext = ".png")
-usedUnit <- "in"
-width <- simple_grob_width(Figure2, unitTo = usedUnit)
-height <- simple_grob_height(Figure2, unitTo = usedUnit)
-ggsave(tmpFile, Figure2, width = width, height = height)
+ggplot2::ggsave(
+  tmpFile, figure2,
+  width = simple_grob_width(figure2, "in"),
+  height = simple_grob_height(figure2, "in"))
 message(
   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
+\donttest{ # Not testing due to use of external software
+utils::browseURL(tmpFile)
+}
 }
 \author{
 Johannes Graumann
 }
 \seealso{
-\code{\link[gtable]{gtable}}, \code{\link{add_panel}},
-\code{\link{simple_grob_width}}, \code{\link{simple_grob_height}}
+\code{\link{add_panel}} for more examples of adding panels
+\code{\link{simple_grob_width}} for inspecting figure dimensions
+\code{\link{capture_base_plot}} for including plots created using base graphics
+\code{\link[gtable]{gtable}} for the underlying structure of a figure
 }
 \keyword{hplot}
 \keyword{utilities}

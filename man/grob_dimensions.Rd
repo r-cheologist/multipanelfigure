@@ -8,14 +8,14 @@
 \alias{simplegrobwidth}
 \title{Convenient Access to \code{grob} Dimensions}
 \usage{
-simple_grob_width(grob, unitTo = "mm")
-simple_grob_height(grob, unitTo = "mm")
+simple_grob_width(grob, unit_to = "mm")
+simple_grob_height(grob, unit_to = "mm")
 }
 \arguments{
 \item{grob}{A \code{\link[grid]{grob}} object for which dimensions are to be
 retrieved.}
 
-\item{unitTo}{A single \code{\link{character}} string representing a valid
+\item{unit_to}{A single \code{\link{character}} string representing a valid
 \pkg{grid}-\code{\link[grid]{unit}}.}
 }
 \value{
@@ -26,15 +26,31 @@ Convenience functions extracting dimensions from
 \code{\link{grob}} objects.
 }
 \examples{
-library(grid)
-testCircle <- circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
-grid.newpage()
-grid.draw(testCircle)
-simple_grob_height(testCircle)
-simple_grob_width(testCircle)
+# Get dimensions of a grid grob
+a_circle <- grid::circleGrob(x = 15, y = 30, r = 15, default.unit = "mm")
+simple_grob_height(a_circle)
+simple_grob_width(a_circle)
 
-simple_grob_height(testCircle, unitTo = "in")
-simple_grob_width(testCircle, unitTo = "cm")
+# Use the unit_to arg to convert units
+simple_grob_height(a_circle, unit_to = "in")
+simple_grob_width(a_circle, unit_to = "cm")
+
+# Get dimensions of a multi-panel figure
+figure <- multi_panel_figure(width = 55, height = 55, rows = 2, columns = 2)
+simple_grob_height(figure)
+simple_grob_width(figure)
+
+# ggsave defaults to measuring dimensions in inches
+width <- simple_grob_width(figure, unit_to = "in")
+height <- simple_grob_height(figure, unit_to = "in")
+tmp_file <- tempfile(fileext = ".png")
+ggplot2::ggsave(
+  tmp_file, gtable::gtable_show_layout(figure),
+  width = width, height = height
+)
+\donttest{ # Not testing due to use of external software
+utils::browseURL(tmp_file)
+}
 }
 \author{
 Johannes Graumann

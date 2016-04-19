@@ -56,7 +56,7 @@ assert_is_multipanelfigure <- function(x)
     x,
     c(
       "multipanelfigure.panelsFree",
-      "multipanelfigure.panellabelsfree",
+      "multipanelfigure.panelLabelType",
       "multipanelfigure.unit"
     )
   )

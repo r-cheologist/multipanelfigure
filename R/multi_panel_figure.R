@@ -54,9 +54,8 @@
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
 #' @param figure_name Single \code{\link{character}} object defining the name of
 #' the resulting \code{\link[gtable]{gtable}}.
-#' @param panel_labels A \code{\link{character}} \code{\link{vector}} defining
-#' the panel labels used for automated annotation. \code{\link{length}} must be
-#' larger or equal to the number of panels defined. Will be used sequentially.
+#' @param panel_label_type A string specifying the marker style for the panel labels
+#' used for automated annotation.  Defaults to uppercase Latin letters.
 #' @return Returns an object of class \code{multipanelfigure} as well as
 #' \code{\link[gtable]{gtable}} object with the following additional attributes:
 #' \describe{
@@ -69,8 +68,10 @@
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[gtable]{gtable}}, \code{\link{add_panel}},
-#' \code{\link{simple_grob_width}}, \code{\link{simple_grob_height}}
+#' @seealso \code{\link{add_panel}} for more examples of adding panels
+#' \code{\link{simple_grob_width}} for inspecting figure dimensions
+#' \code{\link{capture_base_plot}} for including plots created using base graphics
+#' \code{\link[gtable]{gtable}} for the underlying structure of a figure
 #' @keywords hplot utilities
 #' @importFrom assertive.base assert_all_are_true
 #' @importFrom assertive.properties assert_is_null
@@ -90,39 +91,46 @@
 #' @importFrom gtable gtable_add_row_space
 #' @importFrom magrittr %>%
 #' @examples
-#' library(gtable)
 #' # Figure construction based on overall dimensions
-#' Figure1 <- multi_panel_figure(
+#' figure1 <- multi_panel_figure(
 #'    width = 100,
 #'    columns = 4,
 #'    height = 100,
 #'    rows = 6,
-#'    figure_name = "Figure1")
-#' gtable_show_layout(Figure1)
+#'    figure_name = "figure1")
+#' # With no panels, printing shows the layout
+#' figure1
 #'
 #' # Figure construction based on individual panel dimensions
-#' Figure2 <- multi_panel_figure(
-#'    widths = c(20,30),
+#' (figure2 <- multi_panel_figure(
+#'    widths = c(40,30),
 #'    heights = c(40,60),
-#'    figure_name = "Figure2")
-#' gtable_show_layout(Figure2)
+#'    figure_name = "figure2"))
 #'
 #' # A more involved example including filling and printing to device ...
-#' ## Make a simple ggplot object to fill panels
-#' library(ggplot2)
-#' p <- ggplot(mtcars, aes(wt, mpg)) +
-#'   geom_point()
-#' ## Fill panels
-#' Figure2 <- add_panel(Figure2, p, top_panel = 1, left_panel = 2)
-#' Figure2 <- add_panel(Figure2, p, top_panel = 2, left_panel = 1, right_panel = 2)
-#' ## Plot to appropriately sized png device
+#' # Make a simple ggplot object to fill panels
+#' ggp <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'   ggplot2::geom_point()
+#' # Fill panels
+#' # ggplots and lattice plot objects are added directly
+#' # The default position is the top-left panel
+#' figure2 <- add_panel(figure2, ggp)
+#' # JPEG, PNG, and TIFF images are added by passing the path to their file
+#' jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
+#' figure2 <- add_panel(figure2, jpg, left_panel = 2)
+#' # Plots can take up multiple panels
+#' figure2 <- add_panel(figure2, ggp, top_panel = 2, left_panel = 1, right_panel = 2)
+#' # Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
-#' usedUnit <- "in"
-#' width <- simple_grob_width(Figure2, unit_to = usedUnit)
-#' height <- simple_grob_height(Figure2, unit_to = usedUnit)
-#' ggsave(tmpFile, Figure2, width = width, height = height)
+#' ggplot2::ggsave(
+#'   tmpFile, figure2,
+#'   width = simple_grob_width(figure2, "in"),
+#'   height = simple_grob_height(figure2, "in"))
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
+#' \donttest{ # Not testing due to use of external software
+#' utils::browseURL(tmpFile)
+#' }
 multi_panel_figure <- function(
   width = NULL,
   widths = NULL,
@@ -133,13 +141,13 @@ multi_panel_figure <- function(
   inter_panel_spacing = NaN,
   unit = "mm",
   figure_name = "FigureX",
-  panel_labels = LETTERS)
+  panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
 {
   #######################
   # Check Prerequisites #
   #######################
   unit %>%
-    assert_is_a_string() %>%
+    force %>%
     assert_is_a_valid_unit_type()
 
   assert_is_a_number(inter_panel_spacing)
@@ -200,14 +208,16 @@ multi_panel_figure <- function(
     height <- sum(heights) + inter_panel_spacing * (rows - 1)
   }
 
-  assert_is_character(panel_labels)
-  assert_all_are_true(length(columns) * length(rows) <= length(panel_labels))
+  # TODO: support all CSS ordered list marker styles
+  # greek, hebrew, georgian, hiragana, etc. still TODO
+  # http://www.w3schools.com/cssref/pr_list-style-type.asp
+  panel_label_type <- match.arg(panel_label_type)
 
   ####################
   # Construct gtable #
   ####################
   # Basic layout
-  tmpGTable <-
+  tmp_gtable <-
     gtable(
       widths = unit(x = widths, unit = unit),
       heights = unit(x = heights, unit = unit),
@@ -229,13 +239,13 @@ multi_panel_figure <- function(
       data = TRUE,
       ncol = columns,
       nrow = rows),
-    panellabelsfree = panel_labels[seq(columns * rows)],
+    panelLabelType = panel_label_type,
     unit = unit)
-  attributes(tmpGTable) <- c(
-    attributes(tmpGTable),
+  attributes(tmp_gtable) <- c(
+    attributes(tmp_gtable),
     multipanelfigure = multipanelfigure)
-  class(tmpGTable) <- c("multipanelfigure", class(tmpGTable))
-  return(tmpGTable)
+  class(tmp_gtable) <- c("multipanelfigure", class(tmp_gtable))
+  return(tmp_gtable)
 }
 
 #' @export

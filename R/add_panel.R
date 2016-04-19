@@ -41,7 +41,7 @@
 #' @param right_panel Single \code{\link{numeric}} indicating the right column
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
-#' @param panel_label Single \code{\link{character}} object defining the panel
+#' @param label Single \code{\link{character}} object defining the panel
 #' label used for automated annotation.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
@@ -51,6 +51,8 @@
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
 #' \code{\link[jpeg]{readJPEG}}
 #' @importFrom assertive.base assert_all_are_true
+#' @importFrom assertive.base use_first
+#' @importFrom assertive.base coerce_to
 #' @importFrom assertive.files assert_all_are_readable_files
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.numbers assert_all_are_in_closed_range
@@ -75,147 +77,93 @@
 #' @importFrom utils head
 #' @importFrom utils tail
 #' @examples
-#' # Create the figure layout
-#' require(grid)
-#' require(gtable)
-#' Figure <- multi_panel_figure(
-#'   widths = c(20,30,30,30),
-#'   heights = c(40,60,60,60),
-#'   figure_name = "Figure")
-#' gtable_show_layout(Figure)
-#' # All panels are free
-#' attr(Figure,"multipanelfigure.panelsFree")
-#' # Clear canvas
-#' grid.newpage()
+#' # First, some setup; see below for the use of add_panel
 #'
+#' # Make a grid grob
+#' a_grob <- grid::linesGrob(arrow = grid::arrow())
 #' # Make a simple ggplot object to fill panels
-#' require(ggplot2)
-#' p <- ggplot(mtcars, aes(wt, mpg))
-#' p <- p + geom_point()
+#' a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
+#'   ggplot2::geom_point()
 #'
-#' # Fill a first panel using the ggplot object directly
-#' Figure <- add_panel(Figure, p, top_panel = 1, left_panel = 1)
-#' grid.draw(Figure)
-#' # One panel is occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
-#' # Clear canvas
-#' grid.newpage()
+#' # Save the plot to JPEG, PNG, and TIFF file for later
+#' tmp_file_jpeg <- tempfile(fileext = ".jpg")
+#' ggplot2::ggsave(
+#'   filename = tmp_file_jpeg,
+#'   plot = a_ggplot + ggplot2::ggtitle("a jpeg"),
+#'   width = 60, height = 40,
+#'   units = "mm", dpi = 300)
+#' tmp_file_png <- tempfile(fileext = ".png")
+#' ggplot2::ggsave(
+#'   filename = tmp_file_png,
+#'   plot = a_ggplot + ggplot2::ggtitle("a png"),
+#'   width = 55, height = 60,
+#'   units = "mm", dpi = 300)
+#' tmp_file_tiff <- tempfile(fileext = ".tiff")
+#' ggplot2::ggsave(
+#'   filename = tmp_file_tiff,
+#'   plot = a_ggplot + ggplot2::ggtitle("a tiff"),
+#'   width = 60, height = 125,
+#'   units = "mm", dpi = 300)
 #'
-#' # Write the ggplot object to a temporary *.jpg, re-read and use it
-#' # horizontally spanning 2 panels
-#' require(jpeg)
-#' tmpFile <- tempfile(fileext = ".jpg")
-#' ggsave(
-#'   filename = tmpFile,
-#'   plot = p,
-#'   width = 30,
-#'   height = 40,
-#'   unit = "mm",
-#'   dpi = 300)
-#' Figure <- add_panel(
-#'     Figure,
-#'     tmpFile,
-#'     top_panel = 1,
-#'     left_panel = 2)
-#' grid.draw(Figure)
-#' # Two panels are occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
-#' # Clear canvas
-#' grid.newpage()
+#' # add_panel works best with pipes
+#' `%<>%` <- magrittr::`%<>%`
 #'
-#' # Write the ggplot object to a temporary *.png, re-read and use it
-#' # horizontally spanning 2 panels
-#' require(png)
-#' tmpFile <- tempfile(fileext = ".png")
-#' ggsave(
-#'   filename = tmpFile,
-#'   plot = p,
-#'   width = 55,
-#'   height = 60,
-#'   unit = "mm",
-#'   dpi = 300)
-#' Figure <- add_panel(
-#'     Figure,
-#'     tmpFile,
-#'     top_panel = 2,
-#'     left_panel = 1,
-#'     right_panel = 2)
-#' grid.draw(Figure)
-#' # Four panels are occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
-#' # Clear canvas
-#' grid.newpage()
+#' # ------------------------------------------------------------------
 #'
-#' # Write the ggplot object to a temporary *.tif, re-read and use it
-#' # vertically spanning 2 panels
-#' require(tiff)
-#' tmpFile <- tempfile(fileext = ".tiff")
-#' ggsave(
-#'   filename = tmpFile,
-#'   plot = p,
-#'   width = 30,
-#'   height = 125,
-#'   unit = "mm",
-#'   dpi = 300)
-#' Figure <- add_panel(
-#'   Figure,
-#'   tmpFile,
-#'   top_panel = 2,
-#'   bottom_panel = 3,
-#'   left_panel = 3)
-#' grid.draw(Figure)
-#' # Six panels are occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
-#' # Clear canvas
-#' grid.newpage()
+#' # Now, the actual example!
+#' # Create the figure layout
+#' (figure <- multi_panel_figure(
+#'   widths = c(20,30,60),
+#'   heights = c(40,60,60,60)))
 #'
-#'\dontrun{
-#' # Incorporate a lattice/trellis object
-#' require(lattice)
-#' Depth <- equal.count(quakes$depth, number=8, overlap=.1)
-#' latticePlot_trellis <- xyplot(lat ~ long | Depth, data = quakes)
-#' Figure <- add_panel(
-#'   Figure,
-#'   latticePlot_trellis,
-#'   top_panel = 3,
-#'   left_panel = 1,
-#'   right_panel = 2)
-#' grid.draw(Figure)
-#' # Eight panels are occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
-#' # Clear canvas
-#' grid.newpage()
+#' # Fill the top-left panel using the grob object directly
+#' (figure %<>% add_panel(a_grob))
+#'
+#' # Add the ggplot object directly to the top row, second column.
+#' (figure %<>% add_panel(a_ggplot, left_panel = 2))
+#'
+#' # JPEG, PNG, and TIFF images are added by passing the path to their file.
+#' # Add the JPEG to the top row, third column
+#' (figure %<>% add_panel(tmp_file_jpeg, left_panel = 3))
+#'
+#' # Add the PNG to the second row, first and second column
+#' (figure %<>% add_panel(
+#'   tmp_file_png,
+#'   top_panel = 2, left_panel = 1, right_panel = 2))
+#'
+#' # Add the TIFF to the second and third rows, third column
+#' (figure %<>% add_panel(
+#'   tmp_file_tiff,
+#'   top_panel = 2, bottom_panel = 3, left_panel = 3))
+#'
+#' # lattice/trellis plot objects are also added directly
+#' Depth <- lattice::equal.count(quakes$depth, number=8, overlap=0.1)
+#' a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
+#' # Add the lattice plot to the third row, first and second column
+#' (figure %<>% add_panel(
+#'   a_lattice_plot,
+#'   top_panel = 3, left_panel = 1, right_panel = 2))
 #'
 #' # Incorporate a gList object (such as produced by VennDigram)
-#' require(VennDiagram)
-#' venn_plot <- venn.diagram(
-#'   x = list(A = 1:150, B = 121:170),
-#'   filename = NULL)
-#' Figure <- add_panel(
-#'   Figure,
-#'   venn_plot,
-#'   top_panel = 4,
-#'   left_panel = 1,
-#'   right_panel = 2)
-#' grid.draw(Figure)
-#' # Ten panels are occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
+#' if(requireNamespace("VennDiagram"))
+#' {
+#'   a_venn_plot <- VennDiagram::venn.diagram(
+#'   x = list(A = 1:150, B = 121:170), filename = NULL)
+#' # Add the Venn diagram to the fourth row, first and second columns
+#' (figure %<>% add_panel(
+#'   a_venn_plot,
+#'   top_panel = 4, left_panel = 1, right_panel = 2))
+#' }
 #'
 #' # Incorporate a base plot figure (produces minor margin issues)
-#' require(gridGraphics)
-#' plot(seq(10))
-#' grid.echo()
-#' grid.grab() -> base_plot
-#' Figure <- add_panel(
-#'   Figure,
-#'   base_plot,
-#'   top_panel = 4,
-#'   left_panel = 3,
-#'   right_panel = 4)
-#' grid.draw(Figure)
-#' # Twelve panels are occupied
-#' attr(Figure,"multipanelfigure.panelsFree")
-#'}
+#' a_base_plot <- capture_base_plot(
+#'  heatmap(
+#'    cor(USJudgeRatings), Rowv = FALSE, symm = TRUE, col = topo.colors(16),
+#'    distfun = function(c) as.dist(1 - c), keep.dendro = TRUE))
+#' # Add the heatmap to the fourth row, third column
+#' (figure %<>% add_panel(
+#'   a_base_plot,
+#'   top_panel = 4, left_panel = 3))
 add_panel <- function(
   figure,
   panel,
@@ -223,7 +171,7 @@ add_panel <- function(
   bottom_panel = top_panel,
   left_panel = 1,
   right_panel = left_panel,
-  panel_label = head(attr(figure, "multipanelfigure.panellabelsfree"),1))
+  label = NULL)
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -287,7 +235,14 @@ add_panel <- function(
     stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
   }
 
-  assert_is_a_string(panel_label)
+  # Check/fix panel label
+  label <- if(is.null(label))
+  {
+    nextLabel(figure)
+  } else
+  {
+    use_first(coerce_to(label, "character"))
+  }
 
   ##############
   # Processing #
@@ -306,12 +261,12 @@ add_panel <- function(
       })
   # Add panel label
   panel_label <- grid.text(
-    label = panel_label,
+    label = label,
     x = 0, y = 1,
     hjust = unit(0, "mm"),
     vjust = unit(1, "mm"),
     draw = FALSE)
-  panel <- gTree(children=gList(panel, panel_label))
+  panel <- gTree(children = gList(panel, panel_label))
   # Add grob to gtable
   figure <- gtable_add_grob(
     figure,
@@ -325,7 +280,7 @@ add_panel <- function(
     x = attr(figure , "multipanelfigure.panellabelsfree"),
     n = -1)
   attr(figure , "multipanelfigure.panellabelsfree") <- head(
-    x = attr(figure , "multipanelfigure.panellabelsfree"),
+    x = attr(figure, "multipanelfigure.panellabelsfree"),
     n = sum(attr(figure , "multipanelfigure.panelsFree")))
   # Return
   return(figure)
@@ -419,16 +374,7 @@ addPanel <- function( figure, ... ){
   if("rightPanel" %in% names(paramList)){
     right_panel = paramList[["rightPanel"]]
   } else {
-    rightPanel = left_panel
-  }
-  if("panelLabel" %in% names(paramList)){
-    panel_label = paramList[["panelPanel"]]
-  } else {
-    panel_label = head(
-      attr(
-        figure,
-        "multipanelfigure.panellabelsfree"),
-      1)
+    right_panel = left_panel
   }
   add_panel(
     figure = figure,
@@ -436,6 +382,6 @@ addPanel <- function( figure, ... ){
     bottom_panel = bottom_panel,
     left_panel = left_panel,
     right_panel = right_panel,
-    panel_label = panel_label,
+    label = NULL, # for ease of maintenance, only support auto-labelling in deprecated case
     ... )
 }

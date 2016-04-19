@@ -9,15 +9,15 @@
 #' invoked for the side effect of printing the plot to the current device.
 #' @examples
 #' p <- lattice::xyplot(dist ~ speed, cars)
-#' fig <- multi_panel_figure(
+#' figure <- multi_panel_figure(
 #'   width = 100, height = 100,
 #'   rows = 1, columns = 1
 #' )
 #' # With no panels, printing shows the layout
-#' print(fig)
-#' fig <- add_panel(fig, p)
+#' print(figure)
+#' figure <- add_panel(figure, p)
 #' # After a panel is added, printing shows the plot.
-#' print(fig) # shows plot
+#' print(figure) # shows plot
 #' @importFrom assertive.properties is_empty
 #' @importFrom grid grid.newpage
 #' @importFrom grid grid.draw

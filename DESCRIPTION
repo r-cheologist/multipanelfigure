@@ -1,16 +1,17 @@
 Package: multipanelfigure
 Type: Package
-Title: Infrastructure to assemble multipanle figures (from grobs)
+Title: Infrastructure to assemble multipanel figures (from grobs)
 Version: 0.8.1
 Date: 2016-04-04
 Author: Johannes Graumann
 Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
 Authors@R: c(person("Johannes", "Graumann", email =
     "jog2030@qatar-med.cornell.edu", role = c("cre", "aut")),
-    person("Richard J.","Cotton", email = "rjc2003@qatar-med.cornell.edu",
+    person("Richard","Cotton", email = "richierocks@gmail.com",
     role = c("ctb")))
-Description: Tools to create a layout for multipanel figures and fill the
-    panels.
+Description: Tools to create a layout for figures made of multiple panels, and
+    to fill the panels with base, lattice and ggplot2 plots, grobs, and PNG,
+    JPEG, and TIFF images.
 Imports:
     assertive.base (>= 0.0-5),
     assertive.files (>= 0.0-2),
@@ -28,6 +29,7 @@ Imports:
     tiff (>= 0.1-5),
     utils
 Suggests:
+    grDevices,
     lattice (>= 0.20-33),
     roxygen2 (>= 5.0.1),
     VennDiagram (>= 1.6.16)
