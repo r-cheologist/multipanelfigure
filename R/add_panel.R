@@ -112,7 +112,7 @@
 #'
 #' # Now, the actual example!
 #' # Create the figure layout
-#' (figure <- multipanelfigure(
+#' (figure <- multi_panel_figure(
 #'   widths = c(20,30,60),
 #'   heights = c(40,60,60,60)))
 #'

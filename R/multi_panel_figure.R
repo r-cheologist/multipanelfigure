@@ -97,15 +97,15 @@
 #'    columns = 4,
 #'    height = 100,
 #'    rows = 6,
-#'    figureName = "figure1")
+#'    figure_name = "figure1")
 #' # With no panels, printing shows the layout
 #' figure1
 #'
 #' # Figure construction based on individual panel dimensions
-#' (figure2 <- multipanelfigure(
+#' (figure2 <- multi_panel_figure(
 #'    widths = c(40,30),
 #'    heights = c(40,60),
-#'    figureName = "figure2"))
+#'    figure_name = "figure2"))
 #'
 #' # A more involved example including filling and printing to device ...
 #' # Make a simple ggplot object to fill panels
@@ -117,18 +117,21 @@
 #' figure2 <- add_panel(figure2, ggp)
 #' # JPEG, PNG, and TIFF images are added by passing the path to their file
 #' jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-#' figure2 <- add_panel(figure2, jpg, leftPanel = 2)
+#' figure2 <- add_panel(figure2, jpg, left_panel = 2)
 #' # Plots can take up multiple panels
-#' figure2 <- add_panel(figure2, ggp, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' figure2 <- add_panel(figure2, ggp, top_panel = 2, left_panel = 1, right_panel = 2)
 #' # Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
-#' ggplot2::ggsave(tmpFile, figure2, width = width, height = height, units = "mm")
+#' ggplot2::ggsave(
+#'   tmpFile, figure2,
+#'   width = simple_grob_width(figure2, "in"),
+#'   height = simple_grob_height(figure2, "in"))
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 #' \donttest{ # Not testing due to use of external software
 #' utils::browseURL(tmpFile)
 #' }
-multipanelfigure <- function(
+multi_panel_figure <- function(
   width = NULL,
   widths = NULL,
   columns = NULL,
@@ -136,7 +139,7 @@ multipanelfigure <- function(
   heights = NULL,
   rows = NULL,
   inter_panel_spacing = NaN,
-  units = "mm",
+  unit = "mm",
   figure_name = "FigureX",
   panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
 {
@@ -144,7 +147,7 @@ multipanelfigure <- function(
   # Check Prerequisites #
   #######################
   unit %>%
-    assert_is_a_string() %>%
+    force %>%
     assert_is_a_valid_unit_type()
 
   assert_is_a_number(inter_panel_spacing)
@@ -237,7 +240,7 @@ multipanelfigure <- function(
       ncol = columns,
       nrow = rows),
     panelLabelType = panel_label_type,
-    units = units)
+    unit = unit)
   attributes(tmp_gtable) <- c(
     attributes(tmp_gtable),
     multipanelfigure = multipanelfigure)

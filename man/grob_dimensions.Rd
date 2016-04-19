@@ -36,15 +36,18 @@ simple_grob_height(a_circle, unit_to = "in")
 simple_grob_width(a_circle, unit_to = "cm")
 
 # Get dimensions of a multi-panel figure
-figure <- multipanelfigure(width = 55, height = 55, rows = 2, columns = 2)
+figure <- multi_panel_figure(width = 55, height = 55, rows = 2, columns = 2)
 simple_grob_height(figure)
 simple_grob_width(figure)
 
-#' # ggsave defaults to measuring dimensions in inches
+# ggsave defaults to measuring dimensions in inches
 width <- simple_grob_width(figure, unit_to = "in")
 height <- simple_grob_height(figure, unit_to = "in")
 tmp_file <- tempfile(fileext = ".png")
-ggplot2::ggsave(tmp_file, figure, width = width, height = height)
+ggplot2::ggsave(
+  tmp_file, gtable::gtable_show_layout(figure),
+  width = width, height = height
+)
 \donttest{ # Not testing due to use of external software
 utils::browseURL(tmp_file)
 }
