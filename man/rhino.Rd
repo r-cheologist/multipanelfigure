@@ -14,17 +14,17 @@ CC-BY Janette Cotton, 2016.
 if(requireNamespace("magrittr"))
 {
   `\%>\%` <- magrittr::`\%>\%`
-  fig <- multipanelfigure(
+  figure <- multi_panel_figure(
     width = 150, height = 150,
     rows = 3, columns = 3,
-    interPanelSpacing = 0
+    inter_panel_spacing = 0
   )
   rhinoFile <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-  fig \%>\%
-    addpanel(rhinoFile) \%>\%
-    addpanel(rhinoFile, leftPanel = 2, rightPanel = 3) \%>\%
-    addpanel(rhinoFile, topPanel = 2, bottomPanel = 3) \%>\%
-    addpanel(rhinoFile, leftPanel = 2, rightPanel = 3, topPanel = 2, bottomPanel = 3)
+  figure \%>\%
+    add_panel(rhinoFile) \%>\%
+    add_panel(rhinoFile, left_panel = 2, right_panel = 3) \%>\%
+    add_panel(rhinoFile, top_panel = 2, bottom_panel = 3) \%>\%
+    add_panel(rhinoFile, left_panel = 2, right_panel = 3, top_panel = 2, bottom_panel = 3)
 }
 }
 
