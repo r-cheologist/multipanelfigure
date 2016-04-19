@@ -1,4 +1,4 @@
-#' @title multipanelfigure
+#' @title multi_panel_figure
 #' @aliases multipanelfigure
 #' @description A convenience function building \code{\link[gtable]{gtable}}-based
 #' infrastructure for the assembly of multipanel figures.
@@ -10,13 +10,13 @@
 #'     \code{width} and \code{height} together with the number of \code{columns}
 #'     and \code{rows} requested.}}
 #' The function automatically inserts whitespace of width
-#' \code{interPanelSpacing} between panels, which has to be considered for the
+#' \code{inter_panel_spacing} between panels, which has to be considered for the
 #' total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
 #' \code{\link[gtable]{gtable}} in the former case, for example may be calculated
-#' \deqn{W[total] = sum(widths) + (length(widths) - 1) * interPanelSpacing}
+#' \deqn{W[total] = sum(widths) + (length(widths) - 1) * inter_panel_spacing}
 #' while width of resulting panels in the latter table construction approach may
 #' be calculated
-#' \deqn{W[panel] = (width - (columns - 1) * interPanelSpacing)/columns}
+#' \deqn{W[panel] = (width - (columns - 1) * inter_panel_spacing)/columns}
 #'
 #' The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 #' exclusive parameter sets:
@@ -28,33 +28,33 @@
 #'     Requires \code{width}, \code{columns}, \code{heights} and \code{rows}.
 #'     Excludes the use of \code{widths} and \code{heights}.}}
 #' @param width Single \code{link{numeric}} defining the width of the resulting
-#' \code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
-#' dependent and interfering parameters.
+#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
+#' dependend and interfering parameters.
 #' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
-#' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (units
-#' depending on \code{units}). See 'Details' for dependend and
+#' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
+#' depending on \code{unit}). See 'Details' for dependend and
 #' interfering parameters.
 #' @param columns Single \code{\link{numeric}} defining the number of columns in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 #' interfering parameters.
 #' @param height Single \code{link{numeric}} defining the height of the resulting
-#' \code{\link[gtable]{gtable}} (units depending on \code{units}). See 'Details' for
+#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
 #' dependend and interfering parameters.
 #' @param heights \code{\link{vector}} of \code{\link{numeric}}s defining the
-#' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (units
-#' depending on \code{units}). See 'Details' for dependend and
+#' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
+#' depending on \code{unit}). See 'Details' for dependend and
 #' interfering parameters.
 #' @param rows Single \code{\link{numeric}} defining the number of rows in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
 #' interfering parameters.
-#' @param interPanelSpacing The amount of white space automatically inserted
+#' @param inter_panel_spacing The amount of white space automatically inserted
 #' between panels. Defaults to \code{5 mm} unless explicitly given, in which
-#' case the value depents on the \code{units} parameter.
-#' @param units Single \code{\link{character}} object defining the units of all
+#' case the value depents on the \code{unit} parameter.
+#' @param unit Single \code{\link{character}} object defining the unit of all
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
-#' @param figureName Single \code{\link{character}} object defining the name of
+#' @param figure_name Single \code{\link{character}} object defining the name of
 #' the resulting \code{\link[gtable]{gtable}}.
-#' @param panelLabelType A string specifying the marker style for the panel labels
+#' @param panel_label_type A string specifying the marker style for the panel labels
 #' used for automated annotation.  Defaults to uppercase Latin letters.
 #' @return Returns an object of class \code{multipanelfigure} as well as
 #' \code{\link[gtable]{gtable}} object with the following additional attributes:
@@ -62,15 +62,15 @@
 #'   \item{\code{multipanelfigure.panelsFree}:}{A \code{\link{logical}}
 #'     \code{\link{matrix}} with the dimensions of the \code{\link[gtable]{gtable}}
 #'     indicating occupancy of the panels in the table.}
-#'   \item{\code{multipanelfigure.panelLabelsFree}:}{A \code{\link{character}}
-#'     \code{\link{vector}} indicative of the \code{panelLabels} still available.}
-#'   \item{\code{multipanelfigure.units}:}{A single \code{\link{character}}
+#'   \item{\code{multipanelfigure.panellabelsfree}:}{A \code{\link{character}}
+#'     \code{\link{vector}} indicative of the \code{panel_labels} still available.}
+#'   \item{\code{multipanelfigure.unit}:}{A single \code{\link{character}}
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link{addpanel}} for more examples of adding panels
-#' \code{\link{simplegrobwidth}} for inspecting figure dimensions
-#' \code{\link{capturebaseplot}} for including plots created using base graphics
+#' @seealso \code{\link{add_panel}} for more examples of adding panels
+#' \code{\link{simple_grob_width}} for inspecting figure dimensions
+#' \code{\link{capture_base_plot}} for including plots created using base graphics
 #' \code{\link[gtable]{gtable}} for the underlying structure of a figure
 #' @keywords hplot utilities
 #' @importFrom assertive.base assert_all_are_true
@@ -92,20 +92,20 @@
 #' @importFrom magrittr %>%
 #' @examples
 #' # Figure construction based on overall dimensions
-#' Figure1 <- multipanelfigure(
+#' figure1 <- multi_panel_figure(
 #'    width = 100,
 #'    columns = 4,
 #'    height = 100,
 #'    rows = 6,
-#'    figureName = "Figure1")
+#'    figureName = "figure1")
 #' # With no panels, printing shows the layout
-#' Figure 
+#' figure1
 #'
 #' # Figure construction based on individual panel dimensions
-#' (Figure2 <- multipanelfigure(
+#' (figure2 <- multipanelfigure(
 #'    widths = c(40,30),
 #'    heights = c(40,60),
-#'    figureName = "Figure2"))
+#'    figureName = "figure2"))
 #'
 #' # A more involved example including filling and printing to device ...
 #' # Make a simple ggplot object to fill panels
@@ -114,15 +114,15 @@
 #' # Fill panels
 #' # ggplots and lattice plot objects are added directly
 #' # The default position is the top-left panel
-#' Figure2 <- addpanel(Figure2, ggp)
+#' figure2 <- add_panel(figure2, ggp)
 #' # JPEG, PNG, and TIFF images are added by passing the path to their file
 #' jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-#' Figure2 <- addpanel(Figure2, jpg, leftPanel = 2)
+#' figure2 <- add_panel(figure2, jpg, leftPanel = 2)
 #' # Plots can take up multiple panels
-#' Figure2 <- addpanel(Figure2, ggp, topPanel = 2, leftPanel = 1, rightPanel = 2)
+#' figure2 <- add_panel(figure2, ggp, topPanel = 2, leftPanel = 1, rightPanel = 2)
 #' # Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
-#' ggplot2::ggsave(tmpFile, Figure2, width = width, height = height, units = "mm")
+#' ggplot2::ggsave(tmpFile, figure2, width = width, height = height, units = "mm")
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 #' \donttest{ # Not testing due to use of external software
@@ -135,30 +135,30 @@ multipanelfigure <- function(
   height = NULL,
   heights = NULL,
   rows = NULL,
-  interPanelSpacing = NaN,
+  inter_panel_spacing = NaN,
   units = "mm",
-  figureName = "FigureX",
-  panelLabelType = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
+  figure_name = "FigureX",
+  panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
 {
   #######################
   # Check Prerequisites #
   #######################
-  units %>%
+  unit %>%
     assert_is_a_string() %>%
     assert_is_a_valid_unit_type()
- 
-  assert_is_a_number(interPanelSpacing)
-  if(is.nan(interPanelSpacing)){
-    interPanelSpacing <-
+
+  assert_is_a_number(inter_panel_spacing)
+  if(is.nan(inter_panel_spacing)){
+    inter_panel_spacing <-
       5 %>%
-      unit(units = "mm") %>%
-      convertUnit(unitTo = units) %>%
+      unit(unit = "mm") %>%
+      convertUnit(unitTo = unit) %>%
       as.numeric()
   }
-  assert_all_are_non_negative(interPanelSpacing)
- 
-  assert_is_a_string(figureName)
- 
+  assert_all_are_non_negative(inter_panel_spacing)
+
+  assert_is_a_string(figure_name)
+
   if(!is.null(width)){
     assert_is_null(widths)
     width %>%
@@ -170,7 +170,7 @@ multipanelfigure <- function(
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     widths <- rep(
-      x = (width - interPanelSpacing * (columns - 1))/columns,
+      x = (width - inter_panel_spacing * (columns - 1))/columns,
       times = columns)
   } else {
     assert_is_null(columns)
@@ -179,9 +179,9 @@ multipanelfigure <- function(
       assert_is_numeric() %>%
       assert_all_are_positive()
     columns <- length(widths)
-    width <- sum(widths) + interPanelSpacing * (columns - 1)
+    width <- sum(widths) + inter_panel_spacing * (columns - 1)
   }
- 
+
   if(!is.null(height)){
     assert_is_null(heights)
     height %>%
@@ -193,7 +193,7 @@ multipanelfigure <- function(
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     heights <- rep(
-      x = (height - interPanelSpacing * (rows - 1))/rows,
+      x = (height - inter_panel_spacing * (rows - 1))/rows,
       times = rows)
   } else {
     assert_is_null(rows)
@@ -202,32 +202,32 @@ multipanelfigure <- function(
       assert_is_numeric() %>%
       assert_all_are_positive()
     rows <- length(heights)
-    height <- sum(heights) + interPanelSpacing * (rows - 1)
+    height <- sum(heights) + inter_panel_spacing * (rows - 1)
   }
- 
+
   # TODO: support all CSS ordered list marker styles
   # greek, hebrew, georgian, hiragana, etc. still TODO
   # http://www.w3schools.com/cssref/pr_list-style-type.asp
-  panelLabelType <- match.arg(panelLabelType)
- 
+  panel_label_type <- match.arg(panel_label_type)
+
   ####################
   # Construct gtable #
   ####################
   # Basic layout
-  tmpGTable <-
+  tmp_gtable <-
     gtable(
-      widths = unit(x = widths, units = units),
-      heights = unit(x = heights, units = units),
-      name = figureName) %>%
+      widths = unit(x = widths, unit = unit),
+      heights = unit(x = heights, unit = unit),
+      name = figure_name) %>%
     # add interpanel space
     gtable_add_col_space(
       width = unit(
-        x = interPanelSpacing,
-        units = units)) %>%
+        x = inter_panel_spacing,
+        unit = unit)) %>%
     gtable_add_row_space(
       height = unit(
-        x = interPanelSpacing,
-        units = units))
+        x = inter_panel_spacing,
+        unit = unit))
   ##########################
   # Prep and return output #
   ##########################
@@ -236,11 +236,33 @@ multipanelfigure <- function(
       data = TRUE,
       ncol = columns,
       nrow = rows),
-    panelLabelType = panelLabelType,
+    panelLabelType = panel_label_type,
     units = units)
-  attributes(tmpGTable) <- c(
-    attributes(tmpGTable),
+  attributes(tmp_gtable) <- c(
+    attributes(tmp_gtable),
     multipanelfigure = multipanelfigure)
-  class(tmpGTable) <- c("multipanelfigure", class(tmpGTable))
-  return(tmpGTable)
+  class(tmp_gtable) <- c("multipanelfigure", class(tmp_gtable))
+  return(tmp_gtable)
+}
+
+#' @export
+multipanelfigure <- function( ... ){
+  .Deprecated(
+    new = "multi_panel_figure",
+    package = "multipanelfigure")
+  paramList <- list( ... )
+  if("interPanelSpacing" %in% names(paramList)){
+    inter_panel_spacing <- paramList[["interPanelSpacing"]]
+  } else {
+    inter_panel_spacing <- 5
+  }
+  if("figureName" %in% names(paramList)){
+    figure_name <- paramList[["figureName"]]
+  } else {
+    figure_name = "FigureX"
+  }
+  multi_panel_figure(
+    inter_panel_spacing = inter_panel_spacing,
+    figure_name = figure_name,
+    ... )
 }
