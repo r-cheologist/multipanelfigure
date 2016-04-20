@@ -36,6 +36,9 @@ definition of panel spanning (see examples).}
 
 \item{label}{Single \code{\link{character}} object defining the panel
 label used for automated annotation.}
+
+\item{...}{Additional arguments passed to \code{\link[utils]{download.file}}
+when adding PNG, TIFF, or JPEG panels from URL.}
 }
 \value{
 Returns the \code{\link[gtable]{gtable}} object fed to it

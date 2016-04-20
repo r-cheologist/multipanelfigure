@@ -43,6 +43,8 @@
 #' definition of panel spanning (see examples).
 #' @param label Single \code{\link{character}} object defining the panel
 #' label used for automated annotation.
+#' @param ... Additional arguments passed to \code{\link[utils]{download.file}}
+#' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
 #' @author Johannes Graumann
@@ -60,12 +62,6 @@
 #' @importFrom assertive.types assert_is_inherited_from
 #' @importFrom assertive.types assert_is_a_string
 #' @importFrom assertive.types assert_is_a_number
-#' @importFrom png readPNG
-#' @importFrom tiff readTIFF
-#' @importFrom jpeg readJPEG
-#' @importFrom grid unit
-#' @importFrom grid convertUnit
-#' @importFrom grid rasterGrob
 #' @importFrom grid grid.text
 #' @importFrom grid gTree
 #' @importFrom grid gList
@@ -228,7 +224,7 @@ add_panel <- function(
     seq(from=top_panel, to= bottom_panel),
     seq(from=left_panel,to=right_panel)] == 1))
   {
-    attr(figure,which = "multipanelfigure.panelsFree")[
+    attr(figure, which = "multipanelfigure.panelsFree")[
       seq(from=top_panel, to= bottom_panel),
       seq(from=left_panel,to=right_panel)] <- FALSE
   } else {
@@ -275,67 +271,106 @@ add_panel <- function(
     b = placing[["bottom_panel"]],
     l = placing[["left_panel"]],
     r = placing[["right_panel"]])
-  # Fix attributes
-  attr(figure , "multipanelfigure.panellabelsfree") <- tail(
-    x = attr(figure , "multipanelfigure.panellabelsfree"),
-    n = -1)
-  attr(figure , "multipanelfigure.panellabelsfree") <- head(
-    x = attr(figure, "multipanelfigure.panellabelsfree"),
-    n = sum(attr(figure , "multipanelfigure.panelsFree")))
+
   # Return
   return(figure)
 }
 
-makeGrob <- function(x, unit_to){
-  if(is.character(x)){
-    x %>%
-      assert_is_a_string() %>%
-      assert_all_are_readable_files(warn_about_windows = FALSE, severity = "warning")
-    if(grepl(pattern = "\\.png$", ignore.case = TRUE, x = x)){
-      panel <- readPNG(x, info = TRUE)
-      panelDim <- attr(panel, "info")[["dim"]]
-      panelDpi <- attr(panel, "info")[["dpi"]]
-      panelSize <-
-        (panelDim/panelDpi) %>%
-        unit(units = "inches") %>%
-        convertUnit(unitTo = unit_to)
-      panel <- rasterGrob(
-        panel,
-        x = 0, y = 1,
-        width = panelSize[1],
-        height = panelSize[2],
-        just = c("left","top"))
-    } else if(grepl(pattern = "\\.ti[f]{1,2}$", ignore.case = TRUE, x = x)){
-      panel <- readTIFF(x, info = TRUE)
-      panelDim <- c(ncol(panel), nrow(panel))
-      if(!identical(
-        attr(panel, "x.resolution"),
-        attr(panel, "y.resolution")))
-      {
-        warning("Non-identical x/y resolutions.")
-      }
-      panelDpi <- attr(panel, "x.resolution")
-      panelSize <-
-        (panelDim/panelDpi) %>%
-        unit(units = "inches") %>%
-        convertUnit(unitTo = unit_to)
-      panel <- rasterGrob(
-        panel,
-        x = 0, y = 1,
-        width = panelSize[1],
-        height = panelSize[2],
-        just = c("left","top"))
-    } else if(grepl(pattern = "\\.jp[e]*g$", ignore.case = TRUE, x = x)){
-      panel <- readJPEG(x)
-      panel <- rasterGrob(
-        panel,
-        x = 0, y = 1,
-        width = unit(1,"npc"),
-        height = unit(1, "npc"),
-        just = c("left", "top"))
-    } else {
+is_url <- function(x)
+{
+  grepl("^(?:https?|ftp)://", x, ignore.case = TRUE)
+}
+
+#' @importFrom utils download.file
+download_file <- function(x, ...)
+{
+  tmp <- file.path(tempdir(), basename(x))
+  message("Downloading to ", tmp)
+  download.file(x, tmp, mode = "wb", ...)
+  tmp
+}
+
+#' @importFrom grid unit
+#' @importFrom grid convertUnit
+#' @importFrom grid rasterGrob
+#' @importFrom png readPNG
+get_png_raster_grob <- function(x, unit_to)
+{
+  panel <- readPNG(x, info = TRUE)
+  panelDim <- attr(panel, "info")[["dim"]]
+  panelDpi <- attr(panel, "info")[["dpi"]]
+  panelSize <-
+    (panelDim / panelDpi) %>%
+    unit(units = "inches") %>%
+    convertUnit(unitTo = unit_to)
+  rasterGrob(
+    panel,
+    x = 0, y = 1,
+    width = panelSize[1],
+    height = panelSize[2],
+    just = c("left","top"))
+}
+
+#' @importFrom tiff readTIFF
+get_tiff_raster_grob <- function(x, unit_to)
+{
+  panel <- readTIFF(x, info = TRUE)
+  panelDim <- c(ncol(panel), nrow(panel))
+  if(!identical(
+    attr(panel, "x.resolution"),
+    attr(panel, "y.resolution")))
+  {
+    warning("Non-identical x/y resolutions.")
+  }
+  panelDpi <- attr(panel, "x.resolution")
+  panelSize <-
+    (panelDim / panelDpi) %>%
+    unit(units = "inches") %>%
+    convertUnit(unitTo = unit_to)
+  rasterGrob(
+    panel,
+    x = 0, y = 1,
+    width = panelSize[1],
+    height = panelSize[2],
+    just = c("left","top"))
+}
+
+#' @importFrom jpeg readJPEG
+get_jpeg_raster_grob <- function(x)
+{
+  panel <- readJPEG(x)
+  rasterGrob(
+    panel,
+    x = 0, y = 1,
+    width = unit(1,"npc"),
+    height = unit(1, "npc"),
+    just = c("left", "top"))
+}
+
+makeGrob <- function(x, unit_to, ...){
+  if(is.character(x)){ # It's a PNG/JPEG/TIFF image
+    x <- use_first(x)
+    # Could use pathological::get_extension, but the extra package dependencies
+    # aren't really worth it for a single use
+    file_type <- if(grepl(pattern = "\\.png$", x = x, ignore.case = TRUE)) "png" else
+      if(grepl(pattern = "\\.ti[f]{1,2}$", x = x, ignore.case = TRUE)) "tiff" else
+      if(grepl(pattern = "\\.jp[e]*g$", x = x, ignore.case = TRUE)) "jpeg" else
       stop("unsupported file format.")
+
+    if(is_url(x))
+    {
+      x <- download_file(x, ...)
     }
+
+    x %>%
+      assert_all_are_readable_files(warn_about_windows = FALSE, severity = "warning")
+
+    panel <- switch(
+      file_type,
+      png = get_png_raster_grob(x, unit_to),
+      tiff = get_tiff_raster_grob(x, unit_to),
+      jpeg = get_jpeg_raster_grob(x)
+    )
   } else if(inherits(x = x, what = "ggplot")){
     panel <- ggplotGrob(x)
   } else if(inherits(x = x, what = "gList")){
@@ -343,6 +378,7 @@ makeGrob <- function(x, unit_to){
   } else if(inherits(x = x, what = "grob")){
     panel <- x
   } else if (inherits(x = x, what = "trellis")){
+    # See http://r.789695.n4.nabble.com/lattice-grob-td1599209.html
     panel <- grid.grabExpr(print(x))
   } else {
     stop("Class of \'panel\' is not supported.")
