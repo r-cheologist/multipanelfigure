@@ -3,6 +3,7 @@
 \name{add_panel}
 \alias{addPanel}
 \alias{add_panel}
+\alias{addpanel}
 \title{add_panel}
 \usage{
 add_panel(figure, panel, top_panel = 1, bottom_panel = top_panel,

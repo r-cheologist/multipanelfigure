@@ -1,5 +1,5 @@
 #' @title add_panel
-#' @aliases addPanel
+#' @aliases addPanel addpanel
 #' @description A convenience function adding graphical objects to a
 #' \code{\link[gtable]{gtable}} constructed by \code{\link{multi_panel_figure}}.
 #' @details Currently supported as panel-representing objects (\code{panel}) are
@@ -421,3 +421,6 @@ addPanel <- function( figure, ... ){
     label = NULL, # for ease of maintenance, only support auto-labelling in deprecated case
     ... )
 }
+
+#' @export
+addpanel <- addPanel
