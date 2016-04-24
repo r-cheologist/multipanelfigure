@@ -4,7 +4,7 @@
 #' infrastructure for the assembly of multipanel figures.
 #' @details The \code{\link[gtable]{gtable}} may be constructed in two ways:
 #' \enumerate{
-#'   \item{Based on explicit width/heigth definitions for individual panels
+#'   \item{Based on explicit width/height definitions for individual panels
 #'     handed to it via \code{widths} and \code{heights}.}
 #'   \item{Based on total figure/\code{\link[gtable]{gtable}} dimensions given by
 #'     \code{width} and \code{height} together with the number of \code{columns}
