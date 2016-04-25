@@ -7,7 +7,8 @@
 \title{add_panel}
 \usage{
 add_panel(figure, panel, top_panel = 1, bottom_panel = top_panel,
-  left_panel = 1, right_panel = left_panel, label = NULL)
+  left_panel = 1, right_panel = left_panel, label = NULL,
+  label_just = c("right", "bottom"), ...)
 }
 \arguments{
 \item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
@@ -37,6 +38,10 @@ definition of panel spanning (see examples).}
 
 \item{label}{Single \code{\link{character}} object defining the panel
 label used for automated annotation.}
+
+\item{label_just}{Justification for the label within the interpanel spacing
+grob to the top-left of the panel content grob.  Passed to
+\code{\link[grid]{textGrob}}.}
 
 \item{...}{Additional arguments passed to \code{\link[utils]{download.file}}
 when adding PNG, TIFF, or JPEG panels from URL.}
@@ -132,7 +137,7 @@ ggplot2::ggsave(
   top_panel = 2, bottom_panel = 3, left_panel = 3))
 
 # lattice/trellis plot objects are also added directly
-Depth <- lattice::equal.count(quakes$depth, number=8, overlap=0.1)
+Depth <- lattice::equal.count(quakes$depth, number=4, overlap=0.1)
 a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
 # Add the lattice plot to the third row, first and second column
 (figure \%<>\% add_panel(
@@ -154,7 +159,8 @@ if(requireNamespace("VennDiagram"))
 a_base_plot <- capture_base_plot(
  heatmap(
    cor(USJudgeRatings), Rowv = FALSE, symm = TRUE, col = topo.colors(16),
-   distfun = function(c) as.dist(1 - c), keep.dendro = TRUE))
+   distfun = function(c) as.dist(1 - c), keep.dendro = TRUE,
+   cexRow = 0.5, cexCol = 0.5))
 # Add the heatmap to the fourth row, third column
 (figure \%<>\% add_panel(
   a_base_plot,

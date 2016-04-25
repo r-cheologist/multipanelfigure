@@ -43,6 +43,9 @@
 #' definition of panel spanning (see examples).
 #' @param label Single \code{\link{character}} object defining the panel
 #' label used for automated annotation.
+#' @param label_just Justification for the label within the interpanel spacing
+#' grob to the top-left of the panel content grob.  Passed to
+#' \code{\link[grid]{textGrob}}.
 #' @param ... Additional arguments passed to \code{\link[utils]{download.file}}
 #' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
@@ -58,6 +61,7 @@
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.numbers assert_all_are_in_closed_range
 #' @importFrom assertive.types assert_is_a_number
+#' @importFrom grid textGrob
 #' @importFrom gtable gtable_add_grob
 #' @importFrom magrittr %>%
 #' @importFrom stats setNames
@@ -122,7 +126,7 @@
 #'   top_panel = 2, bottom_panel = 3, left_panel = 3))
 #'
 #' # lattice/trellis plot objects are also added directly
-#' Depth <- lattice::equal.count(quakes$depth, number=8, overlap=0.1)
+#' Depth <- lattice::equal.count(quakes$depth, number=4, overlap=0.1)
 #' a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
 #' # Add the lattice plot to the third row, first and second column
 #' (figure %<>% add_panel(
@@ -144,7 +148,8 @@
 #' a_base_plot <- capture_base_plot(
 #'  heatmap(
 #'    cor(USJudgeRatings), Rowv = FALSE, symm = TRUE, col = topo.colors(16),
-#'    distfun = function(c) as.dist(1 - c), keep.dendro = TRUE))
+#'    distfun = function(c) as.dist(1 - c), keep.dendro = TRUE,
+#'    cexRow = 0.5, cexCol = 0.5))
 #' # Add the heatmap to the fourth row, third column
 #' (figure %<>% add_panel(
 #'   a_base_plot,
@@ -156,7 +161,9 @@ add_panel <- function(
   bottom_panel = top_panel,
   left_panel = 1,
   right_panel = left_panel,
-  label = NULL)
+  label = NULL,
+  label_just = c("right", "bottom"),
+  ...)
 {
   ####################################################
   # Check prerequisites & transform objects to grobs #
@@ -236,14 +243,13 @@ add_panel <- function(
   panel_placing <-
     2 * c(top_panel, bottom_panel, left_panel, right_panel) %>%
     setNames(c("top_panel", "bottom_panel", "left_panel", "right_panel"))
-  label_placing <- panel_placing - 1
+  label_placing <- panel_placing[c("top_panel", "left_panel")] - 1
 
   # Create panel label grob
-  panel_label <- grid::textGrob(
+  panel_label <- textGrob(
     label = label,
-    x = 0, y = 1,
-    hjust = unit(0, "mm"),
-    vjust = unit(1, "mm"))
+    x = 1, y = 0,
+    just = label_just)
   # Add grobs to gtable
   figure <- gtable_add_grob(
     figure,
@@ -257,9 +263,10 @@ add_panel <- function(
     figure,
     grobs = panel_label,
     t = label_placing[["top_panel"]],
-    b = label_placing[["bottom_panel"]],
+    b = label_placing[["top_panel"]],
     l = label_placing[["left_panel"]],
-    r = label_placing[["right_panel"]])
+    r = label_placing[["left_panel"]],
+    clip = "off")
   # Return
   return(figure)
 }
