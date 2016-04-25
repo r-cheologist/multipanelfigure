@@ -173,7 +173,7 @@ multi_panel_figure <- function(
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     widths <- rep(
-      x = (width - inter_panel_spacing * (columns - 1))/columns,
+      x = (width - inter_panel_spacing * columns)/columns,
       times = columns)
   } else {
     assert_is_null(columns)
@@ -182,7 +182,7 @@ multi_panel_figure <- function(
       assert_is_numeric() %>%
       assert_all_are_positive()
     columns <- length(widths)
-    width <- sum(widths) + inter_panel_spacing * (columns - 1)
+    width <- sum(widths) + inter_panel_spacing * columns
   }
 
   if(!is.null(height)){
@@ -196,7 +196,7 @@ multi_panel_figure <- function(
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     heights <- rep(
-      x = (height - inter_panel_spacing * (rows - 1))/rows,
+      x = (height - inter_panel_spacing * rows)/rows,
       times = rows)
   } else {
     assert_is_null(rows)
@@ -205,7 +205,7 @@ multi_panel_figure <- function(
       assert_is_numeric() %>%
       assert_all_are_positive()
     rows <- length(heights)
-    height <- sum(heights) + inter_panel_spacing * (rows - 1)
+    height <- sum(heights) + inter_panel_spacing * rows
   }
 
   # TODO: support all CSS ordered list marker styles
@@ -223,11 +223,11 @@ multi_panel_figure <- function(
       heights = unit(x = heights, unit = unit),
       name = figure_name) %>%
     # add interpanel space
-    gtable_add_col_space(
+    gtable_add_col_space2(
       width = unit(
         x = inter_panel_spacing,
         unit = unit)) %>%
-    gtable_add_row_space(
+    gtable_add_row_space2(
       height = unit(
         x = inter_panel_spacing,
         unit = unit))
@@ -246,6 +246,38 @@ multi_panel_figure <- function(
     multipanelfigure = multipanelfigure)
   class(tmp_gtable) <- c("multipanelfigure", class(tmp_gtable))
   return(tmp_gtable)
+}
+
+# Adapted from gtable::gtable_add_col_space
+# Also adds a column before the first existing column
+gtable_add_col_space2 <- function (x, width)
+{
+    stopifnot(gtable::is.gtable(x))
+    n <- ncol(x) # this line changed
+    if (n == 0)
+        return(x)
+    stopifnot(length(width) == 1 || length(width) == n)
+    width <- rep(width, length.out = n)
+    for (i in seq.int(n - 1, 0, by = -1)) { # this line changed
+        x <- gtable::gtable_add_cols(x, width[i], pos = i)
+    }
+    x
+}
+
+# Adapted from gtable::gtable_add_row_space
+# Also adds a row before the first existing row
+gtable_add_row_space2 <- function (x, height)
+{
+    stopifnot(gtable::is.gtable(x))
+    n <- nrow(x)
+    if (n == 0)
+        return(x)
+    stopifnot(length(height) == 1 || length(height) == n)
+    height <- rep(height, length.out = n)
+    for (i in seq.int(n - 1, 0, by = -1)) {
+        x <- gtable::gtable_add_rows(x, height[i], pos = i)
+    }
+    x
 }
 
 #' @export

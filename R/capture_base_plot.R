@@ -6,6 +6,7 @@
 #' @return An object of class \code{gTree}.
 #' @note A side effect of this function is that plots get drawn twice: once as
 #' a base plot, and secondly as a grid plot.
+#' @seealso \code{\link[gridGraphics]{grid.echo}}, \code{\link[grid]{grid.grab}}
 #' @examples
 #' p <- capture_base_plot(hist(rnorm(1000), seq(-4, 4, 0.2)))
 #' grid::grid.draw(p)

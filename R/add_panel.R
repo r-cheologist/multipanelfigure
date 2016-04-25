@@ -55,23 +55,12 @@
 #' @importFrom assertive.base assert_all_are_true
 #' @importFrom assertive.base use_first
 #' @importFrom assertive.base coerce_to
-#' @importFrom assertive.files assert_all_are_readable_files
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.numbers assert_all_are_in_closed_range
-#' @importFrom assertive.properties assert_has_all_attributes
-#' @importFrom assertive.types assert_is_inherited_from
-#' @importFrom assertive.types assert_is_a_string
 #' @importFrom assertive.types assert_is_a_number
-#' @importFrom grid grid.text
-#' @importFrom grid gTree
-#' @importFrom grid gList
-#' @importFrom grid grid.grabExpr
-#' @importFrom ggplot2 ggplotGrob
 #' @importFrom gtable gtable_add_grob
 #' @importFrom magrittr %>%
 #' @importFrom stats setNames
-#' @importFrom utils head
-#' @importFrom utils tail
 #' @examples
 #' # First, some setup; see below for the use of add_panel
 #'
@@ -244,34 +233,33 @@ add_panel <- function(
   # Processing #
   ##############
   # Get the "real" spans (including inter-panel spaces)
-  placing <-
-    c(top_panel, bottom_panel, left_panel, right_panel) %>%
-    setNames(c("top_panel", "bottom_panel", "left_panel", "right_panel")) %>%
-    sapply(
-      function(pl){
-        if(pl == 1){
-          return(1)
-        } else {
-          return(pl + pl - 1)
-        }
-      })
-  # Add panel label
-  panel_label <- grid.text(
+  panel_placing <-
+    2 * c(top_panel, bottom_panel, left_panel, right_panel) %>%
+    setNames(c("top_panel", "bottom_panel", "left_panel", "right_panel"))
+  label_placing <- panel_placing - 1
+
+  # Create panel label grob
+  panel_label <- grid::textGrob(
     label = label,
     x = 0, y = 1,
     hjust = unit(0, "mm"),
-    vjust = unit(1, "mm"),
-    draw = FALSE)
-  panel <- gTree(children = gList(panel, panel_label))
-  # Add grob to gtable
+    vjust = unit(1, "mm"))
+  # Add grobs to gtable
   figure <- gtable_add_grob(
     figure,
     grobs = panel,
-    t = placing[["top_panel"]],
-    b = placing[["bottom_panel"]],
-    l = placing[["left_panel"]],
-    r = placing[["right_panel"]])
+    t = panel_placing[["top_panel"]],
+    b = panel_placing[["bottom_panel"]],
+    l = panel_placing[["left_panel"]],
+    r = panel_placing[["right_panel"]])
 
+  figure <- gtable_add_grob(
+    figure,
+    grobs = panel_label,
+    t = label_placing[["top_panel"]],
+    b = label_placing[["bottom_panel"]],
+    l = label_placing[["left_panel"]],
+    r = label_placing[["right_panel"]])
   # Return
   return(figure)
 }
@@ -347,6 +335,10 @@ get_jpeg_raster_grob <- function(x)
     just = c("left", "top"))
 }
 
+#' @importFrom assertive.files assert_all_are_readable_files
+#' @importFrom ggplot2 ggplotGrob
+#' @importFrom grid grobTree
+#' @importFrom grid grid.grabExpr
 makeGrob <- function(x, unit_to, ...){
   if(is.character(x)){ # It's a PNG/JPEG/TIFF image
     x <- use_first(x)
@@ -374,7 +366,8 @@ makeGrob <- function(x, unit_to, ...){
   } else if(inherits(x = x, what = "ggplot")){
     panel <- ggplotGrob(x)
   } else if(inherits(x = x, what = "gList")){
-    panel <- x
+    # Convert gList to gTree so the automatic labelling works
+    panel <- do.call(grobTree, x)
   } else if(inherits(x = x, what = "grob")){
     panel <- x
   } else if (inherits(x = x, what = "trellis")){

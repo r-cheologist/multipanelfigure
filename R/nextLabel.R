@@ -4,7 +4,7 @@ greek <- intToUtf8(c(945:961, 963:969), multiple = TRUE)
 #' @importFrom utils as.roman
 nextLabel <- function(figure)
 {
-  n <- length(figure$grobs) + 1L
+  n <- length(figure$grobs) / 2 + 1L
   panelLabelType <- attr(figure, "multipanelfigure.panelLabelType")
   switch(
     panelLabelType,
