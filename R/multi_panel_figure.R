@@ -13,10 +13,10 @@
 #' \code{inter_panel_spacing} between panels, which has to be considered for the
 #' total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
 #' \code{\link[gtable]{gtable}} in the former case, for example may be calculated
-#' \deqn{W[total] = sum(widths) + (length(widths) - 1) * inter_panel_spacing}
+#' \deqn{W[total] = sum(widths) + length(widths) * inter_panel_spacing}
 #' while width of resulting panels in the latter table construction approach may
 #' be calculated
-#' \deqn{W[panel] = (width - (columns - 1) * inter_panel_spacing)/columns}
+#' \deqn{W[panel] = (width - columns * inter_panel_spacing)/columns}
 #'
 #' The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 #' exclusive parameter sets:
@@ -29,27 +29,32 @@
 #'     Excludes the use of \code{widths} and \code{heights}.}}
 #' @param width Single \code{link{numeric}} defining the width of the resulting
 #' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
-#' dependend and interfering parameters.
+#' dependent and interfering parameters.
 #' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
 #' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
-#' depending on \code{unit}). See 'Details' for dependend and
+#' depending on \code{unit}). See 'Details' for dependent and
 #' interfering parameters.
 #' @param columns Single \code{\link{numeric}} defining the number of columns in
-#' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
+#' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
 #' @param height Single \code{link{numeric}} defining the height of the resulting
 #' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
-#' dependend and interfering parameters.
+#' dependent and interfering parameters.
 #' @param heights \code{\link{vector}} of \code{\link{numeric}}s defining the
 #' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
-#' depending on \code{unit}). See 'Details' for dependend and
+#' depending on \code{unit}). See 'Details' for dependent and
 #' interfering parameters.
 #' @param rows Single \code{\link{numeric}} defining the number of rows in
-#' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
+#' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
-#' @param inter_panel_spacing The amount of white space automatically inserted
-#' between panels. Defaults to \code{5 mm} unless explicitly given, in which
-#' case the value depents on the \code{unit} parameter.
+#' @param inter_row_spacing The amount of white space automatically inserted
+#' between row panels. Defaults to \code{5 mm} unless explicitly given, in which
+#' case the value depends on the \code{unit} parameter. Recycled to the number
+#' of rows.
+#' @param inter_column_spacing The amount of white space automatically inserted
+#' between column panels. Defaults to \code{5 mm} unless explicitly given, in
+#' which case the value depends on the \code{unit} parameter. Recycled to the
+#' number of columns.
 #' @param unit Single \code{\link{character}} object defining the unit of all
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
 #' @param figure_name Single \code{\link{character}} object defining the name of
@@ -90,6 +95,7 @@
 #' @importFrom gtable gtable_add_col_space
 #' @importFrom gtable gtable_add_row_space
 #' @importFrom magrittr %>%
+#' @importFrom magrittr %<>%
 #' @examples
 #' # Figure construction based on overall dimensions
 #' figure1 <- multi_panel_figure(
@@ -138,7 +144,8 @@ multi_panel_figure <- function(
   height = NULL,
   heights = NULL,
   rows = NULL,
-  inter_panel_spacing = NaN,
+  inter_row_spacing = NaN,
+  inter_column_spacing = NaN,
   unit = "mm",
   figure_name = "FigureX",
   panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
@@ -150,62 +157,60 @@ multi_panel_figure <- function(
     force %>%
     assert_is_a_valid_unit_type()
 
-  assert_is_a_number(inter_panel_spacing)
-  if(is.nan(inter_panel_spacing)){
-    inter_panel_spacing <-
-      5 %>%
-      unit(unit = "mm") %>%
-      convertUnit(unitTo = unit) %>%
-      as.numeric()
-  }
-  assert_all_are_non_negative(inter_panel_spacing)
-
   assert_is_a_string(figure_name)
 
   if(!is.null(width)){
     assert_is_null(widths)
-    width %>%
+    width %<>%
       assert_is_a_number() %>%
-      assert_all_are_positive()
+      assert_all_are_positive() %>%
+      unit(unit)
     columns %>%
       assert_is_not_null() %>%
       assert_is_a_number() %>%
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
+    inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
     widths <- rep(
-      x = (width - inter_panel_spacing * columns)/columns,
+      x = (width - inter_column_spacing * columns) * (1 / columns), # No `/.unit`
       times = columns)
   } else {
     assert_is_null(columns)
-    widths %>%
+    widths %<>%
       assert_is_not_null() %>%
       assert_is_numeric() %>%
-      assert_all_are_positive()
+      assert_all_are_positive() %>%
+      unit(unit)
     columns <- length(widths)
-    width <- sum(widths) + inter_panel_spacing * columns
+    inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
+    width <- sum(widths) + inter_column_spacing * columns
   }
 
   if(!is.null(height)){
     assert_is_null(heights)
-    height %>%
+    height %<>%
       assert_is_a_number() %>%
-      assert_all_are_positive()
+      assert_all_are_positive() %>%
+      unit(unit)
     rows %>%
       assert_is_not_null() %>%
       assert_is_a_number() %>%
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
+    inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
     heights <- rep(
-      x = (height - inter_panel_spacing * rows)/rows,
+      x = (height - inter_row_spacing * rows) * (1 / rows), # No `/.unit`
       times = rows)
   } else {
     assert_is_null(rows)
-    heights %>%
+    heights %<>%
       assert_is_not_null() %>%
       assert_is_numeric() %>%
-      assert_all_are_positive()
+      assert_all_are_positive() %>%
+      unit(unit)
     rows <- length(heights)
-    height <- sum(heights) + inter_panel_spacing * rows
+    inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
+    height <- sum(heights) + inter_row_spacing * rows
   }
 
   # TODO: support all CSS ordered list marker styles
@@ -223,14 +228,8 @@ multi_panel_figure <- function(
       heights = unit(x = heights, unit = unit),
       name = figure_name) %>%
     # add interpanel space
-    gtable_add_col_space2(
-      width = unit(
-        x = inter_panel_spacing,
-        unit = unit)) %>%
-    gtable_add_row_space2(
-      height = unit(
-        x = inter_panel_spacing,
-        unit = unit))
+    gtable_add_col_space2(width = inter_column_spacing) %>%
+    gtable_add_row_space2(height = inter_row_spacing)
   ##########################
   # Prep and return output #
   ##########################
@@ -246,6 +245,16 @@ multi_panel_figure <- function(
     multipanelfigure = multipanelfigure)
   class(tmp_gtable) <- c("multipanelfigure", class(tmp_gtable))
   return(tmp_gtable)
+}
+
+fix_panel_spacing_arg <- function(x, n, u)
+{
+  assert_is_numeric(x)
+  assert_all_are_non_negative(x, na_ignore = TRUE)
+  x <- rep_len(x, n)
+  x_is_na <- is.na(x)
+  x <- unit(ifelse(x_is_na, 5, x), ifelse(x_is_na, "mm", u))
+  x
 }
 
 # Adapted from gtable::gtable_add_col_space

@@ -6,41 +6,47 @@
 \title{multi_panel_figure}
 \usage{
 multi_panel_figure(width = NULL, widths = NULL, columns = NULL,
-  height = NULL, heights = NULL, rows = NULL, inter_panel_spacing = NaN,
-  unit = "mm", figure_name = "FigureX",
+  height = NULL, heights = NULL, rows = NULL, inter_row_spacing = NaN,
+  inter_column_spacing = NaN, unit = "mm", figure_name = "FigureX",
   panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman",
   "lower-roman", "upper-greek", "lower-greek", "none"))
 }
 \arguments{
 \item{width}{Single \code{link{numeric}} defining the width of the resulting
 \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
-dependend and interfering parameters.}
+dependent and interfering parameters.}
 
 \item{widths}{\code{\link{vector}} of \code{\link{numeric}}s defining the
 actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
-depending on \code{unit}). See 'Details' for dependend and
+depending on \code{unit}). See 'Details' for dependent and
 interfering parameters.}
 
 \item{columns}{Single \code{\link{numeric}} defining the number of columns in
-the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
+the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 interfering parameters.}
 
 \item{height}{Single \code{link{numeric}} defining the height of the resulting
 \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
-dependend and interfering parameters.}
+dependent and interfering parameters.}
 
 \item{heights}{\code{\link{vector}} of \code{\link{numeric}}s defining the
 actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
-depending on \code{unit}). See 'Details' for dependend and
+depending on \code{unit}). See 'Details' for dependent and
 interfering parameters.}
 
 \item{rows}{Single \code{\link{numeric}} defining the number of rows in
-the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependend and
+the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 interfering parameters.}
 
-\item{inter_panel_spacing}{The amount of white space automatically inserted
-between panels. Defaults to \code{5 mm} unless explicitly given, in which
-case the value depents on the \code{unit} parameter.}
+\item{inter_row_spacing}{The amount of white space automatically inserted
+between row panels. Defaults to \code{5 mm} unless explicitly given, in which
+case the value depends on the \code{unit} parameter. Recycled to the number
+of rows.}
+
+\item{inter_column_spacing}{The amount of white space automatically inserted
+between column panels. Defaults to \code{5 mm} unless explicitly given, in
+which case the value depends on the \code{unit} parameter. Recycled to the
+number of columns.}
 
 \item{unit}{Single \code{\link{character}} object defining the unit of all
 dimensions defined. Must satisfy \code{grid:::valid.units}.}
@@ -79,10 +85,10 @@ The function automatically inserts whitespace of width
 \code{inter_panel_spacing} between panels, which has to be considered for the
 total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
 \code{\link[gtable]{gtable}} in the former case, for example may be calculated
-\deqn{W[total] = sum(widths) + (length(widths) - 1) * inter_panel_spacing}
+\deqn{W[total] = sum(widths) + length(widths) * inter_panel_spacing}
 while width of resulting panels in the latter table construction approach may
 be calculated
-\deqn{W[panel] = (width - (columns - 1) * inter_panel_spacing)/columns}
+\deqn{W[panel] = (width - columns * inter_panel_spacing)/columns}
 
 The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 exclusive parameter sets:
