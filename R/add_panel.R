@@ -165,7 +165,7 @@ add_panel <- function(
   figure %>%
     assert_is_multipanelfigure
 
-  panel <- makeGrob(panel, unit_to = attr(figure , "multipanelfigure.unit"))
+  panel <- make_grob(panel, unit_to = attr(figure , "multipanelfigure.unit"))
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
@@ -223,7 +223,7 @@ add_panel <- function(
   # Check/fix panel label
   label <- if(is.null(label))
   {
-    nextLabel(figure)
+    next_label(figure)
   } else
   {
     use_first(coerce_to(label, "character"))
@@ -339,7 +339,7 @@ get_jpeg_raster_grob <- function(x)
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom grid grobTree
 #' @importFrom grid grid.grabExpr
-makeGrob <- function(x, unit_to, ...){
+make_grob <- function(x, unit_to, ...){
   if(is.character(x)){ # It's a PNG/JPEG/TIFF image
     x <- use_first(x)
     # Could use pathological::get_extension, but the extra package dependencies
