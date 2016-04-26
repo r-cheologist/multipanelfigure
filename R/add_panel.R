@@ -277,10 +277,15 @@ is_url <- function(x)
   grepl("^(?:https?|ftp)://", x, ignore.case = TRUE)
 }
 
+sanitise_file_name <- function(x)
+{
+  gsub('[\\/:*?"<>|]+', '_', x)
+}
+
 #' @importFrom utils download.file
 download_file <- function(x, ...)
 {
-  tmp <- file.path(tempdir(), basename(x))
+  tmp <- file.path(tempdir(), sanitise_file_name(basename(x)))
   message("Downloading to ", tmp)
   download.file(x, tmp, mode = "wb", ...)
   tmp
