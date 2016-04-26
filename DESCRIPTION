@@ -35,3 +35,4 @@ Suggests:
     VennDiagram (>= 1.6.16)
 License: GPL (>= 3)
 RoxygenNote: 5.0.1
+LazyData: TRUE
