@@ -231,8 +231,8 @@ multi_panel_figure <- function(
       heights = heights,
       name = figure_name) %>%
     # add interpanel space
-    gtable_add_col_space2(width = rev(inter_column_spacing)) %>%
-    gtable_add_row_space2(height = rev(inter_row_spacing))
+    gtable_add_col_space2(width = inter_column_spacing) %>%
+    gtable_add_row_space2(height = inter_row_spacing)
   ##########################
   # Prep and return output #
   ##########################
@@ -267,11 +267,10 @@ gtable_add_col_space2 <- function (x, width)
     stopifnot(gtable::is.gtable(x))
     n <- ncol(x) # this line changed
     if (n == 0)
-        return(x)
-    stopifnot(length(width) == 1 || length(width) == n)
-    width <- rep(width, length.out = n)
-    for (i in seq.int(n - 1, 0, by = -1)) { # this line changed
-        x <- gtable::gtable_add_cols(x, width[i], pos = i)
+      return(x)
+    stopifnot(length(width) == n)
+    for (i in seq.int(n, 1, by = -1)) { # this line changed
+      x <- gtable::gtable_add_cols(x, width[i], pos = i - 1)
     }
     x
 }
@@ -283,11 +282,10 @@ gtable_add_row_space2 <- function (x, height)
     stopifnot(gtable::is.gtable(x))
     n <- nrow(x)
     if (n == 0)
-        return(x)
-    stopifnot(length(height) == 1 || length(height) == n)
-    height <- rep(height, length.out = n)
-    for (i in seq.int(n - 1, 0, by = -1)) {
-        x <- gtable::gtable_add_rows(x, height[i], pos = i)
+      return(x)
+    stopifnot(length(height) == n)
+    for (i in seq.int(n, 1, by = -1)) {
+      x <- gtable::gtable_add_rows(x, height[i], pos = i - 1)
     }
     x
 }
