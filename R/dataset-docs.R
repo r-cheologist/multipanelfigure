@@ -13,7 +13,8 @@
 #'   figure <- multi_panel_figure(
 #'     width = 150, height = 150,
 #'     rows = 3, columns = 3,
-#'     inter_panel_spacing = 0
+#'     inter_row_spacing = 0,
+#'     inter_column_spacing = 0
 #'   )
 #'   rhinoFile <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
 #'   figure %>%

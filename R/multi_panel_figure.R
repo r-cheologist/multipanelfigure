@@ -10,13 +10,15 @@
 #'     \code{width} and \code{height} together with the number of \code{columns}
 #'     and \code{rows} requested.}}
 #' The function automatically inserts whitespace of width
-#' \code{inter_panel_spacing} between panels, which has to be considered for the
-#' total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
-#' \code{\link[gtable]{gtable}} in the former case, for example may be calculated
-#' \deqn{W[total] = sum(widths) + length(widths) * inter_panel_spacing}
+#' \code{inter_column_spacing} before column panels (and of height
+#' \code{inter_row_spacing} before row panels), which has to be considered
+#' for the total dimensions of the resulting \code{\link[gtable]{gtable}}. Width
+#' of the \code{\link[gtable]{gtable}} in the former case, for example may be
+#' calculated
+#' \deqn{W[total] = sum(widths) + length(widths) * inter_column_spacing}
 #' while width of resulting panels in the latter table construction approach may
 #' be calculated
-#' \deqn{W[panel] = (width - columns * inter_panel_spacing)/columns}
+#' \deqn{W[panel] = (width - columns * inter_column_spacing) / columns}
 #'
 #' The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 #' exclusive parameter sets:
@@ -101,7 +103,7 @@
 #' figure1 <- multi_panel_figure(
 #'    width = 100,
 #'    columns = 4,
-#'    height = 100,
+#'    height = 90,
 #'    rows = 6,
 #'    figure_name = "figure1")
 #' # With no panels, printing shows the layout
@@ -111,6 +113,8 @@
 #' (figure2 <- multi_panel_figure(
 #'    widths = c(40,30),
 #'    heights = c(40,60),
+#'    inter_row_spacing = c(5, 1),
+#'    inter_column_spacing = c(0, 10),
 #'    figure_name = "figure2"))
 #'
 #' # A more involved example including filling and printing to device ...
@@ -171,9 +175,7 @@ multi_panel_figure <- function(
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
-    widths <- rep(
-      x = (width - inter_column_spacing * columns) * (1 / columns), # No `/.unit`
-      times = columns)
+    widths <- (width - inter_column_spacing * columns) * (1 / columns) # No `/.unit`
   } else {
     assert_is_null(columns)
     widths %<>%
@@ -183,7 +185,7 @@ multi_panel_figure <- function(
       unit(unit)
     columns <- length(widths)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
-    width <- sum(widths) + inter_column_spacing * columns
+    # width <- sum(widths) + inter_column_spacing * columns
   }
 
   if(!is.null(height)){
@@ -198,9 +200,7 @@ multi_panel_figure <- function(
       assert_all_are_whole_numbers() %>%
       assert_all_are_in_range(lower = 1, upper = Inf)
     inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
-    heights <- rep(
-      x = (height - inter_row_spacing * rows) * (1 / rows), # No `/.unit`
-      times = rows)
+    heights <- (height - inter_row_spacing * rows) * (1 / rows) # No `/.unit`
   } else {
     assert_is_null(rows)
     heights %<>%
@@ -210,8 +210,11 @@ multi_panel_figure <- function(
       unit(unit)
     rows <- length(heights)
     inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
-    height <- sum(heights) + inter_row_spacing * rows
+    # height <- sum(heights) + inter_row_spacing * rows
   }
+
+  widths %<>% convertUnit(unit)
+  heights %<>% convertUnit(unit)
 
   # TODO: support all CSS ordered list marker styles
   # greek, hebrew, georgian, hiragana, etc. still TODO
@@ -224,12 +227,12 @@ multi_panel_figure <- function(
   # Basic layout
   tmp_gtable <-
     gtable(
-      widths = unit(x = widths, unit = unit),
-      heights = unit(x = heights, unit = unit),
+      widths = widths,
+      heights = heights,
       name = figure_name) %>%
     # add interpanel space
-    gtable_add_col_space2(width = inter_column_spacing) %>%
-    gtable_add_row_space2(height = inter_row_spacing)
+    gtable_add_col_space2(width = rev(inter_column_spacing)) %>%
+    gtable_add_row_space2(height = rev(inter_row_spacing))
   ##########################
   # Prep and return output #
   ##########################
@@ -296,9 +299,11 @@ multipanelfigure <- function( ... ){
     package = "multipanelfigure")
   paramList <- list( ... )
   if("interPanelSpacing" %in% names(paramList)){
-    inter_panel_spacing <- paramList[["interPanelSpacing"]]
+    inter_row_spacing <- paramList[["interPanelSpacing"]]
+    inter_column_spacing <- paramList[["interPanelSpacing"]]
   } else {
-    inter_panel_spacing <- 5
+    inter_row_spacing <- 5
+    inter_column_spacing <- 5
   }
   if("figureName" %in% names(paramList)){
     figure_name <- paramList[["figureName"]]
@@ -306,7 +311,8 @@ multipanelfigure <- function( ... ){
     figure_name = "FigureX"
   }
   multi_panel_figure(
-    inter_panel_spacing = inter_panel_spacing,
+    inter_row_spacing = inter_row_spacing,
+    inter_column_spacing = inter_column_spacing,
     figure_name = figure_name,
     ... )
 }

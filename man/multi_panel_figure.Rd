@@ -82,13 +82,15 @@ The \code{\link[gtable]{gtable}} may be constructed in two ways:
     \code{width} and \code{height} together with the number of \code{columns}
     and \code{rows} requested.}}
 The function automatically inserts whitespace of width
-\code{inter_panel_spacing} between panels, which has to be considered for the
-total dimensions of the resulting \code{\link[gtable]{gtable}}. Width of the
-\code{\link[gtable]{gtable}} in the former case, for example may be calculated
-\deqn{W[total] = sum(widths) + length(widths) * inter_panel_spacing}
+\code{inter_column_spacing} before column panels (and of height
+\code{inter_row_spacing} before row panels), which has to be considered
+for the total dimensions of the resulting \code{\link[gtable]{gtable}}. Width
+of the \code{\link[gtable]{gtable}} in the former case, for example may be
+calculated
+\deqn{W[total] = sum(widths) + length(widths) * inter_column_spacing}
 while width of resulting panels in the latter table construction approach may
 be calculated
-\deqn{W[panel] = (width - columns * inter_panel_spacing)/columns}
+\deqn{W[panel] = (width - columns * inter_column_spacing) / columns}
 
 The two approaches to \code{\link[gtable]{gtable}} construction require mutually
 exclusive parameter sets:
@@ -105,7 +107,7 @@ exclusive parameter sets:
 figure1 <- multi_panel_figure(
    width = 100,
    columns = 4,
-   height = 100,
+   height = 90,
    rows = 6,
    figure_name = "figure1")
 # With no panels, printing shows the layout
@@ -115,6 +117,8 @@ figure1
 (figure2 <- multi_panel_figure(
    widths = c(40,30),
    heights = c(40,60),
+   inter_row_spacing = c(5, 1),
+   inter_column_spacing = c(0, 10),
    figure_name = "figure2"))
 
 # A more involved example including filling and printing to device ...
