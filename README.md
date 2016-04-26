@@ -42,7 +42,7 @@ figure2 <- multi_panel_figure(
   heights = c(10, 20, 30))
 ```
 
-When no panels are filled, printing the figure (by typing its name) displays the layout.
+When no panels are filled, printing the figure (by typing its name) displays the layout.  Notice that by default a 5 mm spacer is included between rows and between columns.  (This can be adjusted using `multi_panel_figure`'s `inter_row_spacing` and `inter_column_spacing` arguments.)
 
 ```{r}
 figure1
@@ -76,7 +76,7 @@ Plots created using base graphics must be converted to grid-based plots and capt
 
 ```{r}
 a_base_plot <- capture_base_plot(
-  with(cars, plot(speed, dist))
+  with(Loblolly, plot(age, height))
 )
 figure1 %<>% add_panel(a_base_plot, left_panel = 3)
 ```
