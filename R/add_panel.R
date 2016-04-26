@@ -306,10 +306,8 @@ get_png_raster_grob <- function(x, unit_to)
     convertUnit(unitTo = unit_to)
   rasterGrob(
     panel,
-    x = 0, y = 1,
     width = panelSize[1],
-    height = panelSize[2],
-    just = c("left","top"))
+    height = panelSize[2])
 }
 
 #' @importFrom tiff readTIFF
@@ -330,10 +328,8 @@ get_tiff_raster_grob <- function(x, unit_to)
     convertUnit(unitTo = unit_to)
   rasterGrob(
     panel,
-    x = 0, y = 1,
     width = panelSize[1],
-    height = panelSize[2],
-    just = c("left","top"))
+    height = panelSize[2])
 }
 
 #' @importFrom jpeg readJPEG
@@ -342,10 +338,8 @@ get_jpeg_raster_grob <- function(x)
   panel <- readJPEG(x)
   rasterGrob(
     panel,
-    x = 0, y = 1,
     width = unit(1,"npc"),
-    height = unit(1, "npc"),
-    just = c("left", "top"))
+    height = unit(1, "npc"))
 }
 
 #' @importFrom assertive.files assert_all_are_readable_files
