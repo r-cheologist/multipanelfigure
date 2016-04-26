@@ -48,8 +48,6 @@ When no panels are filled, printing the figure (by typing its name) displays the
 figure1
 ```
 
-[//]: # ggplot2::ggsave("readme_figure_empty.png", gtable::gtable_show_layout(figure1), width = 206, height = 190, units = "mm")
-
 ![An image of the layout of an empty multi-panel figure.](https://bitbucket.org/graumannlabtools/multipanelfigure/downloads/readme_figure_empty.png)
 
 ## Adding panels
@@ -106,7 +104,5 @@ Once panels have been added to the figure, printing it displays the figure.
 ```{r}
 figure1
 ```
-
-[//]: # ggplot2::ggsave("readme_figure_filled.png", figure1, width = 206, height = 190, units = "mm")
 
 ![An image of the filled multi-panel figure, containing several plots and images.](https://bitbucket.org/graumannlabtools/multipanelfigure/downloads/readme_figure_filled.png)
