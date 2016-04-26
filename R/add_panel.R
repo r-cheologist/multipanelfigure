@@ -257,7 +257,8 @@ add_panel <- function(
     t = panel_placing[["top_panel"]],
     b = panel_placing[["bottom_panel"]],
     l = panel_placing[["left_panel"]],
-    r = panel_placing[["right_panel"]])
+    r = panel_placing[["right_panel"]],
+    clip = "off")
 
   figure <- gtable_add_grob(
     figure,
