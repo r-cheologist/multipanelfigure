@@ -8,12 +8,13 @@
 \usage{
 add_panel(figure, panel, top_panel = 1, bottom_panel = top_panel,
   left_panel = 1, right_panel = left_panel, label = NULL,
-  label_just = c("right", "bottom"), ...)
+  label_just = c("right", "bottom"), panel_clip = c("on", "off", "inherit"),
+  ...)
 }
 \arguments{
-\item{figure}{Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
-as produced by \code{\link{multi_panel_figure}} and representing the figure the
-panel is to be placed in.}
+\item{figure}{Object of classes \code{multipanelfigure}/
+\code{\link[gtable]{gtable}} as produced by \code{\link{multi_panel_figure}}
+and representing the figure the panel is to be placed in.}
 
 \item{panel}{Single \code{\link{character}} object representing path to a
 bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
@@ -43,6 +44,9 @@ label used for automated annotation.}
 grob to the top-left of the panel content grob.  Passed to
 \code{\link[grid]{textGrob}}.}
 
+\item{panel_clip}{Should the display of panel contents be clipped at the
+panel borders?  See \code{\link[grid]{viewport}}.}
+
 \item{...}{Additional arguments passed to \code{\link[utils]{download.file}}
 when adding PNG, TIFF, or JPEG panels from URL.}
 }
@@ -57,24 +61,25 @@ A convenience function adding graphical objects to a
 \details{
 Currently supported as panel-representing objects (\code{panel}) are
 \enumerate{
-  \item{\code{\link[ggplot2]{ggplot}} objects.}
-  \item{\code{\link[grid]{grob}} objects.}
-  \item{\code{\link[grid]{gList}} objects.}
-  \item{\code{\link[lattice]{trellis.object}} objects.}
-  \item{Single \code{\link{character}} objects representing paths to readable
-    portable network graphics (\code{*.png}), tagged image file format
-    (\code{*.tiff}/\code{*.tif}) or joint photographic experts group
-    (\code{*.jpg}/\code{*.jpeg}) files, which will be read and placed into
-    panels as requested.}}
+  \item{ggplot2 \code{\link[ggplot2]{ggplot}} objects.}
+  \item{grid \code{\link[grid]{grob}}, \code{\link[grid]{gList}}, and
+    \code{\link[grid]{gTree}} objects.}
+  \item{lattice \code{\link[lattice]{trellis.object}}s.}
+  \item{Single \code{\link{character}} objects representing URLs or paths to
+    readable portable network graphics (\code{*.png}), tagged image file
+    format (\code{*.tiff}/\code{*.tif}), joint photographic experts group
+    (\code{*.jpg}/\code{*.jpeg}) files, or support vector graphics
+    (\code{*.svg}) which will be read and placed into panels as requested.}}
 Note that \code{*.jpg}/\code{*.jpeg} files must be produced
-using the dimensions of the panle(s) they are to be placed in for sensible
+using the dimensions of the panel(s) they are to be placed in for sensible
 results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale and
 \code{*.tiff}/\code{*.tif}, as well as \code{*.png} files have their native
 sizes read out of the file (which isn't working for
-\code{*.jpg}/\code{*.jpeg}).
-\pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted to
-\code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of which
-with respect to plot formatting are not well studied.
+\code{*.jpg}/\code{*.jpeg}).  \code{*.svg} files are converted to a raster
+object the size of the panel.
+\pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted
+tp \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
+which with respect to plot formatting are not well studied.
 }
 \examples{
 # First, some setup; see below for the use of add_panel
@@ -147,15 +152,14 @@ a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
 # Incorporate a gList object (such as produced by VennDigram)
 if(requireNamespace("VennDiagram"))
 {
-  a_venn_plot <- VennDiagram::venn.diagram(
-  x = list(A = 1:150, B = 121:170), filename = NULL)
+  a_venn_plot <- VennDiagram::draw.pairwise.venn(50, 30, 20, ind = FALSE)
 # Add the Venn diagram to the fourth row, first and second columns
 (figure \%<>\% add_panel(
   a_venn_plot,
   top_panel = 4, left_panel = 1, right_panel = 2))
 }
 
-# Incorporate a base plot figure (produces minor margin issues)
+# Incorporate a base plot figure
 a_base_plot <- capture_base_plot(
  heatmap(
    cor(USJudgeRatings), Rowv = FALSE, symm = TRUE, col = topo.colors(16),

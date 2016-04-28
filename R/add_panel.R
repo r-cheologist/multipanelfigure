@@ -4,27 +4,28 @@
 #' \code{\link[gtable]{gtable}} constructed by \code{\link{multi_panel_figure}}.
 #' @details Currently supported as panel-representing objects (\code{panel}) are
 #' \enumerate{
-#'   \item{\code{\link[ggplot2]{ggplot}} objects.}
-#'   \item{\code{\link[grid]{grob}} objects.}
-#'   \item{\code{\link[grid]{gList}} objects.}
-#'   \item{\code{\link[lattice]{trellis.object}} objects.}
-#'   \item{Single \code{\link{character}} objects representing paths to readable
-#'     portable network graphics (\code{*.png}), tagged image file format
-#'     (\code{*.tiff}/\code{*.tif}) or joint photographic experts group
-#'     (\code{*.jpg}/\code{*.jpeg}) files, which will be read and placed into
-#'     panels as requested.}}
+#'   \item{ggplot2 \code{\link[ggplot2]{ggplot}} objects.}
+#'   \item{grid \code{\link[grid]{grob}}, \code{\link[grid]{gList}}, and
+#'     \code{\link[grid]{gTree}} objects.}
+#'   \item{lattice \code{\link[lattice]{trellis.object}}s.}
+#'   \item{Single \code{\link{character}} objects representing URLs or paths to
+#'     readable portable network graphics (\code{*.png}), tagged image file
+#'     format (\code{*.tiff}/\code{*.tif}), joint photographic experts group
+#'     (\code{*.jpg}/\code{*.jpeg}) files, or support vector graphics
+#'     (\code{*.svg}) which will be read and placed into panels as requested.}}
 #' Note that \code{*.jpg}/\code{*.jpeg} files must be produced
-#' using the dimensions of the panle(s) they are to be placed in for sensible
+#' using the dimensions of the panel(s) they are to be placed in for sensible
 #' results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale and
 #' \code{*.tiff}/\code{*.tif}, as well as \code{*.png} files have their native
 #' sizes read out of the file (which isn't working for
-#' \code{*.jpg}/\code{*.jpeg}).
-#' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted to
-#' \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of which
-#' with respect to plot formatting are not well studied.
-#' @param figure Object of classes \code{multipanelfigure}/\code{\link[gtable]{gtable}}
-#' as produced by \code{\link{multi_panel_figure}} and representing the figure the
-#' panel is to be placed in.
+#' \code{*.jpg}/\code{*.jpeg}).  \code{*.svg} files are converted to a raster
+#' object the size of the panel.
+#' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted
+#' tp \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
+#' which with respect to plot formatting are not well studied.
+#' @param figure Object of classes \code{multipanelfigure}/
+#' \code{\link[gtable]{gtable}} as produced by \code{\link{multi_panel_figure}}
+#' and representing the figure the panel is to be placed in.
 #' @param panel Single \code{\link{character}} object representing path to a
 #' bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 #' \code{*.jpg}/\code{*.jpeg}), a \code{\link[ggplot2]{ggplot}} object , a
@@ -46,6 +47,8 @@
 #' @param label_just Justification for the label within the interpanel spacing
 #' grob to the top-left of the panel content grob.  Passed to
 #' \code{\link[grid]{textGrob}}.
+#' @param panel_clip Should the display of panel contents be clipped at the
+#' panel borders?  See \code{\link[grid]{viewport}}.
 #' @param ... Additional arguments passed to \code{\link[utils]{download.file}}
 #' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
@@ -136,15 +139,14 @@
 #' # Incorporate a gList object (such as produced by VennDigram)
 #' if(requireNamespace("VennDiagram"))
 #' {
-#'   a_venn_plot <- VennDiagram::venn.diagram(
-#'   x = list(A = 1:150, B = 121:170), filename = NULL)
+#'   a_venn_plot <- VennDiagram::draw.pairwise.venn(50, 30, 20, ind = FALSE)
 #' # Add the Venn diagram to the fourth row, first and second columns
 #' (figure %<>% add_panel(
 #'   a_venn_plot,
 #'   top_panel = 4, left_panel = 1, right_panel = 2))
 #' }
 #'
-#' # Incorporate a base plot figure (produces minor margin issues)
+#' # Incorporate a base plot figure
 #' a_base_plot <- capture_base_plot(
 #'  heatmap(
 #'    cor(USJudgeRatings), Rowv = FALSE, symm = TRUE, col = topo.colors(16),
@@ -163,6 +165,7 @@ add_panel <- function(
   right_panel = left_panel,
   label = NULL,
   label_just = c("right", "bottom"),
+  panel_clip = c("on", "off", "inherit"),
   ...)
 {
   ####################################################
@@ -172,7 +175,9 @@ add_panel <- function(
   figure %>%
     assert_is_multipanelfigure
 
-  panel <- make_grob(panel, unit_to = attr(figure , "multipanelfigure.unit"))
+  panel_clip <- match.arg(panel_clip)
+
+  panel <- make_grob(panel, unit_to = attr(figure, "multipanelfigure.unit"))
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
@@ -242,8 +247,8 @@ add_panel <- function(
   # Get the "real" spans (including inter-panel spaces)
   panel_placing <-
     2 * c(top_panel, bottom_panel, left_panel, right_panel) %>%
-    setNames(c("top_panel", "bottom_panel", "left_panel", "right_panel"))
-  label_placing <- panel_placing[c("top_panel", "left_panel")] - 1
+    setNames(c("top", "bottom", "left", "right"))
+  label_placing <- panel_placing[c("top", "left")] - 1
 
   # Create panel label grob
   panel_label <- textGrob(
@@ -254,19 +259,19 @@ add_panel <- function(
   figure <- gtable_add_grob(
     figure,
     grobs = panel,
-    t = panel_placing[["top_panel"]],
-    b = panel_placing[["bottom_panel"]],
-    l = panel_placing[["left_panel"]],
-    r = panel_placing[["right_panel"]],
-    clip = "off")
+    t = panel_placing[["top"]],
+    b = panel_placing[["bottom"]],
+    l = panel_placing[["left"]],
+    r = panel_placing[["right"]],
+    clip = panel_clip)
 
   figure <- gtable_add_grob(
     figure,
     grobs = panel_label,
-    t = label_placing[["top_panel"]],
-    b = label_placing[["top_panel"]],
-    l = label_placing[["left_panel"]],
-    r = label_placing[["left_panel"]],
+    t = label_placing[["top"]],
+    b = label_placing[["top"]],  # *not* bottom
+    l = label_placing[["left"]],
+    r = label_placing[["left"]], # *not* right
     clip = "off")
   # Return
   return(figure)
@@ -342,6 +347,16 @@ get_jpeg_raster_grob <- function(x)
     height = unit(1, "npc"))
 }
 
+#' @importFrom rsvg rsvg
+get_svg_raster_grob <- function(x)
+{
+  panel <- rsvg(x)
+  rasterGrob(
+    panel,
+    width = unit(1,"npc"),
+    height = unit(1, "npc"))
+}
+
 #' @importFrom assertive.files assert_all_are_readable_files
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom grid grobTree
@@ -354,6 +369,7 @@ make_grob <- function(x, unit_to, ...){
     file_type <- if(grepl(pattern = "\\.png$", x = x, ignore.case = TRUE)) "png" else
       if(grepl(pattern = "\\.ti[f]{1,2}$", x = x, ignore.case = TRUE)) "tiff" else
       if(grepl(pattern = "\\.jp[e]*g$", x = x, ignore.case = TRUE)) "jpeg" else
+      if(grepl(pattern = "\\.svg$", x = x, ignore.case = TRUE)) "svg" else
       stop("unsupported file format.")
 
     if(is_url(x))
@@ -368,14 +384,15 @@ make_grob <- function(x, unit_to, ...){
       file_type,
       png = get_png_raster_grob(x, unit_to),
       tiff = get_tiff_raster_grob(x, unit_to),
-      jpeg = get_jpeg_raster_grob(x)
+      jpeg = get_jpeg_raster_grob(x),
+      svg = get_svg_raster_grob(x)
     )
   } else if(inherits(x = x, what = "ggplot")){
     panel <- ggplotGrob(x)
   } else if(inherits(x = x, what = "gList")){
     # Convert gList to gTree so the automatic labelling works
     panel <- do.call(grobTree, x)
-  } else if(inherits(x = x, what = "grob")){
+  } else if(inherits(x = x, what = c("grob", "gTree"))){
     panel <- x
   } else if (inherits(x = x, what = "trellis")){
     # See http://r.789695.n4.nabble.com/lattice-grob-td1599209.html

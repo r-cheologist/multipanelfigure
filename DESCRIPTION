@@ -25,6 +25,7 @@ Imports:
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),
     png (>= 0.1-7),
+    rsvg (<= 0.5),
     stats,
     tiff (>= 0.1-5),
     utils
