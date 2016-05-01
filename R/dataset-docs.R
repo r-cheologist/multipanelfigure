@@ -1,28 +1,33 @@
-#' A photo of a rhino
+#' Images
 #'
-#' A photograph of a greater one-horned rhinoceros (Rhinoceros unicornis) taken
-#' in Kaziranga National Park, Assam, India.
-#' CC-BY Janette Cotton, 2016.
+#' A TIFF photograph of Farouq the cat in a washing machine. CC-BY-SA 4.0
+#' Richard Cotton, 2014.
+#'
+#' A JPEG photograph of a greater one-horned rhinoceros (Rhinoceros unicornis)
+#' taken in Kaziranga National Park, Assam, India. CC-BY-SA 4.0 Janette Cotton,
+#' 2016.
+#'
+#' An SVG picture of a fat, pink winged unicorn. CC-BY-SA 4.0 Sara Lendal, 2016.
+#'
+#' A PNG of the R logo. CC-BY-SA 4.0 The R Foundation, 2016.
 #' @docType data
-#' @name rhino
-#' @format A JPEG file.
+#' @name images
+#' @aliases rhino unicorn
+#' @format An image file.
 #' @examples
-#' if(requireNamespace("magrittr"))
-#' {
-#'   `%>%` <- magrittr::`%>%`
-#'   figure <- multi_panel_figure(
-#'     width = 150, height = 150,
-#'     rows = 3, columns = 3,
-#'     inter_row_spacing = 0,
-#'     inter_column_spacing = 0
-#'   )
-#'   rhinoFile <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-#'   figure %>%
-#'     add_panel(rhinoFile) %>%
-#'     add_panel(rhinoFile, left_panel = 2, right_panel = 3) %>%
-#'     add_panel(rhinoFile, top_panel = 2, bottom_panel = 3) %>%
-#'     add_panel(rhinoFile, left_panel = 2, right_panel = 3, top_panel = 2, bottom_panel = 3)
-#' }
+#' figure <- multi_panel_figure(
+#'   widths = c(60, 40, 40), heights = c(40, 40, 40)
+#' )
+#' image_files <- system.file("extdata", package = "multipanelfigure") %>%
+#'   dir(full.names = TRUE) %>%
+#'   setNames(basename(.))
+#' figure %>%
+#'   add_panel(image_files["farouq.tiff"]) %>%
+#'   add_panel(image_files["unicorn.svg"], left_panel = 2, right_panel = 3) %>%
+#'   add_panel(image_files["rhino.jpg"], top_panel = 2, bottom_panel = 3) %>%
+#'   add_panel(
+#'   image_files["Rlogo.png"],
+#'   left_panel = 2, right_panel = 3, top_panel = 2, bottom_panel = 3)
 NULL
 
 #' Mass spectrometry intensities by stem cell type and organelle
