@@ -69,81 +69,55 @@
 #' @importFrom magrittr %>%
 #' @importFrom stats setNames
 #' @examples
-#' # First, some setup; see below for the use of add_panel
-#'
-#' # Make a grid grob
-#' a_grob <- grid::linesGrob(arrow = grid::arrow())
-#' # Make a simple ggplot object to fill panels
-#' a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
-#'   ggplot2::geom_point()
-#'
-#' # Save the plot to JPEG, PNG, and TIFF file for later
-#' tmp_file_jpeg <- tempfile(fileext = ".jpg")
-#' ggplot2::ggsave(
-#'   filename = tmp_file_jpeg,
-#'   plot = a_ggplot + ggplot2::ggtitle("a jpeg"),
-#'   width = 60, height = 40,
-#'   units = "mm", dpi = 300)
-#' tmp_file_png <- tempfile(fileext = ".png")
-#' ggplot2::ggsave(
-#'   filename = tmp_file_png,
-#'   plot = a_ggplot + ggplot2::ggtitle("a png"),
-#'   width = 55, height = 60,
-#'   units = "mm", dpi = 300)
-#' tmp_file_tiff <- tempfile(fileext = ".tiff")
-#' ggplot2::ggsave(
-#'   filename = tmp_file_tiff,
-#'   plot = a_ggplot + ggplot2::ggtitle("a tiff"),
-#'   width = 60, height = 125,
-#'   units = "mm", dpi = 300)
-#'
-#' # add_panel works best with pipes
-#' `%<>%` <- magrittr::`%<>%`
-#'
-#' # ------------------------------------------------------------------
-#'
-#' # Now, the actual example!
 #' # Create the figure layout
 #' (figure <- multi_panel_figure(
-#'   widths = c(20,30,60),
-#'   heights = c(40,60,60,60)))
+#'   widths = c(30,40,60),
+#'   heights = c(40,60,60,60),
+#'   panel_label_type = "upper-roman"))
 #'
-#' # Fill the top-left panel using the grob object directly
-#' (figure %<>% add_panel(a_grob))
+#' # Fill the top-left panel using a grob object directly
+#' a_grob <- grid::linesGrob(arrow = grid::arrow())
+#' figure %<>% add_panel(a_grob)
 #'
-#' # Add the ggplot object directly to the top row, second column.
-#' (figure %<>% add_panel(a_ggplot, left_panel = 2))
+#' # Add a ggplot object directly to the top row, second column.
+#' a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
+#'   ggplot2::geom_point()
+#' figure %<>% add_panel(a_ggplot, left_panel = 2)
 #'
-#' # JPEG, PNG, and TIFF images are added by passing the path to their file.
+#' # JPEG, PNG, TIFF, and SVG images are added by passing the path to their file.
+#' image_files <- system.file("extdata", package = "multipanelfigure") %>%
+#'   dir(full.names = TRUE) %>%
+#'   setNames(basename(.))
+#'
 #' # Add the JPEG to the top row, third column
-#' (figure %<>% add_panel(tmp_file_jpeg, left_panel = 3))
+#' figure %<>% add_panel(image_files["rhino.jpg"], left_panel = 3)
 #'
-#' # Add the PNG to the second row, first and second column
-#' (figure %<>% add_panel(
-#'   tmp_file_png,
-#'   top_panel = 2, left_panel = 1, right_panel = 2))
+#' # Add the PNG to the second and third row, first and second column
+#' figure %<>% add_panel(
+#'   image_files["Rlogo.png"],
+#'   top_panel = 2, bottom_panel = 3, left_panel = 1, right_panel = 2)
 #'
-#' # Add the TIFF to the second and third rows, third column
-#' (figure %<>% add_panel(
-#'   tmp_file_tiff,
-#'   top_panel = 2, bottom_panel = 3, left_panel = 3))
+#' # Add the TIFF to the second row, third column
+#' figure %<>% add_panel(
+#'   image_files["unicorn.svg"],
+#'   top_panel = 2, left_panel = 3)
 #'
 #' # lattice/trellis plot objects are also added directly
 #' Depth <- lattice::equal.count(quakes$depth, number=4, overlap=0.1)
 #' a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
-#' # Add the lattice plot to the third row, first and second column
-#' (figure %<>% add_panel(
+#' # Add the lattice plot to the third row, third column
+#' figure %<>% add_panel(
 #'   a_lattice_plot,
-#'   top_panel = 3, left_panel = 1, right_panel = 2))
+#'   top_panel = 3, left_panel = 3)
 #'
 #' # Incorporate a gList object (such as produced by VennDigram)
 #' if(requireNamespace("VennDiagram"))
 #' {
 #'   a_venn_plot <- VennDiagram::draw.pairwise.venn(50, 30, 20, ind = FALSE)
-#' # Add the Venn diagram to the fourth row, first and second columns
-#' (figure %<>% add_panel(
-#'   a_venn_plot,
-#'   top_panel = 4, left_panel = 1, right_panel = 2))
+#'   # Add the Venn diagram to the fourth row, first and second columns
+#'   (figure %<>% add_panel(
+#'     a_venn_plot,
+#'     top_panel = 4, left_panel = 1, right_panel = 2))
 #' }
 #'
 #' # Incorporate a base plot figure
@@ -305,6 +279,10 @@ get_png_raster_grob <- function(x, unit_to)
   panel <- readPNG(x, info = TRUE)
   panelDim <- attr(panel, "info")[["dim"]]
   panelDpi <- attr(panel, "info")[["dpi"]]
+  if(is.null(panelDpi)) # DPI not always provided in file
+  {
+    panelDpi <- 300
+  }
   panelSize <-
     (panelDim / panelDpi) %>%
     unit(units = "inches") %>%
