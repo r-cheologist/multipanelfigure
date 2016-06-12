@@ -14,8 +14,7 @@ install.packages("devtools")
 Then you can install the *multipanelfigure* package using
 
 ```{r}
-devtools::install_bitbucket(
-  "graumannlabtools/multipanelfigure)
+devtools::install_bitbucket("graumannlabtools/multipanelfigure")
 ```
 
 ## Specifying a layout
