@@ -15,10 +15,7 @@ Then you can install the *multipanelfigure* package using
 
 ```{r}
 devtools::install_bitbucket(
-  "graumannlabtools/multipanelfigure",
-  auth_user = "your bitbucket username", 
-  password  = "your bitbucket password"  
-)
+  "graumannlabtools/multipanelfigure)
 ```
 
 ## Specifying a layout
