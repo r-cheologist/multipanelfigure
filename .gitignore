@@ -3,4 +3,5 @@ packrat/lib*/
 .project
 .Rproj.user
 .Rhistory
+.RData
 packrat/src/
