@@ -298,9 +298,6 @@ download_file <- function(x, ...)
   tmp
 }
 
-#' @importFrom grid unit
-#' @importFrom grid convertUnit
-#' @importFrom grid rasterGrob
 #' @importFrom png readPNG
 get_png_raster_grob <- function(x, unit_to, panelSize, scaling)
 {
@@ -311,58 +308,56 @@ get_png_raster_grob <- function(x, unit_to, panelSize, scaling)
   {
     imageDpi <- 300
   }
+  make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
+}
+
+#' @importFrom tiff readTIFF
+get_tiff_raster_grob <- function(x, unit_to, panelSize, scaling)
+{
+  image <- readTIFF(x, info = TRUE)
+  imageDim <- dim(image)[2:1]
+  # if(!identical(
+  #   attr(panel, "x.resolution"),
+  #   attr(panel, "y.resolution")))
+  # {
+  #   warning("Non-identical x/y resolutions.")
+  # }
+  imageDpi <- c(attr(image, "x.resolution"), attr(image, "y.resolution"))
+  make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
+}
+
+#' @importFrom jpeg readJPEG
+get_jpeg_raster_grob <- function(x, unit_to, panelSize, scaling)
+{
+  image <- readJPEG(x)
+  imageDim <- dim(image)[2:1]
+  imageDpi <- 300 # not retrieved by readJPEG
+  make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
+}
+
+#' @importFrom rsvg rsvg
+get_svg_raster_grob <- function(x, unit_to, panelSize, scaling)
+{
+  image <- rsvg(x, 1000) # TODO: how best to optimize this?
+  imageDim <- dim(image)[2:1] # other way round?
+  imageDpi <- 300             # arbitrary, SVG is a vector format
+  make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
+}
+
+#' @importFrom grid unit
+#' @importFrom grid convertUnit
+#' @importFrom grid rasterGrob
+make_raster_grob_from_image <- function(image, imageDim, imageDpi, unit_to, panelSize, scaling)
+{
   imageSize <-
     (imageDim / imageDpi) %>%
     unit(units = "inches") %>%
     convertUnit(unitTo = unit_to)
   newSize <- resizeImage(scaling, imageSize, panelSize)
-  #browser()
   rasterGrob(
     image,
     width = newSize[1],
     height = newSize[2])
-}
-
-#' @importFrom tiff readTIFF
-get_tiff_raster_grob <- function(x, unit_to)
-{
-  panel <- readTIFF(x, info = TRUE)
-  panelDim <- c(ncol(panel), nrow(panel))
-  if(!identical(
-    attr(panel, "x.resolution"),
-    attr(panel, "y.resolution")))
-  {
-    warning("Non-identical x/y resolutions.")
-  }
-  panelDpi <- attr(panel, "x.resolution")
-  panelSize <-
-    (panelDim / panelDpi) %>%
-    unit(units = "inches") %>%
-    convertUnit(unitTo = unit_to)
-  rasterGrob(
-    panel,
-    width = panelSize[1],
-    height = panelSize[2])
-}
-
-#' @importFrom jpeg readJPEG
-get_jpeg_raster_grob <- function(x)
-{
-  panel <- readJPEG(x)
-  rasterGrob(
-    panel,
-    width = unit(1,"npc"),
-    height = unit(1, "npc"))
-}
-
-#' @importFrom rsvg rsvg
-get_svg_raster_grob <- function(x)
-{
-  panel <- rsvg(x)
-  rasterGrob(
-    panel,
-    width = unit(1,"npc"),
-    height = unit(1, "npc"))
 }
 
 #' @importFrom assertive.files assert_all_are_readable_files
@@ -391,9 +386,9 @@ make_grob <- function(x, unit_to, panelSize, scaling, ...){
     panel <- switch(
       file_type,
       png = get_png_raster_grob(x, unit_to, panelSize, scaling),
-      tiff = get_tiff_raster_grob(x, unit_to),
-      jpeg = get_jpeg_raster_grob(x),
-      svg = get_svg_raster_grob(x)
+      tiff = get_tiff_raster_grob(x, unit_to, panelSize, scaling),
+      jpeg = get_jpeg_raster_grob(x, unit_to, panelSize, scaling),
+      svg = get_svg_raster_grob(x, unit_to, panelSize, scaling)
     )
   } else if(inherits(x = x, what = "ggplot")){
     panel <- ggplotGrob(x)

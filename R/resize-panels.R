@@ -9,7 +9,6 @@ to_mm <- function(x)
 
 resizeImage <- function(scaling, imageSize, panelSize)
 {
-  #browser()
   if(is.numeric(scaling))
   {
     return(scaling * imageSize)
