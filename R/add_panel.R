@@ -140,6 +140,7 @@ add_panel <- function(
   label = NULL,
   label_just = c("right", "bottom"),
   panel_clip = c("on", "off", "inherit"),
+  scaling = c("none", "stretch", "fit", "shrink"),
   ...)
 {
   ####################################################
@@ -151,7 +152,15 @@ add_panel <- function(
 
   panel_clip <- match.arg(panel_clip)
 
-  panel <- make_grob(panel, unit_to = attr(figure, "multipanelfigure.unit"))
+  scaling <- if(is.numeric(scaling))
+  {
+    assert_all_are_positive(scaling)
+    scaling <- rep_len(scaling, 2)
+  }
+  else
+  {
+    match.arg(scaling)
+  }
 
   rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
   columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
@@ -181,7 +190,8 @@ add_panel <- function(
     assert_is_a_number() %>%
     assert_all_are_whole_numbers() %>%
     assert_all_are_in_range(lower = 1, upper = columns)
-    assert_all_are_true(left_panel <= right_panel)
+
+  assert_all_are_true(left_panel <= right_panel)
 
   left_panel %>%
     assert_all_are_in_closed_range(lower = 1, upper = right_panel)
@@ -192,16 +202,16 @@ add_panel <- function(
   # Are the targeted panels free?
   tmpMatrix <- matrix(TRUE, nrow = rows, ncol = columns)
   tmpMatrix[
-    seq(from=top_panel, to= bottom_panel),
-    seq(from=left_panel,to=right_panel)] <- FALSE
+    seq(from = top_panel, to = bottom_panel),
+    seq(from = left_panel, to = right_panel)] <- FALSE
   tmpMatrix <- attr(figure,which = "multipanelfigure.panelsFree") + tmpMatrix
   if(all(tmpMatrix[
-    seq(from=top_panel, to= bottom_panel),
-    seq(from=left_panel,to=right_panel)] == 1))
+    seq(from = top_panel, to = bottom_panel),
+    seq(from = left_panel,to = right_panel)] == 1))
   {
     attr(figure, which = "multipanelfigure.panelsFree")[
-      seq(from=top_panel, to= bottom_panel),
-      seq(from=left_panel,to=right_panel)] <- FALSE
+      seq(from = top_panel, to = bottom_panel),
+      seq(from = left_panel, to = right_panel)] <- FALSE
   } else {
     stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
   }
@@ -223,6 +233,24 @@ add_panel <- function(
     2 * c(top_panel, bottom_panel, left_panel, right_panel) %>%
     setNames(c("top", "bottom", "left", "right"))
   label_placing <- panel_placing[c("top", "left")] - 1
+
+  # Get the available space to contain the panel
+  figureUnit <- figure %>%
+    attr("multipanelfigure.unit")
+  panelWidth <- figure$widths[panel_placing["left"]:panel_placing["right"]] %>%
+    sum %>%
+    convertUnit(unitTo = figureUnit)
+  panelHeight <- figure$heights[panel_placing["top"]:panel_placing["bottom"]] %>%
+    sum %>%
+    convertUnit(unitTo = figureUnit)
+
+  # Make the panel grob
+  panel <- make_grob(
+    panel,
+    unit_to = attr(figure, "multipanelfigure.unit"),
+    panelSize = grid::unit.c(panelWidth, panelHeight),
+    scaling = scaling)
+
 
   # Create panel label grob
   panel_label <- textGrob(
@@ -274,23 +302,25 @@ download_file <- function(x, ...)
 #' @importFrom grid convertUnit
 #' @importFrom grid rasterGrob
 #' @importFrom png readPNG
-get_png_raster_grob <- function(x, unit_to)
+get_png_raster_grob <- function(x, unit_to, panelSize, scaling)
 {
-  panel <- readPNG(x, info = TRUE)
-  panelDim <- attr(panel, "info")[["dim"]]
-  panelDpi <- attr(panel, "info")[["dpi"]]
-  if(is.null(panelDpi)) # DPI not always provided in file
+  image <- readPNG(x, info = TRUE)
+  imageDim <- attr(image, "info")[["dim"]]
+  imageDpi <- attr(image, "info")[["dpi"]]
+  if(is.null(imageDpi)) # DPI not always provided in file
   {
-    panelDpi <- 300
+    imageDpi <- 300
   }
-  panelSize <-
-    (panelDim / panelDpi) %>%
+  imageSize <-
+    (imageDim / imageDpi) %>%
     unit(units = "inches") %>%
     convertUnit(unitTo = unit_to)
+  newSize <- resizeImage(scaling, imageSize, panelSize)
+  #browser()
   rasterGrob(
-    panel,
-    width = panelSize[1],
-    height = panelSize[2])
+    image,
+    width = newSize[1],
+    height = newSize[2])
 }
 
 #' @importFrom tiff readTIFF
@@ -339,7 +369,7 @@ get_svg_raster_grob <- function(x)
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom grid grobTree
 #' @importFrom grid grid.grabExpr
-make_grob <- function(x, unit_to, ...){
+make_grob <- function(x, unit_to, panelSize, scaling, ...){
   if(is.character(x)){ # It's a PNG/JPEG/TIFF image
     x <- use_first(x)
     # Could use pathological::get_extension, but the extra package dependencies
@@ -360,7 +390,7 @@ make_grob <- function(x, unit_to, ...){
 
     panel <- switch(
       file_type,
-      png = get_png_raster_grob(x, unit_to),
+      png = get_png_raster_grob(x, unit_to, panelSize, scaling),
       tiff = get_tiff_raster_grob(x, unit_to),
       jpeg = get_jpeg_raster_grob(x),
       svg = get_svg_raster_grob(x)

@@ -9,7 +9,7 @@
 add_panel(figure, panel, top_panel = 1, bottom_panel = top_panel,
   left_panel = 1, right_panel = left_panel, label = NULL,
   label_just = c("right", "bottom"), panel_clip = c("on", "off", "inherit"),
-  ...)
+  scaling = c("none", "stretch", "fit", "shrink"), ...)
 }
 \arguments{
 \item{figure}{Object of classes \code{multipanelfigure}/
