@@ -13,15 +13,19 @@
 #'     format (\code{*.tiff}/\code{*.tif}), joint photographic experts group
 #'     (\code{*.jpg}/\code{*.jpeg}) files, or support vector graphics
 #'     (\code{*.svg}) which will be read and placed into panels as requested.}}
-#' Note that \code{*.jpg}/\code{*.jpeg} files must be produced
-#' using the dimensions of the panel(s) they are to be placed in for sensible
-#' results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale and
-#' \code{*.tiff}/\code{*.tif}, as well as \code{*.png} files have their native
-#' sizes read out of the file (which isn't working for
-#' \code{*.jpg}/\code{*.jpeg}).  \code{*.svg} files are converted to a raster
-#' object the size of the panel.
+#'
+#' For \code{*.tiff}/\code{*.tif} and \code{*.png} files, their native
+#' resolution is determined from attributes in the file.  If the attributes are
+#' not present, then the DPI is determined by the the
+#' \code{multipanelfigure.defaultdpi} global option, or 300 if this has not been
+#' set.  The \code{\link[jpeg]{readJPEG}} used to import \code{*.jpg}/
+#' \code{*.jpeg} images doesn't support determining the resolution, so the
+#' resolution is always set to \code{multipanelfigure.defaultdpi} or 300.
+#' Likewise for \code{*.svg} files, since this is a vector format there is no
+#' intrinsic resolution and \code{multipanelfigure.defaultdpi} or 300 is used.
+#'
 #' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted
-#' tp \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
+#' to \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
 #' which with respect to plot formatting are not well studied.
 #' @param figure Object of classes \code{multipanelfigure}/
 #' \code{\link[gtable]{gtable}} as produced by \code{\link{multi_panel_figure}}
@@ -53,7 +57,7 @@
 #' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
-#' @author Johannes Graumann
+#' @author Johannes Graumann, Richard Cotton
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
@@ -304,9 +308,9 @@ get_png_raster_grob <- function(x, unit_to, panelSize, scaling)
   image <- readPNG(x, info = TRUE)
   imageDim <- attr(image, "info")[["dim"]]
   imageDpi <- attr(image, "info")[["dpi"]]
-  if(is.null(imageDpi)) # DPI not always provided in file
+  if(is.null(imageDpi))
   {
-    imageDpi <- 300
+    imageDpi <- getOption("multipanelfigure.defaultdpi", 300)
   }
   make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
 }
@@ -316,13 +320,11 @@ get_tiff_raster_grob <- function(x, unit_to, panelSize, scaling)
 {
   image <- readTIFF(x, info = TRUE)
   imageDim <- dim(image)[2:1]
-  # if(!identical(
-  #   attr(panel, "x.resolution"),
-  #   attr(panel, "y.resolution")))
-  # {
-  #   warning("Non-identical x/y resolutions.")
-  # }
   imageDpi <- c(attr(image, "x.resolution"), attr(image, "y.resolution"))
+  if(is.null(imageDpi))
+  {
+    imageDpi <- getOption("multipanelfigure.defaultdpi", 300)
+  }
   make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
 }
 
@@ -331,16 +333,51 @@ get_jpeg_raster_grob <- function(x, unit_to, panelSize, scaling)
 {
   image <- readJPEG(x)
   imageDim <- dim(image)[2:1]
-  imageDpi <- 300 # not retrieved by readJPEG
+  imageDpi <- getOption("multipanelfigure.defaultdpi", 300) # not retrieved by readJPEG
   make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
 }
 
 #' @importFrom rsvg rsvg
 get_svg_raster_grob <- function(x, unit_to, panelSize, scaling)
 {
+  imageDpi <- getOption("multipanelfigure.defaultdpi", 300) # arbitrary, SVG is a vector format
+  # For stretch scaling, we can just read the file with the dimensions of the panel
+  if(scaling == "stretch")
+  {
+    imageDimPixels <- (imageDpi * panelSize) %>%
+      convertUnit("inches", valueOnly = TRUE)
+    image <- rsvg(x, imageDimPixels[1], imageDimPixels[2])
+    return(rasterGrob(
+      image,
+      width = panelSize[1],
+      height = panelSize[2]))
+  }
+  # Hope that the user has selected a portrait panel for a portrait image
+  # and vice versa
+  longestDim <- which.max(panelSize)
+  longestImageDimPixels <- (imageDpi * panelSize[longestDim]) %>%
+    convertUnit("inches", valueOnly = TRUE)
+  if(longestDim == 1L)
+  {
+    image <- rsvg(x, width = longestImageDimPixels)
+  } else # longestDim == 2L
+  {
+    image <- rsvg(x, height = longestImageDimPixels)
+  }
+  if(scaling == "none")
+  {
+    imageDim <- dim(image)[2:1]
+    imageSize <-
+      (imageDim / imageDpi) %>%
+      unit(units = "inches") %>%
+      convertUnit(unitTo = unit_to)
+    return(rasterGrob(
+      image,
+      width = imageSize[1],
+      height = imageSize[2]))
+  }
   image <- rsvg(x, 1000) # TODO: how best to optimize this?
   imageDim <- dim(image)[2:1] # other way round?
-  imageDpi <- 300             # arbitrary, SVG is a vector format
   make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
 }
 

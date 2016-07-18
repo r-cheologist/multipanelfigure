@@ -70,15 +70,19 @@ Currently supported as panel-representing objects (\code{panel}) are
     format (\code{*.tiff}/\code{*.tif}), joint photographic experts group
     (\code{*.jpg}/\code{*.jpeg}) files, or support vector graphics
     (\code{*.svg}) which will be read and placed into panels as requested.}}
-Note that \code{*.jpg}/\code{*.jpeg} files must be produced
-using the dimensions of the panel(s) they are to be placed in for sensible
-results. \code{\link[ggplot2]{ggplot}} objects obviously auto-scale and
-\code{*.tiff}/\code{*.tif}, as well as \code{*.png} files have their native
-sizes read out of the file (which isn't working for
-\code{*.jpg}/\code{*.jpeg}).  \code{*.svg} files are converted to a raster
-object the size of the panel.
+
+For \code{*.tiff}/\code{*.tif} and \code{*.png} files, their native
+resolution is determined from attributes in the file.  If the attributes are
+not present, then the DPI is determined by the the
+\code{multipanelfigure.defaultdpi} global option, or 300 if this has not been
+set.  The \code{\link[jpeg]{readJPEG}} used to import \code{*.jpg}/
+\code{*.jpeg} images doesn't support determining the resolution, so the
+resolution is always set to \code{multipanelfigure.defaultdpi} or 300.
+Likewise for \code{*.svg} files, since this is a vector format there is no
+intrinsic resolution and \code{multipanelfigure.defaultdpi} or 300 is used.
+
 \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted
-tp \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
+to \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
 which with respect to plot formatting are not well studied.
 }
 \examples{
@@ -145,7 +149,7 @@ a_base_plot <- capture_base_plot(
   top_panel = 4, left_panel = 3))
 }
 \author{
-Johannes Graumann
+Johannes Graumann, Richard Cotton
 }
 \seealso{
 \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
