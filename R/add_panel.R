@@ -11,18 +11,19 @@
 #'   \item{Single \code{\link{character}} objects representing URLs or paths to
 #'     readable portable network graphics (\code{*.png}), tagged image file
 #'     format (\code{*.tiff}/\code{*.tif}), joint photographic experts group
-#'     (\code{*.jpg}/\code{*.jpeg}) files, or support vector graphics
-#'     (\code{*.svg}) which will be read and placed into panels as requested.}}
+#'     (\code{*.jpg}/\code{*.jpeg}) files, graphic interchange format
+#'     (\code{*.gif}) or support vector graphics (\code{*.svg}) which will be
+#'     read and placed into panels as requested.}}
 #'
 #' For \code{*.tiff}/\code{*.tif} and \code{*.png} files, their native
 #' resolution is determined from attributes in the file.  If the attributes are
 #' not present, then the DPI is determined by the the
 #' \code{multipanelfigure.defaultdpi} global option, or 300 if this has not been
-#' set.  The \code{\link[jpeg]{readJPEG}} used to import \code{*.jpg}/
-#' \code{*.jpeg} images doesn't support determining the resolution, so the
-#' resolution is always set to \code{multipanelfigure.defaultdpi} or 300.
-#' Likewise for \code{*.svg} files, since this is a vector format there is no
-#' intrinsic resolution and \code{multipanelfigure.defaultdpi} or 300 is used.
+#' set.  \code{*.jpg}/\code{*.jpeg}, \code{*.gif} and \code{*.svg} images don't
+#' support determining the resolution, so the resolution is always set to
+#' \code{multipanelfigure.defaultdpi} or 300.
+#'
+#' For animated GIFs, only the first frame will be used.
 #'
 #' \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted
 #' to \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
@@ -66,7 +67,8 @@
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
 #' \code{\link[tiff]{readTIFF}}, \code{\link[png]{readPNG}},
-#' \code{\link[jpeg]{readJPEG}}
+#' \code{\link[jpeg]{readJPEG}}, \code{\link[caTools]{read.gif}},
+#' \code{\link[rsvg]{rsvg}}
 #' @importFrom assertive.base assert_all_are_true
 #' @importFrom assertive.base use_first
 #' @importFrom assertive.base coerce_to
@@ -342,6 +344,19 @@ get_jpeg_raster_grob <- function(x, unit_to, panelSize, scaling)
   make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
 }
 
+#' @importFrom caTools read.gif
+get_gif_raster_grob <- function(x, unit_to, panelSize, scaling)
+{
+  gif <- read.gif(x, frame = 1)
+  gif$col[gif$transparent + 1] <- NA
+  image <- with(gif, col[image + 1])
+  dim(image) <- dim(gif$image)
+
+  imageDim <- dim(image)[2:1]
+  imageDpi <- getOption("multipanelfigure.defaultdpi", 300) # not contained in GIF files
+  make_raster_grob_from_image(image, imageDim, imageDpi, unit_to, panelSize, scaling)
+}
+
 #' @importFrom rsvg rsvg
 get_svg_raster_grob <- function(x, unit_to, panelSize, scaling)
 {
@@ -415,6 +430,7 @@ make_grob <- function(x, unit_to, panelSize, scaling, ...){
       if(grepl(pattern = "\\.ti[f]{1,2}$", x = x, ignore.case = TRUE)) "tiff" else
       if(grepl(pattern = "\\.jp[e]*g$", x = x, ignore.case = TRUE)) "jpeg" else
       if(grepl(pattern = "\\.svg$", x = x, ignore.case = TRUE)) "svg" else
+      if(grepl(pattern = "\\.gif$", x = x, ignore.case = TRUE)) "gif" else
       stop("unsupported file format.")
 
     if(is_url(x))
@@ -430,7 +446,8 @@ make_grob <- function(x, unit_to, panelSize, scaling, ...){
       png = get_png_raster_grob(x, unit_to, panelSize, scaling),
       tiff = get_tiff_raster_grob(x, unit_to, panelSize, scaling),
       jpeg = get_jpeg_raster_grob(x, unit_to, panelSize, scaling),
-      svg = get_svg_raster_grob(x, unit_to, panelSize, scaling)
+      svg = get_svg_raster_grob(x, unit_to, panelSize, scaling),
+      gif = get_gif_raster_grob(x, unit_to, panelSize, scaling)
     )
   } else if(inherits(x = x, what = "ggplot")){
     panel <- ggplotGrob(x)

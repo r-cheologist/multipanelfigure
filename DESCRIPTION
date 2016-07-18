@@ -19,6 +19,7 @@ Imports:
     assertive.numbers (>= 0.0-2),
     assertive.properties (>= 0.0-3),
     assertive.types (>= 0.0-2),
+    caTools (>= 1.17.1),
     ggplot2 (>= 2.1.0),
     grid,
     gridGraphics (>= 0.1-5),
