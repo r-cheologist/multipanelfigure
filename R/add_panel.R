@@ -53,6 +53,11 @@
 #' \code{\link[grid]{textGrob}}.
 #' @param panel_clip Should the display of panel contents be clipped at the
 #' panel borders?  See \code{\link[grid]{viewport}}.
+#' @param scaling Only used when importing image files. Either "none" to
+#' preserve the dimensions of an image, "stretch" to make it fit the panels,
+#' "fit" to shrink or enlarge it so that it fills one dimension of the panels
+#' while preserving the height to width ratio, or "shirnk which does the same
+#' but won't enlarge it.
 #' @param ... Additional arguments passed to \code{\link[utils]{download.file}}
 #' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
