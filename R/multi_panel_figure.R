@@ -157,9 +157,8 @@ multi_panel_figure <- function(
   #######################
   # Check Prerequisites #
   #######################
-  unit %>%
-    force %>%
-    assert_is_a_valid_unit_type()
+
+  assert_is_a_supported_unit_type(unit)
 
   assert_is_a_string(figure_name)
 

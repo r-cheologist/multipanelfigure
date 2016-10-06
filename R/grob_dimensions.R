@@ -46,10 +46,8 @@
 #' @export
 simple_grob_width <- function(grob, unit_to = "mm"){
   # Check prerequisites
-  grob %>%
-    assert_is_inherited_from(classes = "grob")
-  unit_to %>%
-    assert_is_a_valid_unit_type()
+  assert_is_inherited_from(grob, classes = "grob")
+  assert_is_a_supported_unit_type(unit_to)
 
   # Process
   convertUnit(
@@ -61,10 +59,8 @@ simple_grob_width <- function(grob, unit_to = "mm"){
 #' @export
 simple_grob_height <- function(grob, unit_to = "mm"){
   # Check prerequisites
-  grob %>%
-    assert_is_inherited_from(classes = "grob")
-  unit_to %>%
-    assert_is_a_valid_unit_type()
+  assert_is_inherited_from(grob, classes = "grob")
+  assert_is_a_supported_unit_type(unit_to)
 
   # Process
   convertUnit(
