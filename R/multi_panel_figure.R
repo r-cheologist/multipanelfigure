@@ -164,24 +164,22 @@ multi_panel_figure <- function(
 
   if(!is.null(width)){
     assert_is_null(widths)
-    width %<>%
-      assert_is_a_number() %>%
-      assert_all_are_positive() %>%
-      unit(unit)
-    columns %>%
-      assert_is_not_null() %>%
-      assert_is_a_number() %>%
-      assert_all_are_whole_numbers() %>%
-      assert_all_are_in_range(lower = 1, upper = Inf)
+    assert_is_a_number(width)
+    assert_all_are_positive(width)
+    width <- unit(width, unit)
+
+    assert_is_not_null(columns)
+    assert_is_a_number(columns)
+    assert_all_are_whole_numbers(columns)
+    assert_all_are_in_range(columns, lower = 1, upper = Inf)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
     widths <- (width - inter_column_spacing * columns) * (1 / columns) # No `/.unit`
   } else {
     assert_is_null(columns)
-    widths %<>%
-      assert_is_not_null() %>%
-      assert_is_numeric() %>%
-      assert_all_are_positive() %>%
-      unit(unit)
+    assert_is_not_null(widths) %>%
+    assert_is_numeric(widths) %>%
+    assert_all_are_positive(widths) %>%
+    widths <- unit(widths, unit)
     columns <- length(widths)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
     # width <- sum(widths) + inter_column_spacing * columns
@@ -189,24 +187,22 @@ multi_panel_figure <- function(
 
   if(!is.null(height)){
     assert_is_null(heights)
-    height %<>%
-      assert_is_a_number() %>%
-      assert_all_are_positive() %>%
-      unit(unit)
-    rows %>%
-      assert_is_not_null() %>%
-      assert_is_a_number() %>%
-      assert_all_are_whole_numbers() %>%
-      assert_all_are_in_range(lower = 1, upper = Inf)
+    assert_is_a_number(height)
+    assert_all_are_positive(height)
+    height <- unit(height, unit)
+
+    assert_is_not_null(rows)
+    assert_is_a_number(rows)
+    assert_all_are_whole_numbers(rows)
+    assert_all_are_in_range(rows, lower = 1, upper = Inf)
     inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
     heights <- (height - inter_row_spacing * rows) * (1 / rows) # No `/.unit`
   } else {
     assert_is_null(rows)
-    heights %<>%
-      assert_is_not_null() %>%
-      assert_is_numeric() %>%
-      assert_all_are_positive() %>%
-      unit(unit)
+    assert_is_not_null(heights)
+    assert_is_numeric(heights)
+    assert_all_are_positive(heights)
+    heights <- unit(heights, unit)
     rows <- length(heights)
     inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
     # height <- sum(heights) + inter_row_spacing * rows
