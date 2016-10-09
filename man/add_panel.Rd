@@ -6,8 +6,8 @@
 \alias{addpanel}
 \title{add_panel}
 \usage{
-add_panel(figure, panel, top_panel = 1, bottom_panel = top_panel,
-  left_panel = 1, right_panel = left_panel, label = NULL,
+add_panel(figure, panel, top_panel = "auto", bottom_panel = top_panel,
+  left_panel = "auto", right_panel = left_panel, label = NULL,
   label_just = c("right", "bottom"), panel_clip = c("on", "off", "inherit"),
   scaling = c("none", "stretch", "fit", "shrink"), ...)
 }
@@ -24,14 +24,16 @@ a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 'Details'.}
 
 \item{top_panel}{Single \code{\link{numeric}} indicating the row index of
-the panel that is to be placed in the figure.}
+the panel that is to be placed in the figure, or "auto" to automatically
+pick the row (see details).}
 
 \item{bottom_panel}{Single \code{\link{numeric}} indicating the lower row
 index of the panel that is to be placed in the figure. Important for
 definition of panel spanning (see examples).}
 
 \item{left_panel}{Single \code{\link{numeric}} indicating the column index
-of the panel that is to be placed in the figure.}
+of the panel that is to be placed in the figure, or "auto" to automatically
+pick the column (see details).}
 
 \item{right_panel}{Single \code{\link{numeric}} indicating the right column
 index of the panel that is to be placed in the figure. Important for
@@ -91,6 +93,11 @@ For animated GIFs, only the first frame will be used.
 \pkg{lattice}-generated \code{\link[lattice]{trellis.object}}s are converted
 to \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
 which with respect to plot formatting are not well studied.
+
+If the \code{top_panel} argument is "auto", then the first row with
+a free panel is used.
+If the \code{left_panel} argument is "auto", then the first column in the
+\code{top_panel} row with a free panel is used.
 }
 \examples{
 # Create the figure layout
@@ -104,9 +111,11 @@ a_grob <- grid::linesGrob(arrow = grid::arrow())
 figure \%<>\% add_panel(a_grob)
 
 # Add a ggplot object directly to the top row, second column.
+# The panels are chosen automatically, but you can achieve the same effect
+# using left_panel = 2
 a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
   ggplot2::geom_point()
-figure \%<>\% add_panel(a_ggplot, left_panel = 2)
+figure \%<>\% add_panel(a_ggplot)
 
 # JPEG, PNG, TIFF, and SVG images are added by passing the path to their file.
 image_files <- system.file("extdata", package = "multipanelfigure") \%>\%

@@ -38,12 +38,14 @@
 #' a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 #' 'Details'.
 #' @param top_panel Single \code{\link{numeric}} indicating the row index of
-#' the panel that is to be placed in the figure.
+#' the panel that is to be placed in the figure, or "auto" to automatically
+#' pick the row (see details).
 #' @param bottom_panel Single \code{\link{numeric}} indicating the lower row
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
 #' @param left_panel Single \code{\link{numeric}} indicating the column index
-#' of the panel that is to be placed in the figure.
+#' of the panel that is to be placed in the figure, or "auto" to automatically
+#' pick the column (see details).
 #' @param right_panel Single \code{\link{numeric}} indicating the right column
 #' index of the panel that is to be placed in the figure. Important for
 #' definition of panel spanning (see examples).
@@ -63,6 +65,10 @@
 #' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
+#' @details If the \code{top_panel} argument is "auto", then the first row with
+#' a free panel is used.
+#' If the \code{left_panel} argument is "auto", then the first column in the
+#' \code{top_panel} row with a free panel is used.
 #' @author Johannes Graumann, Richard Cotton
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
@@ -91,9 +97,11 @@
 #' figure %<>% add_panel(a_grob)
 #'
 #' # Add a ggplot object directly to the top row, second column.
+#' # The panels are chosen automatically, but you can achieve the same effect
+#' # using left_panel = 2
 #' a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
 #'   ggplot2::geom_point()
-#' figure %<>% add_panel(a_ggplot, left_panel = 2)
+#' figure %<>% add_panel(a_ggplot)
 #'
 #' # JPEG, PNG, TIFF, and SVG images are added by passing the path to their file.
 #' image_files <- system.file("extdata", package = "multipanelfigure") %>%
@@ -144,9 +152,9 @@
 add_panel <- function(
   figure,
   panel,
-  top_panel = 1,
+  top_panel = "auto",
   bottom_panel = top_panel,
-  left_panel = 1,
+  left_panel = "auto",
   right_panel = left_panel,
   label = NULL,
   label_just = c("right", "bottom"),
@@ -173,42 +181,57 @@ add_panel <- function(
     match.arg(scaling)
   }
 
-  rows <- nrow(attr(figure,which = "multipanelfigure.panelsFree"))
-  columns <- ncol(attr(figure,which = "multipanelfigure.panelsFree"))
+  panels_free <- attr(figure, which = "multipanelfigure.panelsFree")
+  rows <- nrow(panels_free)
+  columns <- ncol(panels_free)
 
-  top_panel %>%
-    assert_is_a_number() %>%
-    assert_all_are_whole_numbers() %>%
-    assert_all_are_in_closed_range(lower = 1, upper = rows)
+  if(identical(top_panel, "auto"))
+  {
+    row_has_free_panel <- panels_free %>%
+      apply(1L, any)
+    if(!any(row_has_free_panel))
+    {
+      stop("There are no free panels in the figure.")
+    }
+    top_panel <- which(row_has_free_panel)[1]
+    message("Setting top_panel to ", top_panel)
+  } else
+  {
+    assert_is_a_number(top_panel)
+    assert_all_are_whole_numbers(top_panel)
+    assert_all_are_in_closed_range(top_panel, lower = 1, upper = rows)
+  }
 
-  bottom_panel %>%
-    assert_is_a_number() %>%
-    assert_all_are_whole_numbers() %>%
-    assert_all_are_in_closed_range(lower = 1, upper = rows)
+  assert_is_a_number(bottom_panel)
+  assert_all_are_whole_numbers(bottom_panel)
+  assert_all_are_in_closed_range(bottom_panel, lower = 1, upper = rows)
 
-  top_panel %>%
-    assert_all_are_in_range(lower = 1, upper = bottom_panel)
+  assert_all_are_in_range(top_panel, lower = 1, upper = bottom_panel)
+  assert_all_are_in_range(bottom_panel, lower = top_panel, upper = rows)
 
-  bottom_panel %>%
-    assert_all_are_in_range(lower = top_panel, upper = rows)
+  if(identical(left_panel, "auto"))
+  {
+    col_has_free_panel <- panels_free[top_panel, ]
+    if(!any(col_has_free_panel))
+    {
+      stop("There are no free panels in the figure.")
+    }
+    left_panel <- which(col_has_free_panel)[1]
+    message("Setting left_panel to ", left_panel)
+  } else
+  {
+    assert_is_a_number(left_panel)
+    assert_all_are_whole_numbers(left_panel)
+    assert_all_are_in_closed_range(left_panel, lower = 1, upper = columns)
+  }
 
-  left_panel %>%
-    assert_is_a_number() %>%
-    assert_all_are_whole_numbers() %>%
-    assert_all_are_in_range(lower = 1, upper = columns)
-
-  right_panel %>%
-    assert_is_a_number() %>%
-    assert_all_are_whole_numbers() %>%
-    assert_all_are_in_range(lower = 1, upper = columns)
+  assert_is_a_number(right_panel)
+  assert_all_are_whole_numbers(right_panel)
+  assert_all_are_in_range(right_panel, lower = 1, upper = columns)
 
   assert_all_are_true(left_panel <= right_panel)
-
-  left_panel %>%
-    assert_all_are_in_closed_range(lower = 1, upper = right_panel)
-
-  right_panel %>%
-    assert_all_are_in_closed_range(lower = left_panel, upper = columns)
+  assert_all_are_in_closed_range(left_panel, lower = 1, upper = right_panel)
+  assert_all_are_in_closed_range(right_panel, lower = left_panel, upper = columns)
 
   # Are the targeted panels free?
   tmpMatrix <- matrix(TRUE, nrow = rows, ncol = columns)
