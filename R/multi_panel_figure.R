@@ -191,9 +191,9 @@ multi_panel_figure <- function(
     widths <- (width - inter_column_spacing * columns) * (1 / columns) # No `/.unit`
   } else {
     assert_is_null(columns)
-    assert_is_not_null(widths) %>%
-    assert_is_numeric(widths) %>%
-    assert_all_are_positive(widths) %>%
+    assert_is_not_null(widths)
+    assert_is_numeric(widths)
+    assert_all_are_positive(widths)
     widths <- unit(widths, unit)
     columns <- length(widths)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
