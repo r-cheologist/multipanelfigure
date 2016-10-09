@@ -78,6 +78,7 @@
 #' @importFrom assertive.base assert_all_are_true
 #' @importFrom assertive.base use_first
 #' @importFrom assertive.base coerce_to
+#' @importFrom assertive.base print_and_capture
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.numbers assert_all_are_in_closed_range
 #' @importFrom assertive.types assert_is_a_number
@@ -234,21 +235,22 @@ add_panel <- function(
   assert_all_are_in_closed_range(right_panel, lower = left_panel, upper = columns)
 
   # Are the targeted panels free?
-  tmpMatrix <- matrix(TRUE, nrow = rows, ncol = columns)
-  tmpMatrix[
-    seq(from = top_panel, to = bottom_panel),
-    seq(from = left_panel, to = right_panel)] <- FALSE
-  tmpMatrix <- attr(figure,which = "multipanelfigure.panelsFree") + tmpMatrix
-  if(all(tmpMatrix[
-    seq(from = top_panel, to = bottom_panel),
-    seq(from = left_panel,to = right_panel)] == 1))
+  panels_to_fill <- matrix(FALSE, nrow = rows, ncol = columns)
+  panels_to_fill[
+    seq.int(from = top_panel, to = bottom_panel),
+    seq.int(from = left_panel, to = right_panel)] <- TRUE
+  clashes <- panels_to_fill & !panels_free
+  if(any(clashes))
   {
-    attr(figure, which = "multipanelfigure.panelsFree")[
+    clash_indices <- data.frame(which(clashes, arr.ind = TRUE))
+    stop(
+      "Attempt to use these already filled panels.\n",
+      print_and_capture(clash_indices)
+    )
+  }
+  attr(figure, which = "multipanelfigure.panelsFree")[
       seq(from = top_panel, to = bottom_panel),
       seq(from = left_panel, to = right_panel)] <- FALSE
-  } else {
-    stop("Attempt to use already filled panel. Check \'attr(figure,which = \"multipanelfigure.panelsFree\")\'.")
-  }
 
   # Check/fix panel label
   label <- if(is.null(label))
