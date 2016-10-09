@@ -158,6 +158,21 @@ multi_panel_figure <- function(
   # Check Prerequisites #
   #######################
 
+  # Check enough arguments have been passed
+  args_passed <- names(match.call()[-1])
+  width_args_ok <- all(c("width", "columns") %in% args_passed) ||
+    ("widths" %in% args_passed)
+  if(!width_args_ok)
+  {
+    stop('The figure width is not well specified. The call to multi_panel_figure must contain either\n  1. "width" and "columns", or\n  2. "widths".')
+  }
+  height_args_ok <- all(c("height", "rows") %in% args_passed) ||
+    ("heights" %in% args_passed)
+  if(!height_args_ok)
+  {
+    stop('The figure height is not well specified. The call to multi_panel_figure must contain either\n  1. "height" and "rows", or\n  2. "heights".')
+  }
+
   assert_is_a_supported_unit_type(unit)
 
   assert_is_a_string(figure_name)
