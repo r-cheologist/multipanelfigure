@@ -9,7 +9,8 @@
 add_panel(figure, panel, top_panel = "auto", bottom_panel = top_panel,
   left_panel = "auto", right_panel = left_panel, label = NULL,
   label_just = c("right", "bottom"), panel_clip = c("on", "off", "inherit"),
-  scaling = c("none", "stretch", "fit", "shrink"), ...)
+  scaling = c("none", "stretch", "fit", "shrink"),
+  allow_panel_overwriting = FALSE, ...)
 }
 \arguments{
 \item{figure}{Object of classes \code{multipanelfigure}/
@@ -52,8 +53,12 @@ panel borders?  See \code{\link[grid]{viewport}}.}
 \item{scaling}{Only used when importing image files. Either "none" to
 preserve the dimensions of an image, "stretch" to make it fit the panels,
 "fit" to shrink or enlarge it so that it fills one dimension of the panels
-while preserving the height to width ratio, or "shirnk which does the same
+while preserving the height to width ratio, or "shrink which does the same
 but won't enlarge it.}
+
+\item{allow_panel_overwriting}{A logical value. If \code{TRUE}, overwriting
+panels is allowed, with a warning.  Otherwise (the default) it will cause an
+error.}
 
 \item{...}{Additional arguments passed to \code{\link[utils]{download.file}}
 when adding PNG, TIFF, or JPEG panels from URL.}

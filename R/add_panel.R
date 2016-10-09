@@ -59,8 +59,11 @@
 #' @param scaling Only used when importing image files. Either "none" to
 #' preserve the dimensions of an image, "stretch" to make it fit the panels,
 #' "fit" to shrink or enlarge it so that it fills one dimension of the panels
-#' while preserving the height to width ratio, or "shirnk which does the same
+#' while preserving the height to width ratio, or "shrink which does the same
 #' but won't enlarge it.
+#' @param allow_panel_overwriting A logical value. If \code{TRUE}, overwriting
+#' panels is allowed, with a warning.  Otherwise (the default) it will cause an
+#' error.
 #' @param ... Additional arguments passed to \code{\link[utils]{download.file}}
 #' when adding PNG, TIFF, or JPEG panels from URL.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
@@ -161,6 +164,7 @@ add_panel <- function(
   label_just = c("right", "bottom"),
   panel_clip = c("on", "off", "inherit"),
   scaling = c("none", "stretch", "fit", "shrink"),
+  allow_panel_overwriting = FALSE,
   ...)
 {
   ####################################################
@@ -182,6 +186,14 @@ add_panel <- function(
     match.arg(scaling)
   }
 
+  overwriting_severity_fn <- if(allow_panel_overwriting)
+  {
+    warning
+  } else
+  {
+    stop
+  }
+
   panels_free <- attr(figure, which = "multipanelfigure.panelsFree")
   rows <- nrow(panels_free)
   columns <- ncol(panels_free)
@@ -192,7 +204,7 @@ add_panel <- function(
       apply(1L, any)
     if(!any(row_has_free_panel))
     {
-      stop("There are no free panels in the figure.")
+      overwriting_severity_fn("There are no free panels in the figure.")
     }
     top_panel <- which(row_has_free_panel)[1]
     message("Setting top_panel to ", top_panel)
@@ -215,7 +227,7 @@ add_panel <- function(
     col_has_free_panel <- panels_free[top_panel, ]
     if(!any(col_has_free_panel))
     {
-      stop("There are no free panels in the figure.")
+      overwriting_severity_fn("There are no free panels in the figure.")
     }
     left_panel <- which(col_has_free_panel)[1]
     message("Setting left_panel to ", left_panel)
@@ -243,7 +255,7 @@ add_panel <- function(
   if(any(clashes))
   {
     clash_indices <- data.frame(which(clashes, arr.ind = TRUE))
-    stop(
+    overwriting_severity_fn(
       "Attempt to use these already filled panels.\n",
       print_and_capture(clash_indices)
     )
