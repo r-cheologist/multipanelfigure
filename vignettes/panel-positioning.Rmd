@@ -11,7 +11,6 @@ output: html_document
 -->
 
 ```{r, setup, echo = FALSE}
-set.seed(3)
 knitr::opts_chunk$set(error = TRUE)
 ```
 
@@ -96,3 +95,14 @@ If we really want to overwrite the panel, we can set `allow_panel_overwriting = 
 ```{r, allow_panel_overwriting}
 (figure %<>% add_panel(rect_grob(), left_panel = 2, right_panel = 3, bottom_panel = 3, allow_panel_overwriting = TRUE))
 ```
+
+
+<!--
+Override the background color so that the edges of plots can be seen better.
+This needs to come at the end of the document, or it will be overriden by default stylesheet.
+-->
+<style type='text/css'>
+body {
+    background-color: #f8f8f8;
+}
+</style>
