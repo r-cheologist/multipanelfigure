@@ -35,7 +35,10 @@ Suggests:
     grDevices,
     lattice (>= 0.20-33),
     roxygen2 (>= 5.0.1),
-    VennDiagram (>= 1.6.17)
+    VennDiagram (>= 1.6.17),
+    knitr,
+    rmarkdown
 License: GPL (>= 3)
 RoxygenNote: 5.0.1
 LazyData: TRUE
+VignetteBuilder: knitr
