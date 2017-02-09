@@ -12,7 +12,7 @@ multi_panel_figure(width = NULL, widths = NULL, columns = NULL,
   "lower-roman", "upper-greek", "lower-greek", "none"))
 }
 \arguments{
-\item{width}{Single \code{link{numeric}} defining the width of the resulting
+\item{width}{Single \code{\link{numeric}} defining the width of the resulting
 \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
 dependent and interfering parameters.}
 
@@ -25,7 +25,7 @@ interfering parameters.}
 the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 interfering parameters.}
 
-\item{height}{Single \code{link{numeric}} defining the height of the resulting
+\item{height}{Single \code{\link{numeric}} defining the height of the resulting
 \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
 dependent and interfering parameters.}
 
