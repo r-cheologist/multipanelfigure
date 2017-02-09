@@ -29,7 +29,7 @@
 #'   \item{Definition of global \code{\link[gtable]{gtable}}/figure dimensions:}{
 #'     Requires \code{width}, \code{columns}, \code{heights} and \code{rows}.
 #'     Excludes the use of \code{widths} and \code{heights}.}}
-#' @param width Single \code{link{numeric}} defining the width of the resulting
+#' @param width Single \code{\link{numeric}} defining the width of the resulting
 #' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
 #' dependent and interfering parameters.
 #' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
@@ -39,7 +39,7 @@
 #' @param columns Single \code{\link{numeric}} defining the number of columns in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
-#' @param height Single \code{link{numeric}} defining the height of the resulting
+#' @param height Single \code{\link{numeric}} defining the height of the resulting
 #' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
 #' dependent and interfering parameters.
 #' @param heights \code{\link{vector}} of \code{\link{numeric}}s defining the
