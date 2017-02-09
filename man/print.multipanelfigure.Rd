@@ -33,4 +33,3 @@ figure <- add_panel(figure, p)
 # After a panel is added, printing shows the plot.
 print(figure) # shows plot
 }
-

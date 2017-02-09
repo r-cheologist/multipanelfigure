@@ -2,10 +2,10 @@
 % Please edit documentation in R/grob_dimensions.R
 \name{grob_dimensions}
 \alias{grob_dimensions}
-\alias{simple_grob_height}
 \alias{simple_grob_width}
 \alias{simplegrobheight}
 \alias{simplegrobwidth}
+\alias{simple_grob_height}
 \title{Convenient Access to \code{grob} Dimensions}
 \usage{
 simple_grob_width(grob, unit_to = "mm")
@@ -52,10 +52,9 @@ ggplot2::ggsave(
 utils::browseURL(tmp_file)
 }
 }
-\author{
-Johannes Graumann
-}
 \seealso{
 \code{\link{multi_panel_figure}}
 }
-
+\author{
+Johannes Graumann
+}

@@ -146,15 +146,14 @@ message(
 utils::browseURL(tmpFile)
 }
 }
-\author{
-Johannes Graumann
-}
 \seealso{
 \code{\link{add_panel}} for more examples of adding panels
 \code{\link{simple_grob_width}} for inspecting figure dimensions
 \code{\link{capture_base_plot}} for including plots created using base graphics
 \code{\link[gtable]{gtable}} for the underlying structure of a figure
 }
+\author{
+Johannes Graumann
+}
 \keyword{hplot}
 \keyword{utilities}
-

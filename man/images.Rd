@@ -35,4 +35,3 @@ figure \%>\%
   image_files["Rlogo.png"],
   left_panel = 2, right_panel = 3, top_panel = 2, bottom_panel = 3)
 }
-
