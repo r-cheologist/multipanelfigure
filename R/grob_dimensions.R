@@ -11,7 +11,7 @@
 #' retrieved.
 #' @return Single \code{\link{numeric}} objects are returned.
 #' @author Johannes Graumann
-#' @seealso \code{\link{multi_panel_figure}}
+#' @seealso \code{\link{multi_panel_figure}}, \code{\link{save_multi_panel_figure}}
 #' @importFrom assertive.types assert_is_inherited_from
 #' @importFrom grid convertUnit
 #' @importFrom grid heightDetails
