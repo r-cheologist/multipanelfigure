@@ -4,8 +4,7 @@
 #' infrastructure for the assembly of multipanel figures.
 #' @details The \code{\link[gtable]{gtable}} may be constructed in two ways:
 #' \enumerate{
-#'   \item{Based on explicit width/height definitions for individual panels
-#'     handed to it via \code{widths} and \code{heights}.}
+#'   \item{Based on explicit width/height definitions for individual panels.}
 #'   \item{Based on total figure/\code{\link[gtable]{gtable}} dimensions given by
 #'     \code{width} and \code{height} together with the number of \code{columns}
 #'     and \code{rows} requested.}}
@@ -15,54 +14,62 @@
 #' for the total dimensions of the resulting \code{\link[gtable]{gtable}}. Width
 #' of the \code{\link[gtable]{gtable}} in the former case, for example may be
 #' calculated
-#' \deqn{W[total] = sum(widths) + length(widths) * inter_column_spacing}
+#' \deqn{W[total] = sum(width) + length(width) * inter_column_spacing}
 #' while width of resulting panels in the latter table construction approach may
 #' be calculated
 #' \deqn{W[panel] = (width - columns * inter_column_spacing) / columns}
 #'
-#' The two approaches to \code{\link[gtable]{gtable}} construction require mutually
-#' exclusive parameter sets:
+#' \code{width}, \code{height}, \code{inter_column_spacing} and
+#' \code{inter_row_spacing} may be defined numerically or as
+#' \code{\link[grid]{unit}} objects.
+#'
+#' Earlier implementations used parameters \code{widhts} and \code{heights} as
+#' synonyms for \code{width} and \code{height} with length greater than one.
+#' These parameters have been deprecated. They continue to work, but produce
+#' a warning.
+#'
+#' The two approaches to \code{\link[gtable]{gtable}} construction require
+#'  interdepending parameter sets:
 #' \describe{
-#'   \item{Individual definition of panel dimensions:}{Requires \code{widths} and
-#'     \code{heights}. Excludes the use of \code{width}, \code{columns},
-#'     \code{heights} and \code{rows}.}
+#'   \item{Individual definition of panel dimensions:}{Requires \code{width} and
+#'     \code{height} of lengths corresponding to the number of columns/rows
+#'     requested. Excludes the use of \code{columns} and \code{rows}.}
 #'   \item{Definition of global \code{\link[gtable]{gtable}}/figure dimensions:}{
-#'     Requires \code{width}, \code{columns}, \code{heights} and \code{rows}.
-#'     Excludes the use of \code{widths} and \code{heights}.}}
-#' @param width Single \code{\link{numeric}} defining the width of the resulting
-#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
-#' dependent and interfering parameters.
-#' @param widths \code{\link{vector}} of \code{\link{numeric}}s defining the
-#' actual widths of panels/columns in the resulting \code{\link[gtable]{gtable}} (unit
-#' depending on \code{unit}). See 'Details' for dependent and
-#' interfering parameters.
+#'     Requires \code{width}, \code{columns}, \code{height} and \code{rows} of
+#'     length 1.}}
+#' @param width \code{\link{numeric}} or \code{link[grid]{unit}} defining the
+#' width(s) of the resulting \code{\link[gtable]{gtable}} if
+#' \code{length(width) == 1} or individual column widths. Units depends on
+#' \code{unit} if not provided as \code{\link[grid]{unit}} object. See 'Details'
+#' for dependent and interfering parameters.
 #' @param columns Single \code{\link{numeric}} defining the number of columns in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
-#' @param height Single \code{\link{numeric}} defining the height of the resulting
-#' \code{\link[gtable]{gtable}} (unit depending on \code{unit}). See 'Details' for
-#' dependent and interfering parameters.
-#' @param heights \code{\link{vector}} of \code{\link{numeric}}s defining the
-#' actual heights of panels/rows in the resulting \code{\link[gtable]{gtable}} (unit
-#' depending on \code{unit}). See 'Details' for dependent and
-#' interfering parameters.
+#' @param height \code{\link{numeric}} or \code{link[grid]{unit}} defining the
+#' height of the resulting \code{\link[gtable]{gtable}} if
+#' \code{length(height) == 1} or individual row heights.nits depends on
+#' \code{unit} if not provided as \code{\link[grid]{unit}} object. See 'Details'
+#' for dependent and interfering parameters.
 #' @param rows Single \code{\link{numeric}} defining the number of rows in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
-#' @param inter_row_spacing The amount of white space automatically inserted
-#' between row panels. Defaults to \code{5 mm} unless explicitly given, in which
-#' case the value depends on the \code{unit} parameter. Recycled to the number
-#' of rows.
-#' @param inter_column_spacing The amount of white space automatically inserted
-#' between column panels. Defaults to \code{5 mm} unless explicitly given, in
-#' which case the value depends on the \code{unit} parameter. Recycled to the
-#' number of columns.
+#' @param inter_row_spacing \code{\link{numeric}} or #' \code{\link[grid]{unit}}
+#' defining the amount of white space automatically inserted between row panels.
+#' Defaults to \code{5 mm} unless explicitly given, in which case the value may
+#' depend on the \code{unit} parameter. Recycled to the number of rows.
+#' @param inter_column_spacing \code{\link{numeric}} or \code{\link[grid]{unit}}
+#' defining the amount of white space automatically inserted between column
+#' panels. Defaults to \code{5 mm} unless explicitly given, in which case the
+#' value may depends on the \code{unit} parameter. Recycled to the number of
+#' columns.
 #' @param unit Single \code{\link{character}} object defining the unit of all
 #' dimensions defined. Must satisfy \code{grid:::valid.units}.
 #' @param figure_name Single \code{\link{character}} object defining the name of
 #' the resulting \code{\link[gtable]{gtable}}.
 #' @param panel_label_type A string specifying the marker style for the panel labels
 #' used for automated annotation.  Defaults to uppercase Latin letters.
+#' @param ... Argument to accomodate deprecated arguments \code{widths} and
+#' \code{heights}.
 #' @return Returns an object of class \code{multipanelfigure} as well as
 #' \code{\link[gtable]{gtable}} object with the following additional attributes:
 #' \describe{
@@ -111,8 +118,8 @@
 #'
 #' # Figure construction based on individual panel dimensions
 #' (figure2 <- multi_panel_figure(
-#'    widths = c(40,30),
-#'    heights = c(40,60),
+#'    width = c(40,30),
+#'    height = c(40,60),
 #'    inter_row_spacing = c(5, 1),
 #'    inter_column_spacing = c(0, 10),
 #'    figure_name = "figure2"))
@@ -143,88 +150,92 @@
 #' }
 multi_panel_figure <- function(
   width = NULL,
-  widths = NULL,
   columns = NULL,
   height = NULL,
-  heights = NULL,
   rows = NULL,
   inter_row_spacing = NaN,
   inter_column_spacing = NaN,
   unit = "mm",
   figure_name = "FigureX",
-  panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"))
+  panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"),
+  ...)
 {
   #######################
   # Check Prerequisites #
   #######################
 
-  # Check enough arguments have been passed
+  # Deal with depreciated arguments 'widths' and 'heights'
+  dot_list = list( ... )
+  if ("heights" %in% names(dot_list)){
+    warning("argument 'heights' deprecated. Use 'height' instead.")
+    height <- dot_list[['heights']]
+    heights <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+  if ("widths" %in% names(dot_list)){
+    warning("argument 'widths' deprecated. Use 'width' instead.")
+    width <- dot_list[['widths']]
+    widths <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+
+  # Check passed arguments
   args_passed <- names(match.call()[-1])
-  width_args_ok <- all(c("width", "columns") %in% args_passed) ||
-    ("widths" %in% args_passed)
+  width_args_ok <- all(
+    (length(width) ==  1 && ("columns" %in% args_passed)) ||
+      (length(width) >= 1 && !("columns" %in% args_passed)))
   if(!width_args_ok)
   {
-    stop('The figure width is not well specified. The call to multi_panel_figure must contain either\n  1. "width" and "columns", or\n  2. "widths".')
+    stop('The figure width is not well specified. The call to multi_panel_figure must contain either\n  1. "width" of length 1 and "columns", or\n  2. "width", defining multiple columns.')
   }
-  height_args_ok <- all(c("height", "rows") %in% args_passed) ||
-    ("heights" %in% args_passed)
+  height_args_ok <- all(
+      (length(height) ==  1 && ("rows" %in% args_passed)) ||
+        (length(height) >= 1 && !("rows" %in% args_passed)))
   if(!height_args_ok)
   {
-    stop('The figure height is not well specified. The call to multi_panel_figure must contain either\n  1. "height" and "rows", or\n  2. "heights".')
+    stop('The figure height is not well specified. The call to multi_panel_figure must contain either\n  1. "height" of length 1 and "rows", or\n  2. "height", defining multiple rows.')
   }
 
   assert_is_a_supported_unit_type(unit)
 
   assert_is_a_string(figure_name)
 
-  if(!is.null(width)){
-    assert_is_null(widths)
-    assert_is_a_number(width)
-    assert_all_are_positive(width)
+  assert_is_numeric(width)
+  assert_all_are_positive(width)
+  if(!is.unit(width)){
     width <- unit(width, unit)
-
+  }
+  if(length(width) == 1){
     assert_is_not_null(columns)
     assert_is_a_number(columns)
     assert_all_are_whole_numbers(columns)
     assert_all_are_in_range(columns, lower = 1, upper = Inf)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
-    widths <- (width - inter_column_spacing * columns) * (1 / columns) # No `/.unit`
   } else {
     assert_is_null(columns)
-    assert_is_not_null(widths)
-    assert_is_numeric(widths)
-    assert_all_are_positive(widths)
-    widths <- unit(widths, unit)
-    columns <- length(widths)
+    columns <- length(width)
     inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
-    # width <- sum(widths) + inter_column_spacing * columns
   }
+  tmp_widths <- (width - inter_column_spacing * columns) * (1 / columns) # No `/.unit`
 
-  if(!is.null(height)){
-    assert_is_null(heights)
-    assert_is_a_number(height)
-    assert_all_are_positive(height)
+  assert_is_numeric(height)
+  assert_all_are_positive(height)
+  if(!is.unit(height)){
     height <- unit(height, unit)
-
+  }
+  if(length(height) == 1){
     assert_is_not_null(rows)
     assert_is_a_number(rows)
     assert_all_are_whole_numbers(rows)
     assert_all_are_in_range(rows, lower = 1, upper = Inf)
     inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
-    heights <- (height - inter_row_spacing * rows) * (1 / rows) # No `/.unit`
   } else {
     assert_is_null(rows)
-    assert_is_not_null(heights)
-    assert_is_numeric(heights)
-    assert_all_are_positive(heights)
-    heights <- unit(heights, unit)
-    rows <- length(heights)
+    rows <- length(height)
     inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
-    # height <- sum(heights) + inter_row_spacing * rows
   }
+  tmp_heights <- (height - inter_row_spacing * rows) * (1 / rows) # No `/.unit`
 
-  widths %<>% convertUnit(unit)
-  heights %<>% convertUnit(unit)
+  width %<>% convertUnit(unit)
+  height %<>% convertUnit(unit)
 
   # TODO: support all CSS ordered list marker styles
   # greek, hebrew, georgian, hiragana, etc. still TODO
@@ -237,8 +248,8 @@ multi_panel_figure <- function(
   # Basic layout
   tmp_gtable <-
     gtable(
-      widths = widths,
-      heights = heights,
+      widths = tmp_widths,
+      heights = tmp_heights,
       name = figure_name) %>%
     # add interpanel space
     gtable_add_col_space2(width = inter_column_spacing) %>%
@@ -262,11 +273,16 @@ multi_panel_figure <- function(
 
 fix_panel_spacing_arg <- function(x, n, u)
 {
-  assert_is_numeric(x)
+  if(is.na(x)){
+    x <- 5
+    u <- "mm"
+  }
+  assert_is_a_number(x)
   assert_all_are_non_negative(x, na_ignore = TRUE)
   x <- rep_len(x, n)
-  x_is_na <- is.na(x)
-  x <- unit(ifelse(x_is_na, 5, x), ifelse(x_is_na, "mm", u))
+  if(!is.unit(x)){
+    x <- unit(x, u)
+  }
   x
 }
 

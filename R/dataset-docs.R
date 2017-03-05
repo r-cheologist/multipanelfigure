@@ -16,7 +16,7 @@
 #' @format An image file.
 #' @examples
 #' figure <- multi_panel_figure(
-#'   widths = c(60, 40, 40), heights = c(40, 40, 40)
+#'   width = c(60, 40, 40), height = c(40, 40, 40)
 #' )
 #' image_files <- system.file("extdata", package = "multipanelfigure") %>%
 #'   dir(full.names = TRUE) %>%

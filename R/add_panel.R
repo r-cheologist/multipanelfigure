@@ -92,8 +92,8 @@
 #' @examples
 #' # Create the figure layout
 #' (figure <- multi_panel_figure(
-#'   widths = c(30,40,60),
-#'   heights = c(40,60,60,60),
+#'   width = c(30,40,60),
+#'   height = c(40,60,60,60),
 #'   panel_label_type = "upper-roman"))
 #'
 #' # Fill the top-left panel using a grob object directly

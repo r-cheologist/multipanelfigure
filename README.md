@@ -39,8 +39,8 @@ Or you can specify widths and heights of individual columns and rows.
 
 ```{r}
 figure2 <- multi_panel_figure(
-  widths = c(20, 30, 40),
-  heights = c(10, 20, 30))
+  width = c(20, 30, 40),
+  height = c(10, 20, 30))
 ```
 
 When no panels are filled, printing the figure (by typing its name) displays the layout.  Notice that by default a 5 mm spacer is included between rows and between columns.  (This can be adjusted using `multi_panel_figure`'s `inter_row_spacing` and `inter_column_spacing` arguments.)

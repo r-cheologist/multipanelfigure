@@ -29,8 +29,8 @@ Here's a multi-panel figure with four panels, to contain the images.  In each ca
 ```{r, figure}
 library(multipanelfigure)
 figure <- multi_panel_figure(
-  widths = c(1, 5),
-  heights = c(1, 1, 4),
+  width = c(1, 5),
+  height = c(1, 1, 4),
   unit = "inches")
 r_logo <- system.file("extdata/Rlogo.png", package = "multipanelfigure")
 ```
@@ -72,8 +72,8 @@ By default, plots and images are clipped so that they don't overrun the panel th
 ```{r, figure2, fig.height = 8, fig.width = 8}
 library(grid)
 figure2 <- multi_panel_figure(
-  widths = rep.int(1.25, 3),
-  heights = rep.int(1.25, 3),
+  width = rep.int(1.25, 3),
+  height = rep.int(1.25, 3),
   unit = "inches")
 rhino <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
 for(position in list(c(1, 1), c(1, 2), c(1, 3), c(2, 1), c(2, 3), c(3, 1), c(3, 2), c(3, 3)))
