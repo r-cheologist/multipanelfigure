@@ -53,7 +53,7 @@ utils::browseURL(tmp_file)
 }
 }
 \seealso{
-\code{\link{multi_panel_figure}}
+\code{\link{multi_panel_figure}}, \code{\link{save_multi_panel_figure}}
 }
 \author{
 Johannes Graumann
