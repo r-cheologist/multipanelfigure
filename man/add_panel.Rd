@@ -6,8 +6,7 @@
 \alias{addpanel}
 \title{add_panel}
 \usage{
-add_panel(figure, panel, top_panel = "auto", bottom_panel = top_panel,
-  left_panel = "auto", right_panel = left_panel, label = NULL,
+add_panel(figure, panel, row = "auto", column = "auto", label = NULL,
   label_just = c("right", "bottom"), panel_clip = c("on", "off", "inherit"),
   scaling = c("none", "stretch", "fit", "shrink"),
   allow_panel_overwriting = FALSE, ...)
@@ -24,21 +23,15 @@ bitmap image (\code{*.png}, \code{*.tiff}/\code{*.tif},
 a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 'Details'.}
 
-\item{top_panel}{Single \code{\link{numeric}} indicating the row index of
-the panel that is to be placed in the figure, or "auto" to automatically
-pick the row (see details).}
+\item{row}{\code{\link{numeric}} object of length 1 or a range, indicating the row
+indeces the panel that is to be placed in the figure, or "auto" to
+automatically pick the row (see details). May be used to define  panel
+spanning (if \code{length(row) > 1}; see examples).}
 
-\item{bottom_panel}{Single \code{\link{numeric}} indicating the lower row
-index of the panel that is to be placed in the figure. Important for
-definition of panel spanning (see examples).}
-
-\item{left_panel}{Single \code{\link{numeric}} indicating the column index
-of the panel that is to be placed in the figure, or "auto" to automatically
-pick the column (see details).}
-
-\item{right_panel}{Single \code{\link{numeric}} indicating the right column
-index of the panel that is to be placed in the figure. Important for
-definition of panel spanning (see examples).}
+\item{column}{\code{\link{numeric}} object of length 1 or a range, indicating the
+column indeces of the panel that is to be placed in the figure, or "auto" to
+automatically pick the column (see details). May be used to define  panel
+spanning (if \code{length(column) > 1}; see examples).}
 
 \item{label}{Single \code{\link{character}} object defining the panel
 label used for automated annotation.}
@@ -61,7 +54,9 @@ panels is allowed, with a warning.  Otherwise (the default) it will cause an
 error.}
 
 \item{...}{Additional arguments passed to \code{\link[utils]{download.file}}
-when adding PNG, TIFF, or JPEG panels from URL.}
+when adding PNG, TIFF, or JPEG panels from URL. Also used to deal with
+deprecated arguments \code{top_panel}, \code{bottom_panel}, \code{left_panel}
+and \code{right_panel}.}
 }
 \value{
 Returns the \code{\link[gtable]{gtable}} object fed to it
@@ -89,7 +84,7 @@ For \code{*.tiff}/\code{*.tif} and \code{*.png} files, their native
 resolution is determined from attributes in the file.  If the attributes are
 not present, then the DPI is determined by the the
 \code{multipanelfigure.defaultdpi} global option, or 300 if this has not been
-set.  \code{*.jpg}/\code{*.jpeg}, \code{*.gif} and \code{*.svg} images don't
+set. \code{*.jpg}/\code{*.jpeg}, \code{*.gif} and \code{*.svg} images don't
 support determining the resolution, so the resolution is always set to
 \code{multipanelfigure.defaultdpi} or 300.
 
@@ -99,10 +94,10 @@ For animated GIFs, only the first frame will be used.
 to \code{grob}s using \code{grid.grabExpr(print(x))}, the side effects of
 which with respect to plot formatting are not well studied.
 
-If the \code{top_panel} argument is "auto", then the first row with
+If the \code{row} argument is "auto", then the first row with
 a free panel is used.
-If the \code{left_panel} argument is "auto", then the first column in the
-\code{top_panel} row with a free panel is used.
+If the \code{column} argument is "auto", then the first column in the
+row with a free panel is used.
 }
 \examples{
 # Create the figure layout
@@ -117,7 +112,7 @@ figure \%<>\% add_panel(a_grob)
 
 # Add a ggplot object directly to the top row, second column.
 # The panels are chosen automatically, but you can achieve the same effect
-# using left_panel = 2
+# using column = 2
 a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
   ggplot2::geom_point()
 figure \%<>\% add_panel(a_ggplot)
@@ -128,17 +123,17 @@ image_files <- system.file("extdata", package = "multipanelfigure") \%>\%
   setNames(basename(.))
 
 # Add the JPEG to the top row, third column
-figure \%<>\% add_panel(image_files["rhino.jpg"], left_panel = 3)
+figure \%<>\% add_panel(image_files["rhino.jpg"], column = 3)
 
 # Add the PNG to the second and third row, first and second column
 figure \%<>\% add_panel(
   image_files["Rlogo.png"],
-  top_panel = 2, bottom_panel = 3, left_panel = 1, right_panel = 2)
+  row = 2:3, column = 1:2)
 
 # Add the TIFF to the second row, third column
 figure \%<>\% add_panel(
   image_files["unicorn.svg"],
-  top_panel = 2, left_panel = 3)
+  row = 2, column = 3)
 
 # lattice/trellis plot objects are also added directly
 Depth <- lattice::equal.count(quakes$depth, number=4, overlap=0.1)
@@ -146,7 +141,7 @@ a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
 # Add the lattice plot to the third row, third column
 figure \%<>\% add_panel(
   a_lattice_plot,
-  top_panel = 3, left_panel = 3)
+  row = 3, column = 3)
 
 # Incorporate a gList object (such as produced by VennDigram)
 if(requireNamespace("VennDiagram"))
@@ -155,7 +150,7 @@ if(requireNamespace("VennDiagram"))
   # Add the Venn diagram to the fourth row, first and second columns
   (figure \%<>\% add_panel(
     a_venn_plot,
-    top_panel = 4, left_panel = 1, right_panel = 2))
+    row = 4, column = 1:2))
 }
 
 # Incorporate a base plot figure
@@ -167,7 +162,7 @@ a_base_plot <- capture_base_plot(
 # Add the heatmap to the fourth row, third column
 (figure \%<>\% add_panel(
   a_base_plot,
-  top_panel = 4, left_panel = 3))
+  row = 4, column = 3))
 }
 \seealso{
 \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},

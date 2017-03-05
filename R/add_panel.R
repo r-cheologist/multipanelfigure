@@ -19,7 +19,7 @@
 #' resolution is determined from attributes in the file.  If the attributes are
 #' not present, then the DPI is determined by the the
 #' \code{multipanelfigure.defaultdpi} global option, or 300 if this has not been
-#' set.  \code{*.jpg}/\code{*.jpeg}, \code{*.gif} and \code{*.svg} images don't
+#' set. \code{*.jpg}/\code{*.jpeg}, \code{*.gif} and \code{*.svg} images don't
 #' support determining the resolution, so the resolution is always set to
 #' \code{multipanelfigure.defaultdpi} or 300.
 #'
@@ -37,18 +37,14 @@
 #' \code{\link[lattice]{trellis.object}}, a \code{\link[grid]{gList}} object or
 #' a \code{\link[grid]{grob}} object to be placed in a multipanel figure. See
 #' 'Details'.
-#' @param top_panel Single \code{\link{numeric}} indicating the row index of
-#' the panel that is to be placed in the figure, or "auto" to automatically
-#' pick the row (see details).
-#' @param bottom_panel Single \code{\link{numeric}} indicating the lower row
-#' index of the panel that is to be placed in the figure. Important for
-#' definition of panel spanning (see examples).
-#' @param left_panel Single \code{\link{numeric}} indicating the column index
-#' of the panel that is to be placed in the figure, or "auto" to automatically
-#' pick the column (see details).
-#' @param right_panel Single \code{\link{numeric}} indicating the right column
-#' index of the panel that is to be placed in the figure. Important for
-#' definition of panel spanning (see examples).
+#' @param row \code{\link{numeric}} object of length 1 or a range, indicating the row
+#' indeces the panel that is to be placed in the figure, or "auto" to
+#' automatically pick the row (see details). May be used to define  panel
+#' spanning (if \code{length(row) > 1}; see examples).
+#' @param column \code{\link{numeric}} object of length 1 or a range, indicating the
+#' column indeces of the panel that is to be placed in the figure, or "auto" to
+#' automatically pick the column (see details). May be used to define  panel
+#' spanning (if \code{length(column) > 1}; see examples).
 #' @param label Single \code{\link{character}} object defining the panel
 #' label used for automated annotation.
 #' @param label_just Justification for the label within the interpanel spacing
@@ -65,13 +61,15 @@
 #' panels is allowed, with a warning.  Otherwise (the default) it will cause an
 #' error.
 #' @param ... Additional arguments passed to \code{\link[utils]{download.file}}
-#' when adding PNG, TIFF, or JPEG panels from URL.
+#' when adding PNG, TIFF, or JPEG panels from URL. Also used to deal with
+#' deprecated arguments \code{top_panel}, \code{bottom_panel}, \code{left_panel}
+#' and \code{right_panel}.
 #' @return Returns the \code{\link[gtable]{gtable}} object fed to it
 #' (\code{figure}) with the addition of the \code{panel}.
-#' @details If the \code{top_panel} argument is "auto", then the first row with
+#' @details If the \code{row} argument is "auto", then the first row with
 #' a free panel is used.
-#' If the \code{left_panel} argument is "auto", then the first column in the
-#' \code{top_panel} row with a free panel is used.
+#' If the \code{column} argument is "auto", then the first column in the
+#' row with a free panel is used.
 #' @author Johannes Graumann, Richard Cotton
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
@@ -84,6 +82,7 @@
 #' @importFrom assertive.base print_and_capture
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.numbers assert_all_are_in_closed_range
+#' @importFrom assertive.numbers assert_all_are_less_than_or_equal_to
 #' @importFrom assertive.types assert_is_a_number
 #' @importFrom grid textGrob
 #' @importFrom gtable gtable_add_grob
@@ -102,7 +101,7 @@
 #'
 #' # Add a ggplot object directly to the top row, second column.
 #' # The panels are chosen automatically, but you can achieve the same effect
-#' # using left_panel = 2
+#' # using column = 2
 #' a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
 #'   ggplot2::geom_point()
 #' figure %<>% add_panel(a_ggplot)
@@ -113,17 +112,17 @@
 #'   setNames(basename(.))
 #'
 #' # Add the JPEG to the top row, third column
-#' figure %<>% add_panel(image_files["rhino.jpg"], left_panel = 3)
+#' figure %<>% add_panel(image_files["rhino.jpg"], column = 3)
 #'
 #' # Add the PNG to the second and third row, first and second column
 #' figure %<>% add_panel(
 #'   image_files["Rlogo.png"],
-#'   top_panel = 2, bottom_panel = 3, left_panel = 1, right_panel = 2)
+#'   row = 2:3, column = 1:2)
 #'
 #' # Add the TIFF to the second row, third column
 #' figure %<>% add_panel(
 #'   image_files["unicorn.svg"],
-#'   top_panel = 2, left_panel = 3)
+#'   row = 2, column = 3)
 #'
 #' # lattice/trellis plot objects are also added directly
 #' Depth <- lattice::equal.count(quakes$depth, number=4, overlap=0.1)
@@ -131,7 +130,7 @@
 #' # Add the lattice plot to the third row, third column
 #' figure %<>% add_panel(
 #'   a_lattice_plot,
-#'   top_panel = 3, left_panel = 3)
+#'   row = 3, column = 3)
 #'
 #' # Incorporate a gList object (such as produced by VennDigram)
 #' if(requireNamespace("VennDiagram"))
@@ -140,7 +139,7 @@
 #'   # Add the Venn diagram to the fourth row, first and second columns
 #'   (figure %<>% add_panel(
 #'     a_venn_plot,
-#'     top_panel = 4, left_panel = 1, right_panel = 2))
+#'     row = 4, column = 1:2))
 #' }
 #'
 #' # Incorporate a base plot figure
@@ -152,14 +151,12 @@
 #' # Add the heatmap to the fourth row, third column
 #' (figure %<>% add_panel(
 #'   a_base_plot,
-#'   top_panel = 4, left_panel = 3))
+#'   row = 4, column = 3))
 add_panel <- function(
   figure,
   panel,
-  top_panel = "auto",
-  bottom_panel = top_panel,
-  left_panel = "auto",
-  right_panel = left_panel,
+  row = "auto",
+  column = "auto",
   label = NULL,
   label_just = c("right", "bottom"),
   panel_clip = c("on", "off", "inherit"),
@@ -170,6 +167,37 @@ add_panel <- function(
   ####################################################
   # Check prerequisites & transform objects to grobs #
   ####################################################
+
+  # Deal with deprecated parameters
+  dot_list <- list( ... )
+  if("top_panel" %in% names(dot_list)){
+    warning("argument 'top_panel' deprecated. Use 'row' instead.")
+    row <- dot_list[['top_panel']]
+    top_panel <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+  if("bottom_panel" %in% names(dot_list)){
+    warning("argument 'bottom_panel' deprecated. Use 'row' instead.")
+    if(dot_list[['bottom_panel']] == 'top_panel'){
+      row[2] <- row[1]
+    } else {
+      row[2] <- dot_list[['bottom_panel']]
+    }
+    top_panel <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+  if("left_panel" %in% names(dot_list)){
+    warning("argument 'left_panel' deprecated. Use 'column' instead.")
+    column <- dot_list[['left_panel']]
+    left_panel <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+  if("right_panel" %in% names(dot_list)){
+    warning("argument 'right_panel' deprecated. Use 'column' instead.")
+    if(dot_list[['right_panel']] == 'left_panel'){
+      column[2] <- column[1]
+    } else {
+      column[2] <- dot_list[['right_panel']]
+    }
+    right_panel <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
 
   figure %>%
     assert_is_multipanelfigure
@@ -198,7 +226,7 @@ add_panel <- function(
   rows <- nrow(panels_free)
   columns <- ncol(panels_free)
 
-  if(identical(top_panel, "auto"))
+  if(identical(row[1], "auto"))
   {
     row_has_free_panel <- panels_free %>%
       apply(1L, any)
@@ -206,51 +234,52 @@ add_panel <- function(
     {
       overwriting_severity_fn("There are no free panels in the figure.")
     }
-    top_panel <- which(row_has_free_panel)[1]
-    message("Setting top_panel to ", top_panel)
-  } else
-  {
-    assert_is_a_number(top_panel)
-    assert_all_are_whole_numbers(top_panel)
-    assert_all_are_in_closed_range(top_panel, lower = 1, upper = rows)
+    row[1] <- which(row_has_free_panel)[1]
+    row %<>% as.numeric()
+    message("Setting row to ", row[1])
   }
 
-  assert_is_a_number(bottom_panel)
-  assert_all_are_whole_numbers(bottom_panel)
-  assert_all_are_in_closed_range(bottom_panel, lower = 1, upper = rows)
+  if(length(row) == 1){
+    row[2] <- row[1]
+  } else if(length(row) > 2){
+    row <- c(
+      row[1],
+      tail(row, n = 1))
+  }
+  assert_is_numeric(row)
+  assert_all_are_whole_numbers(row)
+  assert_all_are_in_closed_range(row, lower = 1, upper = rows)
+  assert_all_are_less_than_or_equal_to(row[1], row[2])
 
-  assert_all_are_in_range(top_panel, lower = 1, upper = bottom_panel)
-  assert_all_are_in_range(bottom_panel, lower = top_panel, upper = rows)
-
-  if(identical(left_panel, "auto"))
+  if(identical(column[1], "auto"))
   {
-    col_has_free_panel <- panels_free[top_panel, ]
+    col_has_free_panel <- panels_free[row[1], ]
     if(!any(col_has_free_panel))
     {
       overwriting_severity_fn("There are no free panels in the figure.")
     }
-    left_panel <- which(col_has_free_panel)[1]
-    message("Setting left_panel to ", left_panel)
-  } else
-  {
-    assert_is_a_number(left_panel)
-    assert_all_are_whole_numbers(left_panel)
-    assert_all_are_in_closed_range(left_panel, lower = 1, upper = columns)
+    column[1] <- which(col_has_free_panel)[1]
+    column %<>% as.numeric()
+    message("Setting column to ", column[1])
   }
 
-  assert_is_a_number(right_panel)
-  assert_all_are_whole_numbers(right_panel)
-  assert_all_are_in_range(right_panel, lower = 1, upper = columns)
-
-  assert_all_are_true(left_panel <= right_panel)
-  assert_all_are_in_closed_range(left_panel, lower = 1, upper = right_panel)
-  assert_all_are_in_closed_range(right_panel, lower = left_panel, upper = columns)
+  if(length(column) == 1){
+    column[2] <- column[1]
+  } else if(length(column) > 2){
+    column <- c(
+      column[1],
+      tail(column, n = 1))
+  }
+  assert_is_numeric(column)
+  assert_all_are_whole_numbers(column)
+  assert_all_are_in_closed_range(column, lower = 1, upper = columns)
+  assert_all_are_less_than_or_equal_to(column[1], column[2])
 
   # Are the targeted panels free?
   panels_to_fill <- matrix(FALSE, nrow = rows, ncol = columns)
   panels_to_fill[
-    seq.int(from = top_panel, to = bottom_panel),
-    seq.int(from = left_panel, to = right_panel)] <- TRUE
+    seq.int(from = row[1], to = row[2]),
+    seq.int(from = column[1], to = column[2])] <- TRUE
   clashes <- panels_to_fill & !panels_free
   if(any(clashes))
   {
@@ -261,8 +290,8 @@ add_panel <- function(
     )
   }
   attr(figure, which = "multipanelfigure.panelsFree")[
-      seq(from = top_panel, to = bottom_panel),
-      seq(from = left_panel, to = right_panel)] <- FALSE
+      seq(from = row[1], to = row[2]),
+      seq(from = column[1], to = column[2])] <- FALSE
 
   # Check/fix panel label
   label <- if(is.null(label))
@@ -278,7 +307,7 @@ add_panel <- function(
   ##############
   # Get the "real" spans (including inter-panel spaces)
   panel_placing <-
-    2 * c(top_panel, bottom_panel, left_panel, right_panel) %>%
+    2 * c(row[1], row[2], column[1], column[2]) %>%
     setNames(c("top", "bottom", "left", "right"))
   label_placing <- panel_placing[c("top", "left")] - 1
 
@@ -298,7 +327,6 @@ add_panel <- function(
     unit_to = attr(figure, "multipanelfigure.unit"),
     panelSize = grid::unit.c(panelWidth, panelHeight),
     scaling = scaling)
-
 
   # Create panel label grob
   panel_label <- textGrob(

@@ -56,13 +56,13 @@ Setting `scaling = "fit"` means that the image is shrunked or grown so that it j
 Setting `scaling = "shrink"`, works the same way as `scaling = "fit"` when the image is larger than the panel.
 
 ```{r, shrink_small, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo, scaling = "shrink", top_panel = 3, left_panel = 1))
+(figure %<>% add_panel(r_logo, scaling = "shrink", row = 3, column = 1))
 ```
 
 If the image is smaller than the panel, `scaling = "shrink"` works like `scaling = "none"`.
 
 ```{r, shrink_big, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo, scaling = "shrink", top_panel = 2, bottom_panel = 3, left_panel = 2))
+(figure %<>% add_panel(r_logo, scaling = "shrink", row = 2:3, column = 2))
 ```
 
 ## Clipping Plots and Images
@@ -81,8 +81,8 @@ for(position in list(c(1, 1), c(1, 2), c(1, 3), c(2, 1), c(2, 3), c(3, 1), c(3, 
   figure2 %<>% 
     add_panel(
       rectGrob(gp = gpar(fill = "#91A45E")), 
-      top_panel = position[1], 
-      left_panel = position[2])
+      row = position[1], 
+      column = position[2])
 }
 figure2
 ```

@@ -29,9 +29,7 @@ image_files <- system.file("extdata", package = "multipanelfigure") \%>\%
   setNames(basename(.))
 figure \%>\%
   add_panel(image_files["farouq.tiff"]) \%>\%
-  add_panel(image_files["unicorn.svg"], left_panel = 2, right_panel = 3) \%>\%
-  add_panel(image_files["rhino.jpg"], top_panel = 2, bottom_panel = 3) \%>\%
-  add_panel(
-  image_files["Rlogo.png"],
-  left_panel = 2, right_panel = 3, top_panel = 2, bottom_panel = 3)
+  add_panel(image_files["unicorn.svg"], column = 2:3) \%>\%
+  add_panel(image_files["rhino.jpg"], row = 2:3) \%>\%
+  add_panel(image_files["Rlogo.png"], column = 2:3, row = 2:3)
 }

@@ -137,9 +137,9 @@ ggp <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
 figure2 <- add_panel(figure2, ggp)
 # JPEG, PNG, and TIFF images are added by passing the path to their file
 jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-figure2 <- add_panel(figure2, jpg, left_panel = 2)
+figure2 <- add_panel(figure2, jpg, column = 2)
 # Plots can take up multiple panels
-figure2 <- add_panel(figure2, ggp, top_panel = 2, left_panel = 1, right_panel = 2)
+figure2 <- add_panel(figure2, ggp, row = 2, column = 1:2)
 # Plot to appropriately sized png device
 tmpFile <- tempfile(fileext = ".png")
 ggplot2::ggsave(

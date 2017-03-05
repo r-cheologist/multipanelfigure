@@ -70,7 +70,7 @@ figure1 %<>% add_panel(a_lattice_plot)
 library(ggplot2)
 library(magrittr)
 a_ggplot <- ggplot(Loblolly, aes(age, height)) + geom_point()
-figure1 %<>% add_panel(a_ggplot, left_panel = 2)
+figure1 %<>% add_panel(a_ggplot, column = 2)
 ```
 
 Plots created using base graphics must be converted to grid-based plots and captured using `capture_base_plot`.
@@ -79,15 +79,15 @@ Plots created using base graphics must be converted to grid-based plots and capt
 a_base_plot <- capture_base_plot(
   with(Loblolly, plot(age, height))
 )
-figure1 %<>% add_panel(a_base_plot, left_panel = 3)
+figure1 %<>% add_panel(a_base_plot, column = 3)
 ```
 
-*grid* grobs are also added directly.  Plots and images can be made to span multiple panels by setting `right_panel` to be larger than `left_panel` or `bottom_panel` to be larger than `top_panel`.  The following example adds the grob to the second and third rows from the top (first column).
+*grid* grobs are also added directly.  Plots and images can be made to span multiple panels by defining starting and stopping columns using `column` and/or starting and stopping rows using `row`. The following example adds the grob to the second and third rows from the top (first column).
 
 ```{r}
 library(grid)
 a_grob <- linesGrob(arrow = arrow())
-figure1 %<>% add_panel(a_grob, top_panel = 2, bottom_panel = 3)
+figure1 %<>% add_panel(a_grob, row = 2:3)
 ```
 
 
@@ -96,8 +96,8 @@ JPEG, PNG, and TIFF images are added via a string giving their location: either 
 ```{r}
 figure1 %<>% add_panel(
   "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Persian_Cat_%28kitten%29.jpg/657px-Persian_Cat_%28kitten%29.jpg",
-  left_panel = 2, right_panel = 3,
-  top_panel = 2, bottom_panel = 3)
+  column = 2:3,
+  row = 2:3)
 ```
 
 Once panels have been added to the figure, printing it displays the figure.
