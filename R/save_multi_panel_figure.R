@@ -4,7 +4,7 @@
 #' constructed by \code{\link{multi_panel_figure}} taking into account the
 #' table's dimensions.
 #' @details Plot dimensions are determined using
-#' \code{\link{simple_grob_height}} and \code{\link{simple_grob_width}}.
+#' \code{\link{figure_height}} and \code{\link{figure_width}}.
 #'
 #' The Device type to use is guessed from the \code{filename} extension.
 #' Currently supported are "eps", "ps", "tex" (pictex), "pdf", "jpeg", "tiff",
@@ -18,8 +18,8 @@
 #' @param ... Other arguments passed to \code{\link[ggplot2]{ggsave}}.
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link[ggplot2]{ggsave}}, \code{\link{simple_grob_width}},
-#' \code{\link{simple_grob_height}}
+#' @seealso \code{\link[ggplot2]{ggsave}}, \code{\link{figure_width}},
+#' \code{\link{figure_height}}
 #' @importFrom assertive.numbers assert_all_are_greater_than
 #' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @importFrom assertive.types assert_is_a_number
@@ -74,9 +74,9 @@ save_multi_panel_figure <- function(
     ggsave(
       plot = figure,
       height = figure %>%
-        simple_grob_height,
+        figure_height,
       width = figure %>%
-        simple_grob_width,
+        figure_width,
       dpi = dpi,
       unit = "mm",
       ...)

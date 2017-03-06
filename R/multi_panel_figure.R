@@ -83,7 +83,7 @@
 #' @author Johannes Graumann
 #' @export
 #' @seealso \code{\link{add_panel}} for more examples of adding panels
-#' \code{\link{simple_grob_width}} for inspecting figure dimensions
+#' \code{\link{figure_width}} for inspecting figure dimensions
 #' \code{\link{capture_base_plot}} for including plots created using base graphics
 #' \code{\link[gtable]{gtable}} for the underlying structure of a figure
 #' @keywords hplot utilities
@@ -142,8 +142,8 @@
 #' tmpFile <- tempfile(fileext = ".png")
 #' ggplot2::ggsave(
 #'   tmpFile, figure2,
-#'   width = simple_grob_width(figure2, "in"),
-#'   height = simple_grob_height(figure2, "in"))
+#'   width = figure_width(figure2, "in"),
+#'   height = figure_height(figure2, "in"))
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 #' \donttest{ # Not testing due to use of external software
