@@ -111,8 +111,8 @@ Hash: 0bf8618b585fa98eb23414cd3ab95118
 
 Package: commonmark
 Source: CRAN
-Version: 1.1
-Hash: ef9740410f8fcf978782a7aa76eaba2b
+Version: 1.2
+Hash: 1290583b9d16fb60322126a8698fb729
 
 Package: crayon
 Source: CRAN
@@ -214,8 +214,8 @@ Hash: 189af3df9864c6aa8546033f08ba9358
 
 Package: jsonlite
 Source: CRAN
-Version: 1.2
-Hash: 3a193a612cae6814719ed523f7e7cf44
+Version: 1.3
+Hash: b9cc3c97b7a6cd513e9b516fe881d6c9
 
 Package: knitr
 Source: CRAN
@@ -351,8 +351,8 @@ Hash: 1ad6b1cc11d982ac233bf2fa2f7c9684
 
 Package: stringr
 Source: CRAN
-Version: 1.1.0
-Hash: 4d21d0063b37a17ea18eaec6acd29bf3
+Version: 1.2.0
+Hash: 25a86d7f410513ebb7c0bc6a5e16bdc3
 Requires: magrittr, stringi
 
 Package: tibble
