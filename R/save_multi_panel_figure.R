@@ -78,7 +78,7 @@ save_multi_panel_figure <- function(
       width = figure %>%
         figure_width,
       dpi = dpi,
-      unit = "mm",
+      units = "mm",
       ...)
 
   # Return 'invisible' (mimicking 'ggplot2::ggsave')

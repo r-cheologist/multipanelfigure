@@ -1,5 +1,5 @@
 #' @title fill_panel
-#' @aliases addPanel addpanel fill_panel
+#' @aliases addPanel addpanel add_panel fill_panel
 #' @description A convenience function adding graphical objects to a
 #' \code{\link[gtable]{gtable}} constructed by \code{\link{multi_panel_figure}}.
 #' @details Currently supported as panel-representing objects (\code{panel}) are
@@ -244,7 +244,7 @@ fill_panel <- function(
   } else if(length(row) > 2){
     row <- c(
       row[1],
-      tail(row, n = 1))
+      utils::tail(row, n = 1))
   }
   assert_is_numeric(row)
   assert_all_are_whole_numbers(row)
@@ -268,7 +268,7 @@ fill_panel <- function(
   } else if(length(column) > 2){
     column <- c(
       column[1],
-      tail(column, n = 1))
+      utils::tail(column, n = 1))
   }
   assert_is_numeric(column)
   assert_all_are_whole_numbers(column)
