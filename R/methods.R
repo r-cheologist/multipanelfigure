@@ -15,7 +15,7 @@
 #' )
 #' # With no panels, printing shows the layout
 #' print(figure)
-#' figure <- add_panel(figure, p)
+#' figure <- fill_panel(figure, p)
 #' # After a panel is added, printing shows the plot.
 #' print(figure) # shows plot
 #' @importFrom assertive.properties is_empty

@@ -82,7 +82,7 @@
 #'     object storing the corresponding value given during object creation.}}
 #' @author Johannes Graumann
 #' @export
-#' @seealso \code{\link{add_panel}} for more examples of adding panels
+#' @seealso \code{\link{fill_panel}} for more examples of filling panels
 #' \code{\link{figure_width}} for inspecting figure dimensions
 #' \code{\link{capture_base_plot}} for including plots created using base graphics
 #' \code{\link[gtable]{gtable}} for the underlying structure of a figure
@@ -132,12 +132,12 @@
 #' # Fill panels
 #' # ggplots and lattice plot objects are added directly
 #' # The default position is the top-left panel
-#' figure2 <- add_panel(figure2, ggp)
+#' figure2 <- fill_panel(figure2, ggp)
 #' # JPEG, PNG, and TIFF images are added by passing the path to their file
 #' jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-#' figure2 <- add_panel(figure2, jpg, column = 2)
+#' figure2 <- fill_panel(figure2, jpg, column = 2)
 #' # Plots can take up multiple panels
-#' figure2 <- add_panel(figure2, ggp, row = 2, column = 1:2)
+#' figure2 <- fill_panel(figure2, ggp, row = 2, column = 1:2)
 #' # Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
 #' ggplot2::ggsave(

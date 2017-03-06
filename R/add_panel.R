@@ -1,5 +1,5 @@
-#' @title add_panel
-#' @aliases addPanel addpanel
+#' @title fill_panel
+#' @aliases addPanel addpanel fill_panel
 #' @description A convenience function adding graphical objects to a
 #' \code{\link[gtable]{gtable}} constructed by \code{\link{multi_panel_figure}}.
 #' @details Currently supported as panel-representing objects (\code{panel}) are
@@ -97,14 +97,14 @@
 #'
 #' # Fill the top-left panel using a grob object directly
 #' a_grob <- grid::linesGrob(arrow = grid::arrow())
-#' figure %<>% add_panel(a_grob)
+#' figure %<>% fill_panel(a_grob)
 #'
 #' # Add a ggplot object directly to the top row, second column.
 #' # The panels are chosen automatically, but you can achieve the same effect
 #' # using column = 2
 #' a_ggplot <- ggplot2::ggplot(mtcars, ggplot2::aes(disp, mpg)) +
 #'   ggplot2::geom_point()
-#' figure %<>% add_panel(a_ggplot)
+#' figure %<>% fill_panel(a_ggplot)
 #'
 #' # JPEG, PNG, TIFF, and SVG images are added by passing the path to their file.
 #' image_files <- system.file("extdata", package = "multipanelfigure") %>%
@@ -112,15 +112,15 @@
 #'   setNames(basename(.))
 #'
 #' # Add the JPEG to the top row, third column
-#' figure %<>% add_panel(image_files["rhino.jpg"], column = 3)
+#' figure %<>% fill_panel(image_files["rhino.jpg"], column = 3)
 #'
 #' # Add the PNG to the second and third row, first and second column
-#' figure %<>% add_panel(
+#' figure %<>% fill_panel(
 #'   image_files["Rlogo.png"],
 #'   row = 2:3, column = 1:2)
 #'
 #' # Add the TIFF to the second row, third column
-#' figure %<>% add_panel(
+#' figure %<>% fill_panel(
 #'   image_files["unicorn.svg"],
 #'   row = 2, column = 3)
 #'
@@ -128,7 +128,7 @@
 #' Depth <- lattice::equal.count(quakes$depth, number=4, overlap=0.1)
 #' a_lattice_plot <- lattice::xyplot(lat ~ long | Depth, data = quakes)
 #' # Add the lattice plot to the third row, third column
-#' figure %<>% add_panel(
+#' figure %<>% fill_panel(
 #'   a_lattice_plot,
 #'   row = 3, column = 3)
 #'
@@ -137,7 +137,7 @@
 #' {
 #'   a_venn_plot <- VennDiagram::draw.pairwise.venn(50, 30, 20, ind = FALSE)
 #'   # Add the Venn diagram to the fourth row, first and second columns
-#'   (figure %<>% add_panel(
+#'   (figure %<>% fill_panel(
 #'     a_venn_plot,
 #'     row = 4, column = 1:2))
 #' }
@@ -149,10 +149,10 @@
 #'    distfun = function(c) as.dist(1 - c), keep.dendro = TRUE,
 #'    cexRow = 0.5, cexCol = 0.5))
 #' # Add the heatmap to the fourth row, third column
-#' (figure %<>% add_panel(
+#' (figure %<>% fill_panel(
 #'   a_base_plot,
 #'   row = 4, column = 3))
-add_panel <- function(
+fill_panel <- function(
   figure,
   panel,
   row = "auto",
@@ -533,7 +533,7 @@ make_grob <- function(x, unit_to, panelSize, scaling, ...){
 #' @export
 addPanel <- function( figure, ... ){
   .Deprecated(
-    new = "add_panel",
+    new = "fill_panel",
     package = "multipanelfigure")
   paramList <- list ( ... )
   if("topPanel" %in% names(paramList)){
@@ -556,7 +556,7 @@ addPanel <- function( figure, ... ){
   } else {
     right_panel = left_panel
   }
-  add_panel(
+  fill_panel(
     figure = figure,
     top_panel = top_panel,
     bottom_panel = bottom_panel,
@@ -568,3 +568,11 @@ addPanel <- function( figure, ... ){
 
 #' @export
 addpanel <- addPanel
+
+#' @export
+add_panel <- function(  ... ){
+  .Deprecated(
+    new = "fill_panel",
+    package = "multipanelfigure")
+  fill_panel( ... )
+}

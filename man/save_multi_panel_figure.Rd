@@ -41,7 +41,7 @@ Currently supported are "eps", "ps", "tex" (pictex), "pdf", "jpeg", "tiff",
 
 # Fill the top-left panel using a grob object directly
 a_grob <- grid::linesGrob(arrow = grid::arrow())
-figure \%<>\% add_panel(a_grob)
+figure \%<>\% fill_panel(a_grob)
 
 \dontrun{
 # Save the figure
