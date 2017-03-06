@@ -111,7 +111,6 @@ round.unit.list <- function(x, digits = 0)
 round.unit <- function(x, digits = 0)
 {
   saved_unit <- x %>%
-    magrittr::extract2(1) %>%
     attr("unit")
   x %>%
     as.numeric() %>%

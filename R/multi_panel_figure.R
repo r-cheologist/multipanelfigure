@@ -222,12 +222,13 @@ multi_panel_figure <- function(
     assert_all_are_whole_numbers(columns)
     assert_all_are_in_range(columns, lower = 1, upper = Inf)
     column_spacing <- fix_panel_spacing_arg(column_spacing, columns, unit)
+    tmp_widths <- (width - column_spacing * columns) * (1 / columns) # No `/.unit`
   } else {
     assert_is_null(columns)
     columns <- length(width)
     column_spacing <- fix_panel_spacing_arg(column_spacing, columns, unit)
+    tmp_widths <- width
   }
-  tmp_widths <- (width - column_spacing * columns) * (1 / columns) # No `/.unit`
 
   assert_is_numeric(height)
   assert_all_are_positive(height)
@@ -240,15 +241,19 @@ multi_panel_figure <- function(
     assert_all_are_whole_numbers(rows)
     assert_all_are_in_range(rows, lower = 1, upper = Inf)
     row_spacing <- fix_panel_spacing_arg(row_spacing, rows, unit)
+    tmp_heights <- (height - row_spacing * rows) * (1 / rows) # No `/.unit`
   } else {
     assert_is_null(rows)
     rows <- length(height)
     row_spacing <- fix_panel_spacing_arg(row_spacing, rows, unit)
+    tmp_heights <- height
   }
-  tmp_heights <- (height - row_spacing * rows) * (1 / rows) # No `/.unit`
 
-  width %<>% convertUnit(unit)
-  height %<>% convertUnit(unit)
+  check_units(width, unit)
+  check_units(height, unit)
+
+  tmp_widths %<>% convertUnit(unit)
+  tmp_heights %<>% convertUnit(unit)
 
   # TODO: support all CSS ordered list marker styles
   # greek, hebrew, georgian, hiragana, etc. still TODO
@@ -352,4 +357,18 @@ multipanelfigure <- function( ... ){
     column_spacing = column_spacing,
     figure_name = figure_name,
     ... )
+}
+
+check_units <- function(x, unit){
+  if(inherits(x, "unit.list")){
+    tmp_units <- x %>%
+      rapply(attr, classes = "unit", which = "unit") %>%
+      unique()
+  } else {
+    tmp_units <- x %>%
+      attr("unit")
+  }
+  if(length(tmp_units) != 1 || tmp_units != unit){
+    warning("Multiple grid::units detected. Casting all to 'unit' argument ('", unit, "').")
+  }
 }
