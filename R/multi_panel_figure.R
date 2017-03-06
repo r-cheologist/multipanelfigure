@@ -103,6 +103,7 @@
 #' @importFrom gtable gtable
 #' @importFrom gtable gtable_add_col_space
 #' @importFrom gtable gtable_add_row_space
+#' @importFrom grid is.unit
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @examples
@@ -277,7 +278,7 @@ fix_panel_spacing_arg <- function(x, n, u)
     x <- 5
     u <- "mm"
   }
-  assert_is_a_number(x)
+  assert_is_numeric(x)
   assert_all_are_non_negative(x, na_ignore = TRUE)
   x <- rep_len(x, n)
   if(!is.unit(x)){
