@@ -43,7 +43,7 @@ figure2 <- multi_panel_figure(
   height = c(10, 20, 30))
 ```
 
-When no panels are filled, printing the figure (by typing its name) displays the layout.  Notice that by default a 5 mm spacer is included between rows and between columns.  (This can be adjusted using `multi_panel_figure`'s `inter_row_spacing` and `inter_column_spacing` arguments.)
+When no panels are filled, printing the figure (by typing its name) displays the layout.  Notice that by default a 5 mm spacer is included between rows and between columns.  (This can be adjusted using `multi_panel_figure`'s `row_spacing` and `column_spacing` arguments.)
 
 ```{r}
 figure1

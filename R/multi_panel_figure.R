@@ -9,18 +9,18 @@
 #'     \code{width} and \code{height} together with the number of \code{columns}
 #'     and \code{rows} requested.}}
 #' The function automatically inserts whitespace of width
-#' \code{inter_column_spacing} before column panels (and of height
-#' \code{inter_row_spacing} before row panels), which has to be considered
+#' \code{column_spacing} before column panels (and of height
+#' \code{row_spacing} before row panels), which has to be considered
 #' for the total dimensions of the resulting \code{\link[gtable]{gtable}}. Width
 #' of the \code{\link[gtable]{gtable}} in the former case, for example may be
 #' calculated
-#' \deqn{W[total] = sum(width) + length(width) * inter_column_spacing}
+#' \deqn{W[total] = sum(width) + length(width) * column_spacing}
 #' while width of resulting panels in the latter table construction approach may
 #' be calculated
-#' \deqn{W[panel] = (width - columns * inter_column_spacing) / columns}
+#' \deqn{W[panel] = (width - columns * column_spacing) / columns}
 #'
-#' \code{width}, \code{height}, \code{inter_column_spacing} and
-#' \code{inter_row_spacing} may be defined numerically or as
+#' \code{width}, \code{height}, \code{column_spacing} and
+#' \code{row_spacing} may be defined numerically or as
 #' \code{\link[grid]{unit}} objects.
 #'
 #' Earlier implementations used parameters \code{widhts} and \code{heights} as
@@ -53,11 +53,11 @@
 #' @param rows Single \code{\link{numeric}} defining the number of rows in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
-#' @param inter_row_spacing \code{\link{numeric}} or #' \code{\link[grid]{unit}}
+#' @param row_spacing \code{\link{numeric}} or #' \code{\link[grid]{unit}}
 #' defining the amount of white space automatically inserted between row panels.
 #' Defaults to \code{5 mm} unless explicitly given, in which case the value may
 #' depend on the \code{unit} parameter. Recycled to the number of rows.
-#' @param inter_column_spacing \code{\link{numeric}} or \code{\link[grid]{unit}}
+#' @param column_spacing \code{\link{numeric}} or \code{\link[grid]{unit}}
 #' defining the amount of white space automatically inserted between column
 #' panels. Defaults to \code{5 mm} unless explicitly given, in which case the
 #' value may depends on the \code{unit} parameter. Recycled to the number of
@@ -121,8 +121,8 @@
 #' (figure2 <- multi_panel_figure(
 #'    width = c(40,30),
 #'    height = c(40,60),
-#'    inter_row_spacing = c(5, 1),
-#'    inter_column_spacing = c(0, 10),
+#'    row_spacing = c(5, 1),
+#'    column_spacing = c(0, 10),
 #'    figure_name = "figure2"))
 #'
 #' # A more involved example including filling and printing to device ...
@@ -154,8 +154,8 @@ multi_panel_figure <- function(
   columns = NULL,
   height = NULL,
   rows = NULL,
-  inter_row_spacing = NaN,
-  inter_column_spacing = NaN,
+  row_spacing = NaN,
+  column_spacing = NaN,
   unit = "mm",
   figure_name = "FigureX",
   panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek", "lower-greek", "none"),
@@ -176,6 +176,18 @@ multi_panel_figure <- function(
     warning("argument 'widths' deprecated. Use 'width' instead.")
     width <- dot_list[['widths']]
     widths <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+  # Deal with depreciated arguments 'inter_column_spacing' and 'inter_row_spacing'
+  dot_list = list( ... )
+  if ("inter_column_spacing" %in% names(dot_list)){
+    warning("argument 'inter_column_spacing' deprecated. Use 'column_spacing' instead.")
+    column_spacing <- dot_list[['inter_column_spacing']]
+    inter_column_spacing <- NA_character_ # Attempt to ensure failing operations for debugging
+  }
+  if ("inter_row_spacing" %in% names(dot_list)){
+    warning("argument 'inter_row_spacing' deprecated. Use 'row_spacing' instead.")
+    row_spacing <- dot_list[['inter_row_spacing']]
+    inter_row_spacing <- NA_character_ # Attempt to ensure failing operations for debugging
   }
 
   # Check passed arguments
@@ -209,13 +221,13 @@ multi_panel_figure <- function(
     assert_is_a_number(columns)
     assert_all_are_whole_numbers(columns)
     assert_all_are_in_range(columns, lower = 1, upper = Inf)
-    inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
+    column_spacing <- fix_panel_spacing_arg(column_spacing, columns, unit)
   } else {
     assert_is_null(columns)
     columns <- length(width)
-    inter_column_spacing <- fix_panel_spacing_arg(inter_column_spacing, columns, unit)
+    column_spacing <- fix_panel_spacing_arg(column_spacing, columns, unit)
   }
-  tmp_widths <- (width - inter_column_spacing * columns) * (1 / columns) # No `/.unit`
+  tmp_widths <- (width - column_spacing * columns) * (1 / columns) # No `/.unit`
 
   assert_is_numeric(height)
   assert_all_are_positive(height)
@@ -227,13 +239,13 @@ multi_panel_figure <- function(
     assert_is_a_number(rows)
     assert_all_are_whole_numbers(rows)
     assert_all_are_in_range(rows, lower = 1, upper = Inf)
-    inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
+    row_spacing <- fix_panel_spacing_arg(row_spacing, rows, unit)
   } else {
     assert_is_null(rows)
     rows <- length(height)
-    inter_row_spacing <- fix_panel_spacing_arg(inter_row_spacing, rows, unit)
+    row_spacing <- fix_panel_spacing_arg(row_spacing, rows, unit)
   }
-  tmp_heights <- (height - inter_row_spacing * rows) * (1 / rows) # No `/.unit`
+  tmp_heights <- (height - row_spacing * rows) * (1 / rows) # No `/.unit`
 
   width %<>% convertUnit(unit)
   height %<>% convertUnit(unit)
@@ -253,8 +265,8 @@ multi_panel_figure <- function(
       heights = tmp_heights,
       name = figure_name) %>%
     # add interpanel space
-    gtable_add_col_space2(width = inter_column_spacing) %>%
-    gtable_add_row_space2(height = inter_row_spacing)
+    gtable_add_col_space2(width = column_spacing) %>%
+    gtable_add_row_space2(height = row_spacing)
   ##########################
   # Prep and return output #
   ##########################
@@ -324,11 +336,11 @@ multipanelfigure <- function( ... ){
     package = "multipanelfigure")
   paramList <- list( ... )
   if("interPanelSpacing" %in% names(paramList)){
-    inter_row_spacing <- paramList[["interPanelSpacing"]]
-    inter_column_spacing <- paramList[["interPanelSpacing"]]
+    row_spacing <- paramList[["interPanelSpacing"]]
+    column_spacing <- paramList[["interPanelSpacing"]]
   } else {
-    inter_row_spacing <- 5
-    inter_column_spacing <- 5
+    row_spacing <- 5
+    column_spacing <- 5
   }
   if("figureName" %in% names(paramList)){
     figure_name <- paramList[["figureName"]]
@@ -336,8 +348,8 @@ multipanelfigure <- function( ... ){
     figure_name = "FigureX"
   }
   multi_panel_figure(
-    inter_row_spacing = inter_row_spacing,
-    inter_column_spacing = inter_column_spacing,
+    row_spacing = row_spacing,
+    column_spacing = column_spacing,
     figure_name = figure_name,
     ... )
 }

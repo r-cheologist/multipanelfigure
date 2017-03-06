@@ -6,10 +6,10 @@
 \title{multi_panel_figure}
 \usage{
 multi_panel_figure(width = NULL, columns = NULL, height = NULL,
-  rows = NULL, inter_row_spacing = NaN, inter_column_spacing = NaN,
-  unit = "mm", figure_name = "FigureX",
-  panel_label_type = c("upper-alpha", "lower-alpha", "decimal", "upper-roman",
-  "lower-roman", "upper-greek", "lower-greek", "none"), ...)
+  rows = NULL, row_spacing = NaN, column_spacing = NaN, unit = "mm",
+  figure_name = "FigureX", panel_label_type = c("upper-alpha",
+  "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek",
+  "lower-greek", "none"), ...)
 }
 \arguments{
 \item{width}{\code{\link{numeric}} or \code{link[grid]{unit}} defining the
@@ -32,12 +32,12 @@ for dependent and interfering parameters.}
 the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 interfering parameters.}
 
-\item{inter_row_spacing}{\code{\link{numeric}} or #' \code{\link[grid]{unit}}
+\item{row_spacing}{\code{\link{numeric}} or #' \code{\link[grid]{unit}}
 defining the amount of white space automatically inserted between row panels.
 Defaults to \code{5 mm} unless explicitly given, in which case the value may
 depend on the \code{unit} parameter. Recycled to the number of rows.}
 
-\item{inter_column_spacing}{\code{\link{numeric}} or \code{\link[grid]{unit}}
+\item{column_spacing}{\code{\link{numeric}} or \code{\link[grid]{unit}}
 defining the amount of white space automatically inserted between column
 panels. Defaults to \code{5 mm} unless explicitly given, in which case the
 value may depends on the \code{unit} parameter. Recycled to the number of
@@ -79,18 +79,18 @@ The \code{\link[gtable]{gtable}} may be constructed in two ways:
     \code{width} and \code{height} together with the number of \code{columns}
     and \code{rows} requested.}}
 The function automatically inserts whitespace of width
-\code{inter_column_spacing} before column panels (and of height
-\code{inter_row_spacing} before row panels), which has to be considered
+\code{column_spacing} before column panels (and of height
+\code{row_spacing} before row panels), which has to be considered
 for the total dimensions of the resulting \code{\link[gtable]{gtable}}. Width
 of the \code{\link[gtable]{gtable}} in the former case, for example may be
 calculated
-\deqn{W[total] = sum(width) + length(width) * inter_column_spacing}
+\deqn{W[total] = sum(width) + length(width) * column_spacing}
 while width of resulting panels in the latter table construction approach may
 be calculated
-\deqn{W[panel] = (width - columns * inter_column_spacing) / columns}
+\deqn{W[panel] = (width - columns * column_spacing) / columns}
 
-\code{width}, \code{height}, \code{inter_column_spacing} and
-\code{inter_row_spacing} may be defined numerically or as
+\code{width}, \code{height}, \code{column_spacing} and
+\code{row_spacing} may be defined numerically or as
 \code{\link[grid]{unit}} objects.
 
 Earlier implementations used parameters \code{widhts} and \code{heights} as
@@ -123,8 +123,8 @@ figure1
 (figure2 <- multi_panel_figure(
    width = c(40,30),
    height = c(40,60),
-   inter_row_spacing = c(5, 1),
-   inter_column_spacing = c(0, 10),
+   row_spacing = c(5, 1),
+   column_spacing = c(0, 10),
    figure_name = "figure2"))
 
 # A more involved example including filling and printing to device ...
