@@ -40,16 +40,18 @@
 #' @param width \code{\link{numeric}} or \code{link[grid]{unit}} defining the
 #' width(s) of the resulting \code{\link[gtable]{gtable}} if
 #' \code{length(width) == 1} or individual column widths. Units depends on
-#' \code{unit} if not provided as \code{\link[grid]{unit}} object. See 'Details'
-#' for dependent and interfering parameters.
+#' \code{unit} if not provided as \code{\link[grid]{unit}} object. The default
+#' '\code{auto}' sets the parameter to the width of the currently used device.
+#' See 'Details' for dependent and interfering parameters.
 #' @param columns Single \code{\link{numeric}} defining the number of columns in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
 #' @param height \code{\link{numeric}} or \code{link[grid]{unit}} defining the
 #' height of the resulting \code{\link[gtable]{gtable}} if
 #' \code{length(height) == 1} or individual row heights.nits depends on
-#' \code{unit} if not provided as \code{\link[grid]{unit}} object. See 'Details'
-#' for dependent and interfering parameters.
+#' \code{unit} if not provided as \code{\link[grid]{unit}} object. The default
+#' '\code{auto}' sets the parameter to the height of the currently used device.
+#' See 'Details' for dependent and interfering parameters.
 #' @param rows Single \code{\link{numeric}} defining the number of rows in
 #' the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
 #' interfering parameters.
@@ -100,6 +102,7 @@
 #' @importFrom assertive.types assert_is_a_number
 #' @importFrom assertive.types assert_is_numeric
 #' @importFrom assertive.types assert_is_character
+#' @importFrom grDevices dev.size
 #' @importFrom gtable gtable
 #' @importFrom gtable gtable_add_col_space
 #' @importFrom gtable gtable_add_row_space
@@ -107,23 +110,33 @@
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @examples
-#' # Figure construction based on overall dimensions
+#' # Figure construction based on the dimensions of the current device
 #' figure1 <- multi_panel_figure(
+#'    columns = 2,
+#'    rows = 2,
+#'    figure_name = "figure1")
+#'
+#' # With no panels, printing shows the layout
+#' figure1
+#'
+#' # Figure construction based on overall dimensions
+#' figure2 <- multi_panel_figure(
 #'    width = 100,
 #'    columns = 4,
 #'    height = 90,
 #'    rows = 6,
-#'    figure_name = "figure1")
-#' # With no panels, printing shows the layout
-#' figure1
+#'    figure_name = "figure2")
+#'
+#' # Still no panels ...
+#' figure2
 #'
 #' # Figure construction based on individual panel dimensions
-#' (figure2 <- multi_panel_figure(
+#' (figure3 <- multi_panel_figure(
 #'    width = c(40,30),
 #'    height = c(40,60),
 #'    row_spacing = c(5, 1),
 #'    column_spacing = c(0, 10),
-#'    figure_name = "figure2"))
+#'    figure_name = "figure3"))
 #'
 #' # A more involved example including filling and printing to device ...
 #' # Make a simple ggplot object to fill panels
@@ -132,27 +145,27 @@
 #' # Fill panels
 #' # ggplots and lattice plot objects are added directly
 #' # The default position is the top-left panel
-#' figure2 <- fill_panel(figure2, ggp)
+#' figure3 <- fill_panel(figure3, ggp)
 #' # JPEG, PNG, and TIFF images are added by passing the path to their file
 #' jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-#' figure2 <- fill_panel(figure2, jpg, column = 2)
+#' figure3 <- fill_panel(figure3, jpg, column = 2)
 #' # Plots can take up multiple panels
-#' figure2 <- fill_panel(figure2, ggp, row = 2, column = 1:2)
+#' figure3 <- fill_panel(figure3, ggp, row = 2, column = 1:2)
 #' # Plot to appropriately sized png device
 #' tmpFile <- tempfile(fileext = ".png")
 #' ggplot2::ggsave(
-#'   tmpFile, figure2,
-#'   width = figure_width(figure2, "in"),
-#'   height = figure_height(figure2, "in"))
+#'   tmpFile, figure3,
+#'   width = figure_width(figure3, "in"),
+#'   height = figure_height(figure3, "in"))
 #' message(
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 #' \donttest{ # Not testing due to use of external software
 #' utils::browseURL(tmpFile)
 #' }
 multi_panel_figure <- function(
-  width = NULL,
+  width = "auto",
   columns = NULL,
-  height = NULL,
+  height = "auto",
   rows = NULL,
   row_spacing = NaN,
   column_spacing = NaN,
@@ -190,6 +203,21 @@ multi_panel_figure <- function(
     inter_row_spacing <- NA_character_ # Attempt to ensure failing operations for debugging
   }
 
+  # Deal with width/height 'auto'
+  assert_is_a_supported_unit_type(unit)
+
+  if(identical(width, "auto")){
+    width <- dev.size(units = "cm")[1] %>%
+      unit(units = "cm") %>%
+      convertUnit ("mm")
+  }
+
+  if(identical(height, "auto")){
+    height <- dev.size(units = "cm")[2] %>%
+      unit(units = "cm") %>%
+      convertUnit ("mm")
+  }
+
   # Check passed arguments
   args_passed <- names(match.call()[-1])
   width_args_ok <- all(
@@ -206,8 +234,6 @@ multi_panel_figure <- function(
   {
     stop('The figure height is not well specified. The call to multi_panel_figure must contain either\n  1. "height" of length 1 and "rows", or\n  2. "height", defining multiple rows.')
   }
-
-  assert_is_a_supported_unit_type(unit)
 
   assert_is_a_string(figure_name)
 

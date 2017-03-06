@@ -5,7 +5,7 @@
 \alias{multipanelfigure}
 \title{multi_panel_figure}
 \usage{
-multi_panel_figure(width = NULL, columns = NULL, height = NULL,
+multi_panel_figure(width = "auto", columns = NULL, height = "auto",
   rows = NULL, row_spacing = NaN, column_spacing = NaN, unit = "mm",
   figure_name = "FigureX", panel_label_type = c("upper-alpha",
   "lower-alpha", "decimal", "upper-roman", "lower-roman", "upper-greek",
@@ -15,8 +15,9 @@ multi_panel_figure(width = NULL, columns = NULL, height = NULL,
 \item{width}{\code{\link{numeric}} or \code{link[grid]{unit}} defining the
 width(s) of the resulting \code{\link[gtable]{gtable}} if
 \code{length(width) == 1} or individual column widths. Units depends on
-\code{unit} if not provided as \code{\link[grid]{unit}} object. See 'Details'
-for dependent and interfering parameters.}
+\code{unit} if not provided as \code{\link[grid]{unit}} object. The default
+'\code{auto}' sets the parameter to the width of the currently used device.
+See 'Details' for dependent and interfering parameters.}
 
 \item{columns}{Single \code{\link{numeric}} defining the number of columns in
 the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
@@ -25,8 +26,9 @@ interfering parameters.}
 \item{height}{\code{\link{numeric}} or \code{link[grid]{unit}} defining the
 height of the resulting \code{\link[gtable]{gtable}} if
 \code{length(height) == 1} or individual row heights.nits depends on
-\code{unit} if not provided as \code{\link[grid]{unit}} object. See 'Details'
-for dependent and interfering parameters.}
+\code{unit} if not provided as \code{\link[grid]{unit}} object. The default
+'\code{auto}' sets the parameter to the height of the currently used device.
+See 'Details' for dependent and interfering parameters.}
 
 \item{rows}{Single \code{\link{numeric}} defining the number of rows in
 the resulting \code{\link[gtable]{gtable}}. See 'Details' for dependent and
@@ -109,23 +111,33 @@ The two approaches to \code{\link[gtable]{gtable}} construction require
     length 1.}}
 }
 \examples{
-# Figure construction based on overall dimensions
+# Figure construction based on the dimensions of the current device
 figure1 <- multi_panel_figure(
+   columns = 2,
+   rows = 2,
+   figure_name = "figure1")
+
+# With no panels, printing shows the layout
+figure1
+
+# Figure construction based on overall dimensions
+figure2 <- multi_panel_figure(
    width = 100,
    columns = 4,
    height = 90,
    rows = 6,
-   figure_name = "figure1")
-# With no panels, printing shows the layout
-figure1
+   figure_name = "figure2")
+
+# Still no panels ...
+figure2
 
 # Figure construction based on individual panel dimensions
-(figure2 <- multi_panel_figure(
+(figure3 <- multi_panel_figure(
    width = c(40,30),
    height = c(40,60),
    row_spacing = c(5, 1),
    column_spacing = c(0, 10),
-   figure_name = "figure2"))
+   figure_name = "figure3"))
 
 # A more involved example including filling and printing to device ...
 # Make a simple ggplot object to fill panels
@@ -134,18 +146,18 @@ ggp <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
 # Fill panels
 # ggplots and lattice plot objects are added directly
 # The default position is the top-left panel
-figure2 <- fill_panel(figure2, ggp)
+figure3 <- fill_panel(figure3, ggp)
 # JPEG, PNG, and TIFF images are added by passing the path to their file
 jpg <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
-figure2 <- fill_panel(figure2, jpg, column = 2)
+figure3 <- fill_panel(figure3, jpg, column = 2)
 # Plots can take up multiple panels
-figure2 <- fill_panel(figure2, ggp, row = 2, column = 1:2)
+figure3 <- fill_panel(figure3, ggp, row = 2, column = 1:2)
 # Plot to appropriately sized png device
 tmpFile <- tempfile(fileext = ".png")
 ggplot2::ggsave(
-  tmpFile, figure2,
-  width = figure_width(figure2, "in"),
-  height = figure_height(figure2, "in"))
+  tmpFile, figure3,
+  width = figure_width(figure3, "in"),
+  height = figure_height(figure3, "in"))
 message(
   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 \donttest{ # Not testing due to use of external software
