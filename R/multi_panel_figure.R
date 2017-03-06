@@ -286,7 +286,7 @@ multi_panel_figure <- function(
 
 fix_panel_spacing_arg <- function(x, n, u)
 {
-  if(is.na(x)){
+  if(length(x) == 1 && is.na(x)){
     x <- 5
     u <- "mm"
   }
