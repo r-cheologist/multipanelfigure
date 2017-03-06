@@ -38,31 +38,31 @@ r_logo <- system.file("extdata/Rlogo.png", package = "multipanelfigure")
 By default, the image is not rescaled, which means that only the central part of the image is displayed.
 
 ```{r, none, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo))
+(figure %<>% fill_panel(r_logo))
 ```
 
 By setting `scaling = "stretch"`, all the image is displayed, fitting the panel exactly, but the height-to-width ratio had been altered, distorting the image.
 
 ```{r, stretch, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo, scaling = "stretch"))
+(figure %<>% fill_panel(r_logo, scaling = "stretch"))
 ```
 
 Setting `scaling = "fit"` means that the image is shrunked or grown so that it just fits inside the panel without the height-to-width ratio being distorted.
 
 ```{r, fit, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo, scaling = "fit"))
+(figure %<>% fill_panel(r_logo, scaling = "fit"))
 ```
 
 Setting `scaling = "shrink"`, works the same way as `scaling = "fit"` when the image is larger than the panel.
 
 ```{r, shrink_small, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo, scaling = "shrink", row = 3, column = 1))
+(figure %<>% fill_panel(r_logo, scaling = "shrink", row = 3, column = 1))
 ```
 
 If the image is smaller than the panel, `scaling = "shrink"` works like `scaling = "none"`.
 
 ```{r, shrink_big, fig.height = 8, fig.width = 8}
-(figure %<>% add_panel(r_logo, scaling = "shrink", row = 2:3, column = 2))
+(figure %<>% fill_panel(r_logo, scaling = "shrink", row = 2:3, column = 2))
 ```
 
 ## Clipping Plots and Images
@@ -79,7 +79,7 @@ rhino <- system.file("extdata/rhino.jpg", package = "multipanelfigure")
 for(position in list(c(1, 1), c(1, 2), c(1, 3), c(2, 1), c(2, 3), c(3, 1), c(3, 2), c(3, 3)))
 {
   figure2 %<>% 
-    add_panel(
+    fill_panel(
       rectGrob(gp = gpar(fill = "#91A45E")), 
       row = position[1], 
       column = position[2])
@@ -90,13 +90,13 @@ figure2
 When we try to display the rhino, only the central part of the image is shown, since there is no rescaling, and the panel isn't big enough.
 
 ```{r, clip_on, fig.height = 5, fig.width = 5}
-(figure2 %>% add_panel(rhino))
+(figure2 %>% fill_panel(rhino))
 ```
 
 To turn off clipping, set `panel_clip = "off"`. This time the complete image of the rhino is displayed, overrunning the other panel regions.
 
 ```{r, clip_off, fig.height = 5, fig.width = 5}
-(figure2 %>% add_panel(rhino, panel_clip = "off"))
+(figure2 %>% fill_panel(rhino, panel_clip = "off"))
 ```
 
 
