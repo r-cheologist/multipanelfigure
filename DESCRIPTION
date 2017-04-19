@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 0.8.17
-Date: 2017-03-06
+Version: 0.9.0
+Date: 2017-04-19
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
 Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
@@ -27,13 +27,13 @@ Imports:
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),
     png (>= 0.1-7),
-    rsvg (>= 1.0),
+    rsvg (>= 1.1),
     stats,
     tiff (>= 0.1-5),
     utils
 Suggests:
     grDevices,
-    lattice (>= 0.20-34),
+    lattice (>= 0.20-35),
     roxygen2 (>= 6.0.1),
     VennDiagram (>= 1.6.17),
     knitr,
