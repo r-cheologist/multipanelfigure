@@ -250,14 +250,14 @@ Hash: bdc4d48c3135e8f3b399536ddf160df4
 
 Package: markdown
 Source: CRAN
-Version: 0.7.7
-Hash: fea2343a1119d61b0cc5c0a950d103a3
+Version: 0.8
+Hash: 045d7c594d503b41f1c28946d076c8aa
 Requires: mime
 
 Package: memoise
 Source: CRAN
-Version: 1.0.0
-Hash: 56e7087c3559eb7ba72a9afb349bf896
+Version: 1.1.0
+Hash: 410fcd334bc626db100237cc1370f2e9
 Requires: digest
 
 Package: mgcv
