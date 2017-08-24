@@ -154,9 +154,9 @@ if(requireNamespace("VennDiagram"))
 {
   a_venn_plot <- VennDiagram::draw.pairwise.venn(50, 30, 20, ind = FALSE)
   # Add the Venn diagram to the fourth row, firstd column
-  (figure \%<>\% fill_panel(
+  figure \%<>\% fill_panel(
     a_venn_plot,
-    row = 4, column = 1))
+    row = 4, column = 1)
 }
 
 # Incorporate a base plot figure
@@ -166,25 +166,22 @@ a_base_plot <- capture_base_plot(
    distfun = function(c) as.dist(1 - c), keep.dendro = TRUE,
    cexRow = 0.5, cexCol = 0.5))
 # Add the heatmap to the fourth row, second column
-(figure \%<>\% fill_panel(
+figure \%<>\% fill_panel(
   a_base_plot,
-  row = 4, column = 2))
+  row = 4, column = 2)
 
 # Incorporate a ComplexHeatmap figure
-if(requireNamespace("ComplexHeatmap"))
-{
-   require(ComplexHeatmap)
-   mat = matrix(rnorm(80, 2), 8, 10)
-   mat = rbind(mat, matrix(rnorm(40, -2), 4, 10))
-   rownames(mat) = letters[1:12]
-   colnames(mat) = letters[1:10]
-   ht = Heatmap(mat)
-   a_complex_heatmap <- ht + ht + ht
-   # Add the ComplexHeatmap to the fourth row, third column
-   (figure \%<>\% fill_panel(
-     a_complex_heatmap,
-     row = 4, column = 3))
-}
+require(ComplexHeatmap)
+mat = matrix(rnorm(80, 2), 8, 10)
+mat = rbind(mat, matrix(rnorm(40, -2), 4, 10))
+rownames(mat) = letters[1:12]
+colnames(mat) = letters[1:10]
+ht = Heatmap(mat)
+a_complex_heatmap <- ht + ht + ht
+# Add the ComplexHeatmap to the fourth row, third column
+(figure \%<>\% fill_panel(
+  a_complex_heatmap,
+  row = 4, column = 3))
 }
 \seealso{
 \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},

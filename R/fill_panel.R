@@ -142,9 +142,9 @@
 #' {
 #'   a_venn_plot <- VennDiagram::draw.pairwise.venn(50, 30, 20, ind = FALSE)
 #'   # Add the Venn diagram to the fourth row, firstd column
-#'   (figure %<>% fill_panel(
+#'   figure %<>% fill_panel(
 #'     a_venn_plot,
-#'     row = 4, column = 1))
+#'     row = 4, column = 1)
 #' }
 #'
 #' # Incorporate a base plot figure
@@ -154,9 +154,9 @@
 #'    distfun = function(c) as.dist(1 - c), keep.dendro = TRUE,
 #'    cexRow = 0.5, cexCol = 0.5))
 #' # Add the heatmap to the fourth row, second column
-#' (figure %<>% fill_panel(
+#' figure %<>% fill_panel(
 #'   a_base_plot,
-#'   row = 4, column = 2))
+#'   row = 4, column = 2)
 #'
 #' # Incorporate a ComplexHeatmap figure
 #' require(ComplexHeatmap)
