@@ -159,20 +159,17 @@
 #'   row = 4, column = 2))
 #'
 #' # Incorporate a ComplexHeatmap figure
-#' if(requireNamespace("ComplexHeatmap"))
-#' {
-#'    require(ComplexHeatmap)
-#'    mat = matrix(rnorm(80, 2), 8, 10)
-#'    mat = rbind(mat, matrix(rnorm(40, -2), 4, 10))
-#'    rownames(mat) = letters[1:12]
-#'    colnames(mat) = letters[1:10]
-#'    ht = Heatmap(mat)
-#'    a_complex_heatmap <- ht + ht + ht
-#'    # Add the ComplexHeatmap to the fourth row, third column
-#'    (figure %<>% fill_panel(
-#'      a_complex_heatmap,
-#'      row = 4, column = 3))
-#' }
+#' require(ComplexHeatmap)
+#' mat = matrix(rnorm(80, 2), 8, 10)
+#' mat = rbind(mat, matrix(rnorm(40, -2), 4, 10))
+#' rownames(mat) = letters[1:12]
+#' colnames(mat) = letters[1:10]
+#' ht = Heatmap(mat)
+#' a_complex_heatmap <- ht + ht + ht
+#' # Add the ComplexHeatmap to the fourth row, third column
+#' (figure %<>% fill_panel(
+#'   a_complex_heatmap,
+#'   row = 4, column = 3))
 fill_panel <- function(
   figure,
   panel,
