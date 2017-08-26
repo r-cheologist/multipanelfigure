@@ -94,6 +94,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom stats setNames
 #' @examples
+#' \donttest{ # Not testing - slow grid graphics makes CRAN timing excessive
 #' # Create the figure layout
 #' (figure <- multi_panel_figure(
 #'   width = c(30,40,60),
@@ -170,6 +171,7 @@
 #' (figure %<>% fill_panel(
 #'   a_complex_heatmap,
 #'   row = 4, column = 3))
+#' }
 fill_panel <- function(
   figure,
   panel,

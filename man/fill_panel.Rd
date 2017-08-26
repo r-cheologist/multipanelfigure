@@ -106,6 +106,7 @@ If the \code{column} argument is "auto", then the first column in the
 row with a free panel is used.
 }
 \examples{
+\donttest{ # Not testing - slow grid graphics makes CRAN timing excessive
 # Create the figure layout
 (figure <- multi_panel_figure(
   width = c(30,40,60),
@@ -182,6 +183,7 @@ a_complex_heatmap <- ht + ht + ht
 (figure \%<>\% fill_panel(
   a_complex_heatmap,
   row = 4, column = 3))
+}
 }
 \seealso{
 \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}},
