@@ -23,7 +23,7 @@ Imports:
     ComplexHeatmap (>= 1.14.0),
     ggplot2 (>= 2.2.1),
     grid,
-    gridGraphics (>= 0.1-5),
+    gridGraphics (>= 0.2),
     gtable (>= 0.2.0),
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),
