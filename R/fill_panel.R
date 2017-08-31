@@ -548,7 +548,7 @@ make_grob <- function(x, unit_to, panelSize, scaling, ...){
     if(requireNamespace("ComplexHeatmap", quietly = TRUE)){
       panel <- grid.grabExpr(ComplexHeatmap::draw(x), wrap = TRUE, warn = FALSE)
     } else {
-      stop("Install 'ComplexHeatmap' from Bioconductor first.")
+      stop("Install \'ComplexHeatmap\' from Bioconductor first.")
     }
   } else {
     stop("Class of \'panel\' is not supported.")
