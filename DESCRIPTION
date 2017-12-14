@@ -36,7 +36,7 @@ Suggests:
     grDevices,
     lattice (>= 0.20-35),
     roxygen2 (>= 6.0.1),
-    VennDiagram (>= 1.6.17),
+    VennDiagram (>= 1.6.18),
     knitr,
     rmarkdown,
     markdown
