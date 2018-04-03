@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 0.10.6
-Date: 2017-08-31
+Version: 0.10.7
+Date: 2018-04-03
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
 Maintainer: Johannes Graumann <jog2030@qatar-med.cornell.edu>
@@ -22,7 +22,7 @@ Imports:
     caTools (>= 1.17.1), 
     ggplot2 (>= 2.2.1),
     grid,
-    gridGraphics (>= 0.2),
+    gridGraphics (>= 0.2-1),
     gtable (>= 0.2.0),
     jpeg (>= 0.1-8),
     magrittr (>= 1.5),
@@ -32,11 +32,11 @@ Imports:
     tiff (>= 0.1-5),
     utils
 Suggests:
-    ComplexHeatmap (>= 1.14.0),
+    ComplexHeatmap (>= 1.17.1),
     grDevices,
     lattice (>= 0.20-35),
     roxygen2 (>= 6.0.1),
-    VennDiagram (>= 1.6.18),
+    VennDiagram (>= 1.6.20),
     knitr,
     rmarkdown,
     markdown
