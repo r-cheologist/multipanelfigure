@@ -1,0 +1,11 @@
+bibentry(
+ bibtype     = "Article",
+ title       = "{multipanelfigure}: Simple Assembly of Multiple Plots and Images into a Compound Figure",
+ journal     = "Journal of Statistical Software",
+ volume      = "84",
+ year        = "2018",
+ author      = c(
+   person("Johannes", "Graumann", email = "johannes.graumann@mpi-bn.mpg.de", role = c("cre", "aut")),
+   person("Richard J.","Cotton", email = "richierocks@gmail.com", role = c("ctb"))),
+ textVersion = "Graumann, J., and Cotton, R.J. (2018). multipanelfigure: Simple Assembly of Multiple Plots and Images into a Compound Figure. Journal of Statistical Software 84.",
+ note        = "doi: 10.18637/jss.v084.c03")
