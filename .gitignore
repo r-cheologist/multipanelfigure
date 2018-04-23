@@ -1,7 +1,6 @@
-packrat/lib*/
 .settings
 .project
 .Rproj.user
 .Rhistory
 .RData
-packrat/src/
+vignettes
