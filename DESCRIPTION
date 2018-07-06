@@ -1,7 +1,7 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 1.0.0
+Version: 1.1.0
 Date: 2018-04-23
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
@@ -19,7 +19,6 @@ Imports:
     assertive.numbers (>= 0.0-2),
     assertive.properties (>= 0.0-4),
     assertive.types (>= 0.0-3),
-    caTools (>= 1.17.1), 
     ggplot2 (>= 2.2.1),
     grid,
     gridGraphics (>= 0.3-0),
