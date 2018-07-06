@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 1.1.0
-Date: 2018-04-23
+Version: 1.1.1
+Date: 2018-07-06
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
 Maintainer: Johannes Graumann <johannes.graumann@mpi-bn.mpg.de>
