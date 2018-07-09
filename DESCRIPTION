@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 1.1.2
-Date: 2018-07-06
+Version: 2.0.0
+Date: 2018-07-09
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
 Maintainer: Johannes Graumann <johannes.graumann@mpi-bn.mpg.de>
@@ -12,7 +12,8 @@ Authors@R: c(person("Johannes", "Graumann", email =
     role = c("ctb")))
 Description: Tools to create a layout for figures made of multiple panels, and
     to fill the panels with base, 'lattice', 'ggplot2' and 'ComplexHeatmap'
-    plots, grobs, and PNG, JPEG, SVG and TIFF images.
+    plots, grobs, as well as content from all image formats supported by
+    ImageMagick (accessed through 'magick').
 Imports:
     assertive.base (>= 0.0-7),
     assertive.files (>= 0.0-2),
@@ -23,12 +24,10 @@ Imports:
     grid,
     gridGraphics (>= 0.3-0),
     gtable (>= 0.2.0),
-    jpeg (>= 0.1-8),
+    magick (>= 1.9),
     magrittr (>= 1.5),
-    png (>= 0.1-7),
-    rsvg (>= 1.3),
     stats,
-    tiff (>= 0.1-5),
+    stringi (>= 1.2.3),
     utils
 Suggests:
     ComplexHeatmap (>= 1.17.1),
