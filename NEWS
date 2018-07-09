@@ -1,4 +1,6 @@
-1.1.0 As caTools is being archived (no response of maintainer to CRAN requests),
+2.0.0 Major version increment: switch all handling of external graphics to
+      'magick' (access to ImageMagick)
+1.1.0 As caTools is being archived (n.o response of maintainer to CRAN requests),
       caTools-dependent gif support is temporarily dropped.
 0.8.4 Added support for importing GIFs into panels.
       Different scaling options for image panels.
