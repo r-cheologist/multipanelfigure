@@ -1,7 +1,7 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 2.0.3
+Version: 2.0.4
 Date: 2020-02-26
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
@@ -14,6 +14,7 @@ Description: Tools to create a layout for figures made of multiple panels, and
     to fill the panels with base, 'lattice', 'ggplot2' and 'ComplexHeatmap'
     plots, grobs, as well as content from all image formats supported by
     'ImageMagick' (accessed through 'magick').
+biocViews:
 Imports:
     assertive.base (>= 0.0-7),
     assertive.files (>= 0.0-2),
