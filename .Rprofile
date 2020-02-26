@@ -1,1 +1,0 @@
-switchr::switchTo(basename(getwd()))

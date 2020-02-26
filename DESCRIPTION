@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 2.0.2
-Date: 2019-01-14
+Version: 2.0.3
+Date: 2020-02-26
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [ctb]
 Maintainer: Johannes Graumann <johannes.graumann@mpi-bn.mpg.de>
@@ -39,6 +39,6 @@ Suggests:
     rmarkdown,
     markdown
 License: GPL (>= 3)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 LazyData: TRUE
 VignetteBuilder: knitr
