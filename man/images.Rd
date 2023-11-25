@@ -6,7 +6,9 @@
 \alias{rhino}
 \alias{unicorn}
 \title{Images}
-\format{An image file.}
+\format{
+An image file.
+}
 \description{
 A TIFF photograph of Farouq the cat in a washing machine. CC-BY-SA 4.0
 Richard Cotton, 2014.
