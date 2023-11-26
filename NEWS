@@ -2,6 +2,9 @@
 
   - Fix another URL(devtools);
 
+  - Render `images` examples in dataset-docs.R `dontrun`to pass checks on CRAN's
+    r-oldrel-windows-x86_64;
+
 2.1.4
 
   - Fix maintainer address to new JG affiliation (oversight in 2.1.3);
