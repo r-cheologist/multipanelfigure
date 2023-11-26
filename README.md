@@ -11,7 +11,7 @@ package `magick`).
 ## Installation
 
 To install the package, you first need the 
-[*devtools*](https://github.com/hadley/devtools) package.
+[*devtools*](https://github.com/r-lib/devtools) package.
 
 ```{r}
 install.packages("devtools")
