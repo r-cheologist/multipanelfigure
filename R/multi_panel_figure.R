@@ -105,6 +105,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @examples
+#' \dontrun{
 #' # Figure construction based on the dimensions of the current device
 #' figure1 <- multi_panel_figure(
 #'    columns = 2,
@@ -156,6 +157,7 @@
 #'   paste0("Now have a look at '",tmpFile,"' - nicely sized PNG output."))
 #' \donttest{ # Not testing due to use of external software
 #' utils::browseURL(tmpFile)
+#' }
 #' }
 multi_panel_figure <- function(
   width = "auto",

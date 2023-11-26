@@ -2,8 +2,8 @@
 
   - Fix another URL(devtools);
 
-  - Render `images` examples in dataset-docs.R `dontrun`to pass checks on CRAN's
-    r-oldrel-windows-x86_64;
+  - Render `images` and `multi_panel_figure` examples in dataset-docs.R `dontrun`
+    to avoid note on CRAN;
 
 2.1.4
 
