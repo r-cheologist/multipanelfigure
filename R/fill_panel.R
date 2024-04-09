@@ -73,13 +73,6 @@
 #' Statistical Software 84. doi: 10.18637/jss.v084.c03
 #' @export
 #' @seealso \code{\link[gtable]{gtable}}, \code{\link{multi_panel_figure}}
-#' @importFrom assertive.base assert_all_are_true
-#' @importFrom assertive.base use_first
-#' @importFrom assertive.base coerce_to
-#' @importFrom assertive.base print_and_capture
-#' @importFrom assertive.numbers assert_all_are_whole_numbers
-#' @importFrom assertive.numbers assert_all_are_in_closed_range
-#' @importFrom assertive.numbers assert_all_are_less_than_or_equal_to
 #' @examples
 #' \donttest{ # Not testing - slow grid graphics makes CRAN timing excessive
 #' # Create the figure layout

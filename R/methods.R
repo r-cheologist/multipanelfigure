@@ -61,8 +61,8 @@ custom.grid.show.layout <- function (l, newpage = TRUE, vp.ex = 0.8, bg = "light
     if (cell.label)
       {
         if(
-          assertive.numbers::is_divisible_by(i,2) &&
-          assertive.numbers::is_divisible_by(j,2))
+          is_divisible_by(i,2) &&
+          is_divisible_by(j,2))
         {
           grid::grid.text(paste0("(", i/2, ", ", j/2, ")"), gp = grid::gpar(col = label.col))
         }

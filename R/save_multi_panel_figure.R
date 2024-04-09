@@ -23,8 +23,6 @@
 #' @export
 #' @seealso \code{\link[ggplot2]{ggsave}}, \code{\link{figure_width}},
 #' \code{\link{figure_height}}
-#' @importFrom assertive.numbers assert_all_are_greater_than
-#' @importFrom assertive.numbers assert_all_are_whole_numbers
 #' @examples
 #' # Create the figure layout
 #' (figure <- multi_panel_figure(

@@ -92,11 +92,6 @@
 #' \code{\link{capture_base_plot}} for including plots created using base graphics
 #' \code{\link[gtable]{gtable}} for the underlying structure of a figure
 #' @keywords hplot utilities
-#' @importFrom assertive.base assert_all_are_true
-#' @importFrom assertive.numbers assert_all_are_non_negative
-#' @importFrom assertive.numbers assert_all_are_positive
-#' @importFrom assertive.numbers assert_all_are_whole_numbers
-#' @importFrom assertive.numbers assert_all_are_in_range
 #' @examples
 #' \dontrun{
 #' # Figure construction based on the dimensions of the current device
