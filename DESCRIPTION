@@ -38,3 +38,4 @@ License: GPL (>= 3)
 RoxygenNote: 7.2.3
 LazyData: TRUE
 VignetteBuilder: knitr
+Encoding: UTF-8
