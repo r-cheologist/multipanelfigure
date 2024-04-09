@@ -1,8 +1,8 @@
 Package: multipanelfigure
 Type: Package
 Title: Infrastructure to Assemble Multi-Panel Figures (from Grobs)
-Version: 2.1.5
-Date: 2023-11-26
+Version: 2.1.6
+Date: 2024-04-09
 Author: Johannes Graumann [cre, aut],
     Richard Cotton [aut]
 Maintainer: Johannes Graumann <johannes.graumann@uni-marburg.de>
@@ -16,16 +16,13 @@ Description: Tools to create a layout for figures made of multiple panels, and
     'ImageMagick' (accessed through 'magick').
 biocViews:
 Imports:
-    assertive.base (>= 0.0-7),
-    assertive.files (>= 0.0-2),
-    assertive.numbers (>= 0.0-2),
     ggplot2 (>= 2.2.1),
     grid,
     gridGraphics (>= 0.3-0),
     gtable (>= 0.2.0),
     magick (>= 1.9),
     magrittr (>= 1.5),
-    stats,
+    methods,
     stringi (>= 1.2.3),
     utils
 Suggests:
