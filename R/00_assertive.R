@@ -6,7 +6,7 @@
 #      Its usage was beautifully documented in the O Reilly book `Testing R` by Richard Cotton.
 #      The suite is still fully available at bitbucket/richierocks.
 #      But, sadly, the CRAN packages are being deprecated.
-#      Multicrispr, as BioC package, requires dependencies to be available on CRAN (or BioC).
+#      multipanelfigure, as a CRAN package, requires dependencies to be available on CRAN.
 #      Therefore, in response, used assertive functionality is now copied into this file.
 #      Explicit dependency on assertive is being phased out.
 #      Gratefulness towards Richard Cotton for his amazing functionality remains : )
